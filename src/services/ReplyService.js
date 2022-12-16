@@ -1,22 +1,31 @@
-import axios from 'axios';
 
-const REPLY_REST_API ='http://localhost:8080/api/reply';
+import rootInstance from "./utilsService/rootInstance";
 
-class ReplyService{
-    getReplies(postCommentID){
-        return axios.get(REPLY_REST_API +"/" + postCommentID);
-    }
 
-    createReply(reply){
-        return axios.post(REPLY_REST_API,reply);
-    }
-
-    updateReply(postCommentID,reply){
-        return axios.put(REPLY_REST_API + "/" + postCommentID,reply);
-    }
-    deleteReply(postCommentID){
-        return axios.delete(REPLY_REST_API + "/" + postCommentID);
-    }
+const getReplies = async (postCommentID) => {
+    return await rootInstance.get("/reply/" + postCommentID);
 }
 
-export default new ReplyService();
+const createReply = async (reply) => {
+    return await rootInstance.post("/reply/add", reply);
+}
+
+const deleteReply= async (postCommentID) => {
+    return await rootInstance.delete("/reply/remove/" + postCommentID);
+}
+
+const updateReply = async (postCommentID,reply) => {
+    return await rootInstance.put("/reply/update/" + postCommentID, reply);
+}
+
+
+
+const ReplyService = {
+    getReplies,
+    createReply,
+    deleteReply,
+    updateReply,
+};
+  
+export default ReplyService;
+
