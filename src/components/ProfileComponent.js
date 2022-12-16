@@ -9,6 +9,8 @@ import PostService from '../services/PostService';
 import CommentComponent from '../components/CommentComponent';
 import LikeIcon from '@atlaskit/icon/glyph/like'
 import CommentIcon from '@atlaskit/icon/glyph/comment'
+import {storage} from '../firebaseConfig';
+import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
 function ProfileComponent() {
 
     const [userProfileID,setUserProfileID] = useState(0)
@@ -16,8 +18,8 @@ function ProfileComponent() {
     const [lastName,setLastName] = useState('')
     const [gender,setGender] = useState(0)
     const [dob,setDob] = useState("")
-    const [avatar,setAvatar] = useState()
-    const [background,setBackground] = useState("")
+    const [avatar,setAvatar] = useState(null)
+    const [background,setBackground] = useState(null)
     const [about,setAbout] = useState("")
     const [locationID,setLocationID] = useState(0)
 
@@ -27,27 +29,53 @@ function ProfileComponent() {
     const [uploadBackground,setUploadBackground] = useState(null);
 
     const [posts,setPosts] = useState([]);
+    
+    const OldImage = useRef(null);
+    const OldBackground = useRef(null);
 
     useEffect(() => {
         ProfileService.getProfile(userID).then((response) => {
             setUserProfileID(response.data.userProfileID);
             setFirstName(response.data.firstName);
             setLastName(response.data.lastName);
-            setAvatar(response.data.avatar);
-            setBackground(response.data.background);
             setAbout(response.data.about);
             setGender(response.data.gender);
             setDob(response.data.dateOfBirth);
             setLocationID(response.data.locationID);
-        })
+            getImageFromFirebase(response.data.avatar,response.data.background)
 
+          
+        })
         getUserPost()
+     
     },[])
 
+   
+
+
+    const getImageFromFirebase=(avatar,background)=>{
+      const avatarRef = ref(storage,`avatarImages/${avatar}`);
+      getDownloadURL(avatarRef).then((url) => {
+        setAvatar(url)
+      }).catch((error) => {
+        // Handle any errors
+      });
+      OldImage.current = avatar;
+
+      const backgroundRef = ref(storage,`backGroundImages/${background}`);
+      getDownloadURL(backgroundRef).then((url) => {
+        setBackground(url)
+      }).catch((error) => {
+        // Handle any errors
+      });
+      OldBackground.current = background
+    }
     const [show, setShow] = useState(false);
 
     const handleClose = () => {
       setShow(false);
+      setUploadAvatar(null);
+      setUploadBackground(null);
     }
     const handleShow = () => {
       setShow(true);
@@ -68,21 +96,49 @@ function ProfileComponent() {
       }
     };
     
-    const handleUpdateProfile =() =>{
-          const updateDate = new Date().toISOString().slice(0, 10);;
-          const dateOfBirth = dob;
-          const profile = {userProfileID,firstName,lastName,gender,dateOfBirth,avatar,background,about,updateDate,locationID}
+    const handleUpdateProfile= ()=>{
+
+
+        var avatar = "";
+        var background = "";
+        if(uploadAvatar===null){
+          avatar = OldImage.current;
+        }
+        else{
+        const avatarRef = ref(storage,`avatarImages/${uploadAvatar.name}`)
+        uploadBytes(avatarRef,uploadAvatar)
+        avatar = avatarRef.name
+        }
+
+        if(uploadBackground===null){
+          background = OldBackground.current;
+
+        }
+        else{
+        const backgroundRef = ref(storage,`backGroundImages/${uploadBackground.name}`)
+        uploadBytes(backgroundRef,uploadBackground)
+        background = backgroundRef.name;  
+        }
+        const updateDate = new Date().toISOString().slice(0, 10);;
+        const dateOfBirth = dob;
+          
 
       
-          ProfileService.updateProfile(userID,profile).then((res)=>{
+        const profile = {userProfileID,firstName,lastName,gender,dateOfBirth,avatar,background,about,updateDate,locationID}
+
+         
+        ProfileService.updateProfile(userID,profile).then((res)=>{
             handleClose();
+            getImageFromFirebase(avatar,background);
             alert("Update Sucess!")
           
         }).catch((err)=>{
             console.log(err)
         });
+        
+  }
 
-    }
+   
 
     const getUserPost=()=>{
       PostService.getPostWithUserID(userID).then((response)=>{
@@ -261,6 +317,7 @@ function ProfileComponent() {
             <div className="d-flex justify-content-between mb-5">
             <p>Ảnh đại diện </p>
             <input
+        accept="image/png, image/jpeg"
         type="file"
         name="uploadAvatar"
         onChange={(e) => handleUploadAvatar(e.target.files)}
@@ -279,6 +336,7 @@ function ProfileComponent() {
            <div className="d-flex justify-content-between mb-5">
            <p>Ảnh nền </p>
            <input
+        accept="image/png, image/jpeg"
         type="file"
         name="uploadBackground"
         onChange={(e) => handleUploadBackground(e.target.files)}
@@ -321,7 +379,7 @@ function ProfileComponent() {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleUpdateProfile}>Update</Button>
+          <Button variant="primary" onClick={() => handleUpdateProfile()}>Update</Button>
         </Modal.Footer>
       </Modal>
     </div>
