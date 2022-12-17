@@ -1,10 +1,10 @@
 import React ,{useState,useEffect,useRef} from 'react';
 import styled from "styled-components";
 import ReplyService from '../../services/ReplyService'
-import CrossIcon from '@atlaskit/icon/glyph/cross'
-import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled'
-import FeedbackIcon from '@atlaskit/icon/glyph/feedback'
-import Button from '@atlaskit/button';
+// import CrossIcon from '@atlaskit/icon/glyph/cross'
+// import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled'
+// import FeedbackIcon from '@atlaskit/icon/glyph/feedback'
+// import Button from '@atlaskit/button';
 import Form from 'react-bootstrap/Form';
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
@@ -168,16 +168,13 @@ function ReplyComponent({comment,renderValue}){
                     <div className="d-flex">
                       <div className="feature border border-primary">
                       <span className='icon feedback-icon' onClick={(e) => handlerCreate(index)(e)}> 
-                    <FeedbackIcon primaryColor='#FF0000' >
-                    </FeedbackIcon>
+                        Feedback
                      </span>
                       <span className='icon delete-icon ' onClick={()=> {if(window.confirm('Delete the item?')){deleteReply(reply.id)}}}> 
-                    <CrossIcon primaryColor='#FF0000'>
-                    </CrossIcon>
+                  Delete
                   </span>
                   <span className='icon edit-icon' onClick={(e) => handlerUpdate(index)(e,reply.id)}> 
-                    <EditFilledIcon primaryColor='#FF0000'  >
-                    </EditFilledIcon>
+                  Edit
                   </span>     
                         </div>
                   <p className="ms-3 card-text">{reply.dateReply}</p>
@@ -202,7 +199,7 @@ function ReplyComponent({comment,renderValue}){
                               onChange= {(e)=> setInputReply(e.target.value)} 
                               >
                               </TextareaAutosize>                                          
-                              <Button isDisabled={!inputReply} className="float-end" onClick={(e) => saveReply(e,index)}>Bình luận</Button>
+                              <button disabled={!inputReply} className="float-end" onClick={(e) => saveReply(e,index)}>Bình luận</button>
                               </div>
                       </div>
                  

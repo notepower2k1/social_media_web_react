@@ -1,10 +1,10 @@
 
 import React ,{useState ,useEffect,useRef} from 'react'
 import CommentService from '../../services/CommentService'
-import CrossIcon from '@atlaskit/icon/glyph/cross'
-import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled'
-import FeedbackIcon from '@atlaskit/icon/glyph/feedback'
-import Button from '@atlaskit/button';
+// import CrossIcon from '@atlaskit/icon/glyph/cross'
+// import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled'
+// import FeedbackIcon from '@atlaskit/icon/glyph/feedback'
+// import Button from '@atlaskit/button';
 import ReplyComponent from '../Reply/ReplyComponent';
 import AddReplyComponent from '../Reply/AddReplyComponent';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -156,7 +156,7 @@ function CommentComponent({post}) {
                  >
                 </TextareaAutosize>                
                </div>
-                 <Button isDisabled={!inputComment} className="float-end" onClick={(e) => saveComment(e)}>Bình luận</Button>
+                 <button disabled={!inputComment} className="float-end" onClick={(e) => saveComment(e)}>Bình luận</button>
              </form>
              {
             listComments.map(     
@@ -181,23 +181,20 @@ function CommentComponent({post}) {
                     >         
                     </TextareaAutosize> 
                    
-                  <div className="d-flex">
+                   <div className="d-flex">
                       <div className="feature border border-primary" >
                       <span className='icon feedback-icon' onClick={(e) => handlerCreateReply(index)(e)}> 
-                    <FeedbackIcon primaryColor='#FF0000' >
-                    </FeedbackIcon>
+                      FeedBack
                      </span>
                       <span className='icon delete-icon ' onClick={()=> {if(window.confirm('Delete the item?')){deleteComment(comment.id)}}}> 
-                    <CrossIcon primaryColor='#FF0000'>
-                    </CrossIcon>
+                   Delete
                   </span>
                   <span className='icon edit-icon' onClick={(e) => UpdateHandler(index)(e,comment.id)}> 
-                    <EditFilledIcon primaryColor='#FF0000'>
-                    </EditFilledIcon>
+                    Edit
                   </span>     
                         </div>
                   <p className="ms-3 card-text">{comment.commentDate}</p>
-                  </div> 
+                  </div>  
                   </div> 
 
 

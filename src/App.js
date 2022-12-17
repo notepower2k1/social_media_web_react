@@ -15,9 +15,12 @@ import ProfileComponent from "./components/Profile/ProfileComponent";
 
 import Event from "./utils/Event";
 import PrivateRoute from "./utils/PrivateRoute";
+import Search from "./components/Search/Search";
 function App() {
 
   const [currentUser, setCurrentUser] = useState(undefined);
+  const [searchInput, setSearchInput] = useState();
+
   const user = AuthService.getCurrentUser();
 
   useEffect(() => {
@@ -66,23 +69,26 @@ function App() {
             </li>
           </ul>
           <ul className="setting-area">
-            <li>
-              <a href="#" title="Home" data-ripple=""><i className="ti-search"></i></a>
-              <div className="searched">
-                <form method="post" className="form-search">
-                  <input type="text" placeholder="Search Friend" />
-                  <button data-ripple><i className="ti-search"></i></button>
-                </form>
-              </div>
+            <li >
+                <input 
+                    type="text"  
+                    className="form-control "
+                    placeholder="Search..." 
+                    onChange={(e) => setSearchInput(e.target.value)}
+                />
+              
             </li>
-            <li><a href="newsfeed.html" title="Home" data-ripple=""><i className="ti-home"></i></a></li>
-            
+            <li>{user && <Link to={"/search/" + searchInput}>
+            <a href="#" title="Home" className="" data-ripple=""><i className="ti-search"></i></a>
+            </Link>}
+               
+            </li>     
           </ul>
           <div className="user-img">
-          <Link to={"/profile/" + user.id}>
+          { user &&  <Link to={"/profile/" + user.id}>
           <img src="images/resources/admin.jpg" alt="" />
 
-          </Link>
+          </Link> }
             <span className="status f-online"></span>
             <div className="user-setting">
               <a href="#" title=""><span className="status f-online"></span>online</a>
@@ -170,7 +176,11 @@ function App() {
               <ProfileComponent />
             </PrivateRoute>
           } />
-
+        <Route path="/search/:keyword" element={
+            <PrivateRoute>
+              <Search />
+            </PrivateRoute>
+          } />
         </Routes>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React ,{useState,useRef} from 'react';
 
-import Button from '@atlaskit/button';
+// import Button from '@atlaskit/button';
 import ReplyService from '../../services/ReplyService'
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
@@ -54,7 +54,7 @@ function AddReplyComponent({increaseRenderValue,comment}) {
                               onChange= {(e)=> setInputReply(e.target.value)}
                               >
                               </TextareaAutosize>                                          
-                              <Button isDisabled={!inputReply} className="float-end" onClick={(e) => saveReply(e)}>Bình luận</Button>
+                              <button disabled={!inputReply} className="float-end" onClick={(e) => saveReply(e)}>Bình luận</button>
                         </form>  
                         </div>
                       </div>

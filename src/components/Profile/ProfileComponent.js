@@ -1,17 +1,24 @@
 import React ,{useState ,useEffect,useRef} from 'react'
 import ProfileService from '../../services/ProfileService';
 import {useParams} from 'react-router-dom';
-import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled'
-import Button from '@atlaskit/button';
+// import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled'
+// import Button from '@atlaskit/button';
 import Modal from 'react-bootstrap/Modal';
 import TextareaAutosize from 'react-textarea-autosize';
 import PostService from '../../services/post.service';
 import CommentComponent from '../Comment/CommentComponent';
-import LikeIcon from '@atlaskit/icon/glyph/like'
-import CommentIcon from '@atlaskit/icon/glyph/comment'
+import ListFriend from '../Friend/ListFriend.js';
+// import LikeIcon from '@atlaskit/icon/glyph/like'
+// import CommentIcon from '@atlaskit/icon/glyph/comment'
 import {storage} from '../../utils/firebaseConfig';
 import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
+import FriendService from "../../services/FriendService"
+import AuthService from "../../services/auth.service";
+import ButtonFriend from '../Friend/ButtonFriend';
 function ProfileComponent() {
+
+    const [isCurrentProfile,setIsCurrentProfile] = useState()
+    const currentUser = AuthService.getCurrentUser();
 
     const [userProfileID,setUserProfileID] = useState(0)
     const [firstName,setFirstName] = useState('')
@@ -30,8 +37,12 @@ function ProfileComponent() {
 
     const [posts,setPosts] = useState([]);
     
+
+
     const OldImage = useRef(null);
     const OldBackground = useRef(null);
+
+
 
     useEffect(() => {
         ProfileService.getProfile(userID).then((response) => {
@@ -43,14 +54,19 @@ function ProfileComponent() {
             setDob(response.data.dateOfBirth);
             setLocationID(response.data.locationID);
             getImageFromFirebase(response.data.avatar,response.data.background)
-
-          
         })
         getUserPost()
-     
-    },[])
+        checkCurrentUserProfile()
+    },[userID])
 
-   
+   const checkCurrentUserProfile = () => {
+    if (currentUser.id == userID){
+      setIsCurrentProfile(true)
+    } else{
+      setIsCurrentProfile(false)
+    }
+   }
+
 
 
     const getImageFromFirebase=(avatar,background)=>{
@@ -191,17 +207,25 @@ function ProfileComponent() {
             </div>
         
             <div className="mb-2 me-2 align-self-end">
-            <Button
+            <button
             onClick={handleShow}
                         appearance="primary"
-                        iconBefore={<EditFilledIcon label="" size="medium"></EditFilledIcon> }
-                        >Edit Profile</Button>
+                        // iconBefore={<EditFilledIcon label="" size="medium"></EditFilledIcon> }
+                        >Edit Profile</button>
                     
             </div>
           
             </div>
           
-    
+          {!isCurrentProfile && <ButtonFriend userID = {userID} />}
+          
+
+          {/* //Render list friend */}
+            <div className="card-body p-4 text-black">
+              {userID && <ListFriend userID = {userID}/>}
+            </div>
+
+
           <div className="card-body p-4 text-black">
             <div className="mb-5" style={{backgroundColor: "#f8f9fa"}}>
               <p className="lead fw-normal mb-1">About</p>
@@ -236,16 +260,16 @@ function ProfileComponent() {
                          </div>
                      </div>
                        <div className="feature-box d-flex ">
-                     <Button
-                     appearance="subtle"
-                     iconBefore={<LikeIcon label="" size="medium"></LikeIcon> }
-                     shouldFitContainer></Button>
-                     <Button 
-                     appearance="subtle" 
-                     iconBefore={<CommentIcon label="" size="medium" ></CommentIcon>}
-                     shouldFitContainer
+                     <button
+                    
+                    //  iconBefore={<LikeIcon label="" size="medium"></LikeIcon> }
+                     >Like</button>
+                     <button 
+                    
+                    //  iconBefore={<CommentIcon label="" size="medium" ></CommentIcon>}
+                     
                      onClick={(e) => handlerOpenComment(index)(e)}
-                     ></Button>
+                     >Comment</button>
                        </div>
                      </div>
 
@@ -346,12 +370,12 @@ function ProfileComponent() {
            <div className="text-center mb-3">
            <div className="d-flex justify-content-between">
             <p>Giới thiệu </p>
-            <Button
+            <button
                         onClick={()=>setIsReadonly(prevState => !prevState)}
                         appearance="subtle"
-                        iconBefore={<EditFilledIcon label="" size="medium"></EditFilledIcon> }
+                        // iconBefore={<EditFilledIcon label="" size="medium"></EditFilledIcon> }
                         >Chỉnh sửa                     
-                        </Button>
+                        </button>
            </div>    
            
 
@@ -370,10 +394,10 @@ function ProfileComponent() {
            </div>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <button variant="secondary" onClick={handleClose}>
             Close
-          </Button>
-          <Button variant="primary" onClick={() => handleUpdateProfile()}>Update</Button>
+          </button>
+          <button variant="primary" onClick={() => handleUpdateProfile()}>Update</button>
         </Modal.Footer>
       </Modal>
     </div>
