@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.0
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1:3307
--- Generation Time: Dec 16, 2022 at 02:09 PM
--- Server version: 10.4.21-MariaDB
--- PHP Version: 8.0.12
+-- Host: 127.0.0.1
+-- Generation Time: Dec 17, 2022 at 02:11 PM
+-- Server version: 10.4.24-MariaDB
+-- PHP Version: 8.1.6
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -47,21 +47,52 @@ INSERT INTO `comment_reply` (`comment_reply_id`, `date_reply`, `reply`, `post_co
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `follow`
+--
+
+CREATE TABLE `follow` (
+  `follow_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `user_id_follower` int(11) NOT NULL,
+  `date_follow` date NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `follow`
+--
+
+INSERT INTO `follow` (`follow_id`, `user_id`, `user_id_follower`, `date_follow`) VALUES
+(1, 3, 2, '2022-12-16'),
+(2, 3, 4, '2022-12-16'),
+(3, 2, 6, '2022-12-16'),
+(4, 2, 7, '2022-12-16'),
+(5, 3, 6, '2022-12-16'),
+(6, 6, 2, '2022-12-16');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `friendship`
 --
 
 CREATE TABLE `friendship` (
   `friendship_id` int(11) NOT NULL,
-  `personone_id` int(11) NOT NULL,
-  `persontwo_id` int(11) NOT NULL
+  `user_id_1` int(11) NOT NULL,
+  `user_id_2` int(11) NOT NULL,
+  `status_id` tinyint(4) NOT NULL,
+  `date_addfriend` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `friendship`
 --
 
-INSERT INTO `friendship` (`friendship_id`, `personone_id`, `persontwo_id`) VALUES
-(1, 1, 2);
+INSERT INTO `friendship` (`friendship_id`, `user_id_1`, `user_id_2`, `status_id`, `date_addfriend`) VALUES
+(1, 7, 17, 2, NULL),
+(3, 7, 19, 2, NULL),
+(4, 7, 20, 2, NULL),
+(6, 17, 20, 2, '2022-12-17'),
+(7, 17, 19, 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -100,7 +131,7 @@ CREATE TABLE `hibernate_sequence` (
 --
 
 INSERT INTO `hibernate_sequence` (`next_val`) VALUES
-(14);
+(47);
 
 -- --------------------------------------------------------
 
@@ -121,6 +152,7 @@ CREATE TABLE `joinedgroup` (
 INSERT INTO `joinedgroup` (`group_id`, `user_id`, `joined_date`) VALUES
 (1, 7, '2022-12-16'),
 (1, 8, '2022-12-15'),
+(1, 19, '2022-12-17'),
 (2, 8, '2022-12-15'),
 (3, 8, '2022-12-16');
 
@@ -165,7 +197,8 @@ CREATE TABLE `post` (
 
 INSERT INTO `post` (`post_id`, `content`, `image`, `published_date`, `user_id`) VALUES
 (24, 'hom nay toi buon qua diiiiiiiiii', 'NONE', '2022-12-14', 7),
-(59, 'Day la test', '|https://firebasestorage.googleapis.com/v0/b/media-socia.appspot.com/o/post_images%2Fbackground.jpg?alt=media&token=5bc1b69a-b2ec-4671-a180-9534158d06e2|https://firebasestorage.googleapis.com/v0/b/media-socia.appspot.com/o/post_images%2Fbaitap.png?alt=media&token=e9af7062-d662-4aa9-a6cf-de8b00c12209', '2022-12-16', 7);
+(59, 'Day la test', '|https://firebasestorage.googleapis.com/v0/b/media-socia.appspot.com/o/post_images%2Fbackground.jpg?alt=media&token=5bc1b69a-b2ec-4671-a180-9534158d06e2|https://firebasestorage.googleapis.com/v0/b/media-socia.appspot.com/o/post_images%2Fbaitap.png?alt=media&token=e9af7062-d662-4aa9-a6cf-de8b00c12209', '2022-12-16', 7),
+(60, 'Nay là thứ 7', 'NONE', '2022-12-17', 7);
 
 -- --------------------------------------------------------
 
@@ -187,7 +220,8 @@ CREATE TABLE `post_comment` (
 
 INSERT INTO `post_comment` (`post_comment_id`, `date_comment`, `content`, `post_id`, `user_id`) VALUES
 (4, '2022-12-16', 'day la mot comment ', 24, 7),
-(8, '2022-12-16', 'test comment', 59, 7);
+(8, '2022-12-16', 'test comment', 59, 7),
+(9, '2022-12-17', 'đẹp trai', 59, 7);
 
 -- --------------------------------------------------------
 
@@ -236,7 +270,37 @@ INSERT INTO `refreshtoken` (`ref_token_id`, `expiry_date`, `token`, `user_id`) V
 (10, '2022-12-17 13:41:29', '38f06ce0-79c3-427c-bab9-5c440831fa3f', 7),
 (11, '2022-12-17 07:50:10', 'd12ce127-74e0-4227-97ad-4c2cf06bb1bf', 7),
 (12, '2022-12-17 08:07:51', '0960a76b-d059-4258-8a7d-abc89d9e0deb', 7),
-(13, '2022-12-17 09:39:15', 'de2770ef-ef76-4bd8-bec1-96fb9364dc65', 7);
+(13, '2022-12-17 09:39:15', 'de2770ef-ef76-4bd8-bec1-96fb9364dc65', 7),
+(14, '2022-12-18 03:15:14', 'd802fce8-e8f3-4ecc-8dda-e341240f9e03', 7),
+(15, '2022-12-18 03:28:02', '0c4fd4eb-cb0c-4e53-9e1a-e82176f1518d', 9),
+(17, '2022-12-18 03:36:13', '514a769e-cb87-4489-82bb-ca6c2dee8fa3', 7),
+(18, '2022-12-18 03:50:31', 'b303ce79-33d9-479d-9bbd-1b43f95bf4f7', 9),
+(19, '2022-12-18 03:53:51', '70a9a1d2-b71e-469f-8aca-0fff9b4abb33', 9),
+(20, '2022-12-18 03:54:46', '425de7d5-46ff-49d7-9de9-1bb46573365d', 17),
+(22, '2022-12-18 03:57:08', '77264b82-07d5-4097-a984-5b9f847215f8', 17),
+(24, '2022-12-18 04:02:10', '0068862e-6119-4560-8ed9-3f93ba6064a4', 19),
+(25, '2022-12-18 04:04:23', '27e55e6c-92a5-4375-8fc6-d269fa6e981b', 20),
+(26, '2022-12-18 04:20:00', '9f104ae2-7ba8-47fa-8005-28d432406075', 7),
+(27, '2022-12-18 04:23:37', 'da7f5b14-a5a9-4f17-ae82-f366685a7c95', 7),
+(28, '2022-12-18 04:28:38', 'ed989b96-b037-4925-a359-cd64b9b4486a', 7),
+(29, '2022-12-18 05:21:09', 'c487dbb7-2830-43fe-ba70-00e796fe3971', 9),
+(30, '2022-12-18 05:21:30', '7d1b94bd-ba5d-4b6a-96b9-d0cecd45e1cc', 17),
+(31, '2022-12-18 05:22:14', '9fd15bf3-b0e9-4980-888c-8b4991e6b2ab', 19),
+(32, '2022-12-18 05:47:02', '23199f36-7916-49c0-8947-841081c8b652', 19),
+(33, '2022-12-18 05:48:12', 'a9354939-e5e8-4aff-b533-67bf918402a2', 19),
+(34, '2022-12-18 05:49:39', '862011af-000d-4055-9a7f-093618a0c70e', 19),
+(35, '2022-12-18 05:51:39', '4795b262-a1c6-4919-9b87-1e024e9ed855', 19),
+(36, '2022-12-18 05:52:39', 'e79f2ee7-8f5c-42ee-8e89-2250ac8df68d', 19),
+(37, '2022-12-18 05:57:36', 'b8a6cd67-9b56-4df5-9975-f41f5c3e402c', 19),
+(38, '2022-12-18 05:58:33', '0bd736e1-c559-478d-a6b9-7c5bb28be2e8', 19),
+(39, '2022-12-18 05:59:12', 'f75f11c5-125c-4f2e-894d-67c309920a67', 19),
+(40, '2022-12-18 06:05:05', 'f6758dcf-4e1a-4512-af5d-7b32a540ff46', 19),
+(41, '2022-12-18 11:12:34', 'ccf100dc-5877-4d22-97b4-25785fbc2f26', 19),
+(42, '2022-12-18 11:24:00', '875bf9ff-922b-44f5-a8e9-eb28898b7216', 19),
+(43, '2022-12-18 12:01:32', '2006163d-7e24-42e9-8841-b2a7f9bc994d', 17),
+(44, '2022-12-18 12:02:40', 'b1bb34a5-8469-42fa-8ef9-3b05c9acb1df', 20),
+(45, '2022-12-18 13:03:41', '7a3fe4fa-ffaa-41e9-b2f1-0185b8cc3f37', 9),
+(46, '2022-12-18 13:03:48', 'fa5cd79d-7fa6-4964-8e4f-677fa2ebf7b3', 17);
 
 -- --------------------------------------------------------
 
@@ -261,6 +325,25 @@ INSERT INTO `role` (`role_id`, `name`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `status_friend`
+--
+
+CREATE TABLE `status_friend` (
+  `status_id` int(11) NOT NULL,
+  `status` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Dumping data for table `status_friend`
+--
+
+INSERT INTO `status_friend` (`status_id`, `status`) VALUES
+(1, 'request friend'),
+(2, 'friend');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `user`
 --
 
@@ -281,7 +364,13 @@ INSERT INTO `user` (`user_id`, `email`, `password`, `registered_date`, `username
 (3, 'hungbeo123@gmail.com', '$2a$10$u1rrtoQQSy4PhWek3lEdU.uqKtIPWo4R1lG9Z.gqQvsG.6CxTeIUy', '2022-12-02', 'hung2712'),
 (4, 'thachnv@gmail.com', 'asbsdas', '2022-12-02', 'thachlmao2828'),
 (7, 'email@gmail.com', '$2a$10$2jmGakjWDImZeuE740oVT.Z0x7rpeZPw8WH.KkejsIGrQsKr0CYzW', '2022-12-08', 'hung2727'),
-(8, 'sieupha2712@gmail.com', '$2a$10$Jw1noGaVHIE9tj.3QnNxh.qPYlFs6Oa.DTd2E1pfQxiNKU4l76sta', '2022-12-08', 'hung2728');
+(8, 'sieupha2712@gmail.com', '$2a$10$Jw1noGaVHIE9tj.3QnNxh.qPYlFs6Oa.DTd2E1pfQxiNKU4l76sta', '2022-12-08', 'hung2728'),
+(9, 'truong992001@gmail.com', '$2a$10$2jmGakjWDImZeuE740oVT.Z0x7rpeZPw8WH.KkejsIGrQsKr0CYzW', '2022-12-02', 'blackbear'),
+(10, 'nhan@gmail.com', '123456789', '2022-12-05', 'nhan123'),
+(11, 'nam@gmail.com', '123456789', '2022-12-05', 'nam123'),
+(17, 'truong992001no2@gmail.com', '$2a$10$WHwPDGhENCW2P0HMjIEehuVWDrUg/lR/S4F5.IFSOR7YNdsFvlPNe', '2022-12-17', 'blackbear1'),
+(19, 'nhan123@gmail.com', '$2a$10$4puKCnLcF84nmTxaZe91Y.R6SET0pCz0MekRm7PS/GPV0nZIV4lIq', '2022-12-17', 'nhan1234'),
+(20, 'vannam@gmail.com', '$2a$10$gIK7kUovq6NYOooIpzZcIOogEoIwlNrTmCFPTex9MXV.Of2/nKmca', '2022-12-17', 'vannam');
 
 -- --------------------------------------------------------
 
@@ -309,7 +398,10 @@ CREATE TABLE `userprofile` (
 
 INSERT INTO `userprofile` (`userprofile_id`, `avatar`, `background`, `dob`, `first_name`, `gender`, `last_name`, `update_date`, `user_id`, `about`, `location_id`) VALUES
 (1, 'hutao.jpg', 'background.jpg', '2001-12-27', 'Nguyen Van', b'1', 'Hung', '2022-12-12', 7, '그동안 \'너의 이름은\' 사운드트랙을 10곡 커버했습니다.\n모음집으로 만들면서 돌아보니 2019년부터 \'너의 이름은\' OST를 연주하기 시작 했네요. 시간이 꽤 흘렀지만 좋아하는 작품인지라 매년 다시보고 꾸준히 음악도 들어가며 즐겁게 연주했습니다. ', 0),
-(2, 'hung2.jpg', 'alone.png', '2022-12-01', 'Nguyen', b'1', 'Hung', '2022-12-12', 8, '', 0);
+(2, 'hung2.jpg', 'alone.png', '2022-12-01', 'Nguyen', b'1', 'Hung', '2022-12-12', 8, 'acc clone của Hưng', 0),
+(3, 'meogiandu.jpg', 'background.jpg', '2022-12-16', 'Nguyễn Nhật', b'1', 'Trường', NULL, 17, 'nhà tui ở diên khánh', 1),
+(4, '123.png', 'background.jpg', '2022-12-16', 'Nhân', b'1', 'Nguyễn Thành', NULL, 19, 'không có gì', 1),
+(5, '123.png', 'background.jpg', '2022-12-16', 'Lê Văn', b'1', 'Nam', NULL, 20, 'không có gì', 1);
 
 -- --------------------------------------------------------
 
@@ -330,7 +422,10 @@ INSERT INTO `user_roles` (`user_id`, `role_id`) VALUES
 (2, 1),
 (3, 1),
 (7, 2),
-(8, 2);
+(8, 2),
+(17, 2),
+(19, 2),
+(20, 2);
 
 --
 -- Indexes for dumped tables
@@ -343,6 +438,12 @@ ALTER TABLE `comment_reply`
   ADD PRIMARY KEY (`comment_reply_id`),
   ADD KEY `FK35weat9pbnp5kdpevwti5k3u4` (`post_comment_id`),
   ADD KEY `FKsrjwcmm9boromh00gubiqc8x5` (`user_id`);
+
+--
+-- Indexes for table `follow`
+--
+ALTER TABLE `follow`
+  ADD PRIMARY KEY (`follow_id`);
 
 --
 -- Indexes for table `friendship`
@@ -405,6 +506,12 @@ ALTER TABLE `role`
   ADD PRIMARY KEY (`role_id`);
 
 --
+-- Indexes for table `status_friend`
+--
+ALTER TABLE `status_friend`
+  ADD PRIMARY KEY (`status_id`);
+
+--
 -- Indexes for table `user`
 --
 ALTER TABLE `user`
@@ -437,10 +544,16 @@ ALTER TABLE `comment_reply`
   MODIFY `comment_reply_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `follow`
+--
+ALTER TABLE `follow`
+  MODIFY `follow_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `friendship`
 --
 ALTER TABLE `friendship`
-  MODIFY `friendship_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `friendship_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `group`
@@ -458,13 +571,13 @@ ALTER TABLE `location`
 -- AUTO_INCREMENT for table `post`
 --
 ALTER TABLE `post`
-  MODIFY `post_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `post_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `post_comment`
 --
 ALTER TABLE `post_comment`
-  MODIFY `post_comment_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `post_comment_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT for table `role`
@@ -473,16 +586,22 @@ ALTER TABLE `role`
   MODIFY `role_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
+-- AUTO_INCREMENT for table `status_friend`
+--
+ALTER TABLE `status_friend`
+  MODIFY `status_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `user_id` bigint(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT for table `userprofile`
 --
 ALTER TABLE `userprofile`
-  MODIFY `userprofile_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `userprofile_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
