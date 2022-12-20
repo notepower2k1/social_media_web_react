@@ -1,10 +1,6 @@
 
 import React ,{useState ,useEffect,useRef} from 'react'
 import CommentService from '../../services/CommentService'
-// import CrossIcon from '@atlaskit/icon/glyph/cross'
-// import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled'
-// import FeedbackIcon from '@atlaskit/icon/glyph/feedback'
-// import Button from '@atlaskit/button';
 import ReplyComponent from '../Reply/ReplyComponent';
 import AddReplyComponent from '../Reply/AddReplyComponent';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -143,8 +139,8 @@ function CommentComponent({post}) {
   return (
     <div >
             <div className="comment-box card">
-               <form>
-               <div className="form-group mb-2">
+               <form className="border border-dark">
+               <div className="form-group mb-2 ">
                  <TextareaAutosize
                  autoFocus
                  cacheMeasurements
@@ -156,7 +152,7 @@ function CommentComponent({post}) {
                  >
                 </TextareaAutosize>                
                </div>
-                 <button disabled={!inputComment} className="float-end" onClick={(e) => saveComment(e)}>Bình luận</button>
+                 <button disabled={!inputComment} className="btn btn-primary float-end" onClick={(e) => saveComment(e)}>Bình luận</button>
              </form>
              {
             listComments.map(     
@@ -182,15 +178,15 @@ function CommentComponent({post}) {
                     </TextareaAutosize> 
                    
                    <div className="d-flex">
-                      <div className="feature border border-primary" >
-                      <span className='icon feedback-icon' onClick={(e) => handlerCreateReply(index)(e)}> 
-                      FeedBack
+                      <div className="feature" >
+                      <span className='icon feedback-icon mr-2' onClick={(e) => handlerCreateReply(index)(e)}> 
+                      <i className="fa fa-reply"></i>
                      </span>
-                      <span className='icon delete-icon ' onClick={()=> {if(window.confirm('Delete the item?')){deleteComment(comment.id)}}}> 
-                   Delete
+                      <span className='icon delete-icon mr-2' onClick={()=> {if(window.confirm('Delete the item?')){deleteComment(comment.id)}}}> 
+                      <i className="fa fa-trash"></i>
                   </span>
-                  <span className='icon edit-icon' onClick={(e) => UpdateHandler(index)(e,comment.id)}> 
-                    Edit
+                  <span className='icon edit-icon mr-2' onClick={(e) => UpdateHandler(index)(e,comment.id)}> 
+                  <i className="fa fa-edit"></i>
                   </span>     
                         </div>
                   <p className="ms-3 card-text">{comment.commentDate}</p>

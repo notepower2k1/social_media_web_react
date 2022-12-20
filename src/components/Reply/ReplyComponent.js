@@ -166,15 +166,17 @@ function ReplyComponent({comment,renderValue}){
 
 
                     <div className="d-flex">
-                      <div className="feature border border-primary">
-                      <span className='icon feedback-icon' onClick={(e) => handlerCreate(index)(e)}> 
-                        Feedback
+                      <div className="feature">
+                      <span className='icon feedback-icon mr-2' onClick={(e) => handlerCreate(index)(e)}> 
+                      <i className="fa fa-reply"></i>
+
                      </span>
-                      <span className='icon delete-icon ' onClick={()=> {if(window.confirm('Delete the item?')){deleteReply(reply.id)}}}> 
-                  Delete
+                      <span className='icon delete-icon mr-2 ' onClick={()=> {if(window.confirm('Delete the item?')){deleteReply(reply.id)}}}> 
+                      <i className="fa fa-trash"></i>
+
                   </span>
-                  <span className='icon edit-icon' onClick={(e) => handlerUpdate(index)(e,reply.id)}> 
-                  Edit
+                  <span className='icon edit-icon mr-2' onClick={(e) => handlerUpdate(index)(e,reply.id)}> 
+                  <i className="fa fa-edit"></i>
                   </span>     
                         </div>
                   <p className="ms-3 card-text">{reply.dateReply}</p>

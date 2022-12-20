@@ -32,10 +32,10 @@ function ButtonFriend(props){
       }
     // const [isCurrentProfile,setIsCurrentProfile] = useState()
 
-    return <div className="button_friend">
+    return <div className="button_friend mr-2">
             {isFriend ?
-              <button className="btn btn-danger col-3">Hủy kết bạn</button> 
-            : <button className="btn btn-info col-3">Kết bạn</button>}
+              <button className="btn btn-danger">Hủy kết bạn</button> 
+            : <button className="btn btn-info">Kết bạn</button>}
           </div>
 }
 export default ButtonFriend

@@ -54,7 +54,7 @@ function AddReplyComponent({increaseRenderValue,comment}) {
                               onChange= {(e)=> setInputReply(e.target.value)}
                               >
                               </TextareaAutosize>                                          
-                              <button disabled={!inputReply} className="float-end" onClick={(e) => saveReply(e)}>Bình luận</button>
+                              <button disabled={!inputReply} className="btn btn-primary float-end" onClick={(e) => saveReply(e)}>Bình luận</button>
                         </form>  
                         </div>
                       </div>

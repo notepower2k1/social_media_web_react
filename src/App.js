@@ -11,6 +11,8 @@ import PostList from "./components/Post/PostList";
 import GroupList from "./components/Group/GroupList";
 import GroupCreate from "./components/Group/GroupCreate";
 import GroupPage from "./components/Group/GroupPage";
+import ListConversation from "./components/Conversation/ListConversation";
+
 import ProfileComponent from "./components/Profile/ProfileComponent";
 
 import Event from "./utils/Event";
@@ -53,9 +55,10 @@ function App() {
         <div className="top-area">
           <ul className="main-menu">
             <li>
-              <Link to={"/"}>
+            { user &&  <Link to={"/profile/" + user.id}>
+
                 Home
-              </Link>
+                </Link> }
             </li>
             <li>
               <Link to={"/posts"}>
@@ -66,6 +69,16 @@ function App() {
               <Link to={"/groups"}>
                 Groups
               </Link>
+              
+            </li>
+
+            <li>
+            { user &&  <Link to={"/conversation/" + user.id}>
+
+              Message
+
+          </Link> }
+              
             </li>
           </ul>
           <ul className="setting-area">
@@ -174,6 +187,11 @@ function App() {
         <Route path="/profile/:userID" element={
             <PrivateRoute>
               <ProfileComponent />
+            </PrivateRoute>
+          } />
+          <Route path="/conversation/:userID" element={
+            <PrivateRoute>
+              <ListConversation />
             </PrivateRoute>
           } />
         <Route path="/search/:keyword" element={
