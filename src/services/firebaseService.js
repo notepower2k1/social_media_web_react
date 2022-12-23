@@ -12,7 +12,6 @@ const getAvatarFromFirebase= async (avatar)=>{
         console.log(error);
     });
 
-    console.log(result);
 
     return result;
 }
@@ -26,7 +25,6 @@ const getBackGroundFromFirebase= async (background)=>{
     console.log(error);
 });
 
-    console.log(result);
     return result;
 
 }

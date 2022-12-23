@@ -4,9 +4,16 @@ import AuthService from '../../services/auth.service'
 import Conversation from './Conversation'
 import ConversationReply from './ConversationReply'
 import SendMessage from './SendMessage'
+import {io} from "socket.io-client";
+
+
 
 function ListConversation() {
+    
+
     const user = AuthService.getCurrentUser();
+
+    const socket = useRef();
 
     const [listConversations,setListConversations] = useState([]);
     const chatItemRef = useRef([]);
@@ -14,9 +21,29 @@ function ListConversation() {
     const [chatOn,setChatOn] = useState(false)
     const currentConversation = useRef();
 
+
+    const increaseRenderValue = ()=>{
+      setRenderValue(c=>c+1)
+    }
+
+   
+ 
+
+   
+
+ 
+ 
+   
+
     useEffect(() =>{
-        getAllConversation();
-    },[])
+      getAllConversation();   
+
+  },[])
+
+
+    const toggleChat= () =>{
+      setChatOn(prevState => !prevState);
+    }
 
     const getAllConversation = async () =>{
         conversationService.getAllConversation(user.id).then(res=>{
@@ -26,6 +53,9 @@ function ListConversation() {
 
  
 
+    const updateStatusMessage = async (conversationID,senderID) =>{
+      conversationService.updateStatus(conversationID,senderID);
+    }
 
     const handleClick = (index,conversation)=>{
         
@@ -42,14 +72,19 @@ function ListConversation() {
 
         currentConversation.current = conversation;
 
-        setChatOn(prevState => !prevState);
+        toggleChat();
+        //update status messenge
+        user.id === conversation.userOne.id 
+        ? updateStatusMessage(conversation.id,conversation.userTwo.id)
+        : updateStatusMessage(conversation.id,conversation.userOne.id)
+
+        increaseRenderValue();
 
     }
 
-    const increaseRenderValue = ()=>{
-      setRenderValue(c=>c+1)
-    }
-
+    
+ 
+   
   return (
     <div className="">
         <h3 className=" text-center">Messaging</h3>
@@ -78,8 +113,8 @@ function ListConversation() {
 
                             {
                                     user.id === conversation.userOne.id ?
-                                    <Conversation data={conversation} userID={conversation.userTwo.id}/>
-                                    :<Conversation  data={conversation} userID={conversation.userOne.id}/>
+                                    <Conversation chatOn={chatOn} increaseRenderValue={increaseRenderValue} renderValue={renderValue} data={conversation} sender={conversation.userTwo}/>
+                                    :<Conversation chatOn={chatOn} increaseRenderValue={increaseRenderValue}  renderValue={renderValue} data={conversation} sender={conversation.userOne}/>
                 
                                 }
                                                 </div>
@@ -95,10 +130,10 @@ function ListConversation() {
             </div>
             <div className="mesgs">
                  <div className="msg_history">
-                    {chatOn && <ConversationReply renderValue={renderValue} currentConversation={currentConversation.current}/>}
+                    {chatOn && <ConversationReply chatOn={chatOn} socket ={socket} increaseRenderValue={increaseRenderValue} renderValue={renderValue} currentConversation={currentConversation.current}/>}
                  </div>
                  <div className="type_msg">
-                    <SendMessage increaseRenderValue={increaseRenderValue} currentConversation={currentConversation.current}/>
+                    {chatOn && <SendMessage socket ={socket} increaseRenderValue={increaseRenderValue} currentConversation={currentConversation.current}/>}
                  </div>
                </div>
             </div>

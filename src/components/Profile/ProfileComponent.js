@@ -10,7 +10,6 @@ import ListFriend from '../Friend/ListFriend.js';
 
 import {storage} from '../../utils/firebaseConfig';
 import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
-import FriendService from "../../services/FriendService"
 import AuthService from "../../services/auth.service";
 import ButtonFriend from '../Friend/ButtonFriend';
 
@@ -60,7 +59,7 @@ function ProfileComponent() {
     },[userID])
 
    const checkCurrentUserProfile = () => {
-    if (currentUser.id == userID){
+    if (currentUser.id === userID){
       setIsCurrentProfile(true)
     } else{
       setIsCurrentProfile(false)

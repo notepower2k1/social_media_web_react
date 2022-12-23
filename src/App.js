@@ -18,6 +18,11 @@ import ProfileComponent from "./components/Profile/ProfileComponent";
 import Event from "./utils/Event";
 import PrivateRoute from "./utils/PrivateRoute";
 import Search from "./components/Search/Search";
+
+
+
+
+
 function App() {
 
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -27,23 +32,31 @@ function App() {
 
   useEffect(() => {
 
+
     if (user) {
       setCurrentUser(user);
     }
 
     Event.on("logout", () => {
       logOut();
+
     });
+
+    
 
     return () => {
       Event.remove("logout");
     };
+
+    
   }, []);
 
   const logOut = () => {
     AuthService.logout();
     setCurrentUser(undefined);
   };
+
+
 
   return (
     <div className="theme-layout">
@@ -75,7 +88,8 @@ function App() {
             <li>
             { user &&  <Link to={"/conversation/" + user.id}>
 
-              Message
+                Message
+
 
           </Link> }
               
@@ -191,7 +205,7 @@ function App() {
           } />
           <Route path="/conversation/:userID" element={
             <PrivateRoute>
-              <ListConversation />
+            <ListConversation />
             </PrivateRoute>
           } />
         <Route path="/search/:keyword" element={
