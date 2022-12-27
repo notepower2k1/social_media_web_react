@@ -3,9 +3,8 @@ import AuthService from '../../services/auth.service'
 import conversationService from '../../services/conversationService'
 import ProfileService from '../../services/ProfileService';
 import FirebaseSerive from '../../services/firebaseService';
-import {io} from "socket.io-client";
 
-function ConversationReply({chatOn,increaseRenderValue,socket,renderValue,currentConversation}) {
+function ConversationReply({increaseRenderValue,socket,renderValue,currentConversation}) {
 
   const user = AuthService.getCurrentUser();
 
@@ -14,6 +13,7 @@ function ConversationReply({chatOn,increaseRenderValue,socket,renderValue,curren
   const [arrivalMessage,setArrivalMessage] = useState("")
 
   const conversationReplyTime = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
+
 
 
   const iconRef = useRef([]);
@@ -39,7 +39,6 @@ function ConversationReply({chatOn,increaseRenderValue,socket,renderValue,curren
   }
   const deleteReply = async (id)=>{
     conversationService.deleteConversationReply(id).then((res)=>{
-      getConversationReplies();
       increaseRenderValue();
       alert("Delete Sucess!")
 
@@ -50,28 +49,10 @@ function ConversationReply({chatOn,increaseRenderValue,socket,renderValue,curren
   }
 
    
-  useEffect(() => {
-    
-    if(chatOn){
-      socket.current =io.connect("ws://localhost:8900");
-
-    }
 
 
-     return () => {
-      socket.current.close();
-    }
 
-  },[chatOn]);
-
-  useEffect(() =>{
-    if(chatOn){
-      socket.current.emit("addUser",user.id);
-      socket.current.on("getUsers",users=>{
-      })
-    }
-  
-  },[])
+ 
 
   
   
@@ -88,6 +69,8 @@ function ConversationReply({chatOn,increaseRenderValue,socket,renderValue,curren
           id :lastID ,
           reply:data.text,
           conversationReplyTime:conversationReplyTime,
+          status :0,
+          deleleStatus:0,
           user:data.senderID,
           conversation:currentConversation,
         })
@@ -160,8 +143,7 @@ function ConversationReply({chatOn,increaseRenderValue,socket,renderValue,curren
         (conversationReply,index) =>
            <div key={conversationReply.id} ref={scrollRef}>
 
-                  {
-                    
+                  {                    
                     user.id === conversationReply.user.id
                     ?
                     <div className="outgoing_msg">
@@ -171,23 +153,35 @@ function ConversationReply({chatOn,increaseRenderValue,socket,renderValue,curren
                           onMouseLeave={() => setHide(index)}
                           >
                           
-                        <p>{conversationReply.reply}</p>
-                        
-                        <span className='icon delete-icon mr-2' ref={el => iconRef.current[index] = el}  onClick={()=> {if(window.confirm('Delete the item?')){deleteReply(conversationReply.id,index)}}}> 
+                        {
+                          conversationReply.deleleStatus === 0
+                          ?<p>{conversationReply.reply}</p>
+                          :<p>Bạn đã thu hồi tin nhắn</p>
+                        }                       
+
+                        {
+                        conversationReply.deleleStatus === 0?
+                        <span className='icon delete-icon mr-2' ref={el => iconRef.current[index] = el}  onClick={()=> {if(window.confirm('Delete the item?')){deleteReply(conversationReply.id)}}}> 
                       <i className="fa fa-trash"></i>
                         </span>
-                        
-                       
+                        :<div></div>
+
+                        }
                           </div>
                        
-                        <span className="time_date">{convertTime(conversationReply.conversationReplyTime)}</span> </div>
+                        <span className="time_date">{convertTime(conversationReply.conversationReplyTime)}</span> 
+                        </div>
                       </div>
                     :  
                       <div className="incoming_msg">
                       <div className="incoming_msg_img"> <img src={avatar} className="rounded-circle"  alt="sunil"/> </div>
                       <div className="received_msg">
                         <div className="received_withd_msg">
-                        <p>{conversationReply.reply}</p>
+                        {
+                          conversationReply.deleleStatus === 0
+                          ?<p>{conversationReply.reply}</p>
+                          :<p>Tin nhắn đã bị thu hồi</p>
+                        }    
                         <span className="time_date">{convertTime(conversationReply.conversationReplyTime)}</span></div>
                       </div>
                     </div>
@@ -197,12 +191,12 @@ function ConversationReply({chatOn,increaseRenderValue,socket,renderValue,curren
                  
             </div>
        )
+       
       }
       
         
                   
                  
-                  
     </div>
   )
 }

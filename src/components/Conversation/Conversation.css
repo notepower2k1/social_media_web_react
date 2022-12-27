@@ -3,7 +3,7 @@ img{ max-width:100%;}
   background: #f8f8f8 none repeat scroll 0 0;
   float: left;
   overflow: hidden;
-  width: 40%; border-right:1px solid #c4c4c4;
+  width: 30%; border-right:1px solid #c4c4c4;
 }
 .inbox_msg {
   border: 1px solid #c4c4c4;
@@ -88,7 +88,7 @@ img{ max-width:100%;}
 .mesgs {
   float: left;
   padding: 30px 15px 0 25px;
-  width: 60%;
+  width: 70%;
 }
 
  .sent_msg p {
@@ -136,6 +136,29 @@ img{ max-width:100%;}
 .chat_list{
     cursor: pointer;
 }
-.icon ,.delete-icon{
+.sent_msg > .d-flex > .delete-icon{
   display:none;
+}
+.current-chat-avatar {
+  width: 320px;
+  height: 320px;
+}
+.fa-circle{
+  color:green;
+  font-size:5px;
+}
+
+
+
+.chat_img {
+  position: relative;
+
+}
+
+
+.chat_img>.online {
+  width: 15px;
+  position: absolute;
+  right:0;
+  bottom: 0;
 }
