@@ -14,12 +14,26 @@ const GroupList = () => {
     const [groups, setGroups] = useState([]);
     const [groupsJoined, setGroupsJoined] = useState([]);
     const [newGroups, setNewGroups] = useState([]);
+    const [reload, setReload] = useState(false);
     const currentUser = AuthService.getCurrentUser();
 
     useEffect(() => {
-        getAllGroups();
-        getGroupsCurrentUserJoined(currentUser.id);
-    }, [])
+        getAllGroups()
+            .then(res => {
+                setGroups(res.data);
+                dispatch(setAllGroups(res.data))    
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        getGroupsCurrentUserJoined(currentUser.id)
+            .then(res => {
+                setGroupsJoined(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }, [reload])
     useEffect(() => {
         let newGroups = (groups && groupsJoined) && groups.map(group => {
             if (groupsJoined.some(groupJoined => groupJoined.id === group.id)) {
@@ -29,32 +43,17 @@ const GroupList = () => {
             }
             return group;
         });
-        
-        console.log(newGroups);
 
         setNewGroups(newGroups);
         
     }, [groupsJoined, groups])
 
     const getAllGroups = async () => {
-        await GroupService.readAllGroups()
-            .then(res => {
-                setGroups(res.data);
-                dispatch(setAllGroups(res.data))    
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        return await GroupService.readAllGroups();
     }
 
     const getGroupsCurrentUserJoined = async (userId) => {
-        await GroupService.readGroupsUserJoined(userId)
-            .then(res => {
-                setGroupsJoined(res.data);
-            })
-            .catch(err => {
-                console.log(err);
-            })
+        return await GroupService.readGroupsUserJoined(userId);
     }
 
     return (
@@ -67,7 +66,13 @@ const GroupList = () => {
                         <span><i className="fa fa-users"></i> Groups</span>
                     </div>
                     <ul className="nearby-contct">
-                    {  newGroups && newGroups.map((group, index) => <li key={ index }> <Group data={ group } user={ currentUser }/> </li>) }
+                    {  newGroups && newGroups.map((group, index) => <li key={ index }> 
+                            <Group 
+                                data={ group } 
+                                user={ currentUser }
+                                callBack={ setReload }
+                            /> 
+                        </li>) }
                     </ul>
                 </div>
             </div>

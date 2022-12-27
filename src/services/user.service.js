@@ -24,13 +24,28 @@ const joinGroup = (groupId, userId) => {
   return rootInstance.post("/user/join-group", {groupId: groupId, userId: userId});
 }
 
+const leaveGroup = (groupId, userId) => {
+  return rootInstance.post("/user/leave-group", {groupId: groupId, userId: userId});
+}
+
+const checkUserJoinedGroup = async (groupId, userId) => {
+  return await rootInstance.get(`/user/${userId}/check-joined/${groupId}`);
+}
+
+const checkUserIsAdminGroup = async (groupId, userId) => {
+  return await rootInstance.get(`/user/${userId}/check-admin/${groupId}`);
+}
+
 const UserService = {
   getPublicContent,
   getUserBoard,
   getModeratorBoard,
   getAdminBoard,
   readUserProfile,  
-  joinGroup
+  joinGroup,
+  leaveGroup,
+  checkUserJoinedGroup,
+  checkUserIsAdminGroup
 };
 
 export default UserService;

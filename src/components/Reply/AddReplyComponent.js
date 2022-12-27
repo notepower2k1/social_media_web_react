@@ -1,6 +1,5 @@
 import React ,{useState,useRef} from 'react';
 
-// import Button from '@atlaskit/button';
 import ReplyService from '../../services/ReplyService'
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'

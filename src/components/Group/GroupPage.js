@@ -1,24 +1,105 @@
 import React, { useEffect, useState} from 'react';
-import { useParams } from 'react-router-dom';
-import { useSelector } from "react-redux";
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import Loading from "../Loading/Loading";
 
 import GroupService from "../../services/group.service";
-
+import AuthService from "../../services/auth.service";
+import UserService from "../../services/user.service";
 
 const GroupPage = () => {
+
     const [group, setGroup] = useState(null);
+    const [totalMembers, setTotalMembers] = useState(0);
+    const [loading, setLoading] = useState("");
+    const [isJoined, setIsJoined] = useState(false);
+    const [isAdmin, setIsAdmin] = useState(false);
+
+    const currentUser = AuthService.getCurrentUser();
+    
+    const navigate = useNavigate();
     let { id } = useParams();
 
     useEffect(() => {
-        GroupService.readGroupById(id)
+        getGroup(id)
             .then((res) => {
                 setGroup(res.data);
             })
-            .catch((error) => {
-                console.log(error);
+            .catch((err) => {
+                console.log(err);
+            });
+        getTotalMember(id)
+            .then(res => {
+                setTotalMembers(res.data);
             })
-    }, []);
+            .catch(err => {
+                console.log(err);
+            });
+        checkUserJoinedGroup(id, currentUser.id)
+            .then(res => {
+                setIsJoined(res.data === 1 ? true : false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+        checkUserIsAdminGroup(id, currentUser.id)
+            .then(res => {
+                setIsAdmin(res.data === 1 ? true : false);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, [totalMembers, isJoined, loading]);
+
+    
+    const handleJoinGroup = async (event) => {
+        event.preventDefault();
+        setLoading(true);
+        await UserService.joinGroup(id, currentUser.id)
+            .then((res) => {
+                setLoading(false);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        setLoading(false);
+    }
+
+    const handleLeaveGroup = async (event) => {
+        event.preventDefault();
+        //Nếu admin rời nhóm thì chuyển quyền cho thành viên khác
+        //Nếu là admin thì có quyền buộc thành viên khác rời nhóm
+        if (isAdmin) {
+            if (window.confirm("Bạn là admin nếu rời nhóm, nhóm sẽ tự động xóa.\nXác nhận xóa?")) {
+                await UserService.leaveGroup(id, currentUser.id);
+                await GroupService.deleteGroup(id)
+                    .then(res => {
+                        navigate("/groups");
+                    });
+            }
+        } else {
+            setLoading(true);
+            await UserService.leaveGroup(id, currentUser.id)
+                .then((res) => {
+                    setLoading(false);
+                });
+            setLoading(false);
+        }
+    }
+
+    const getGroup = async (id) => {
+        return await GroupService.readGroupById(id);
+    }
+
+    const getTotalMember = async (id) => {
+        return await GroupService.readTotalMembersById(id);
+    }
+
+    const checkUserJoinedGroup = async (groupId, userId) => {
+        return await UserService.checkUserJoinedGroup(groupId, userId);
+    }
+    const checkUserIsAdminGroup = async (groupId, userId) => {
+        return await UserService.checkUserIsAdminGroup(groupId, userId);
+    }
 
     return (
         <div>
@@ -29,8 +110,26 @@ const GroupPage = () => {
                                 <figure><img src="https://www.facebook.com/images/groups/groups-default-cover-photo-2x.png" alt=""  /></figure>
                                 <div className="add-btn">
                                     {/* <span>1205 followers</span> */}
-                                    <span>(số thành viên)</span>
-                                    <a href="#" title="" data-ripple="">Join Group</a>
+                                    <span>{ totalMembers } thành viên</span>
+                                    {
+                                        isJoined ? <a href="#" title="" className="bg-danger" data-ripple="" 
+                                            onClick={ handleLeaveGroup }
+                                        >{loading && (
+                                            <span className="spinner-border spinner-border-sm"></span>
+                                        )}Leave Group</a>
+                                        
+                                        : <a href="#" title="" data-ripple="" 
+                                            onClick={ handleJoinGroup }
+                                        >{loading && (
+                                                <span className="spinner-border spinner-border-sm"></span>
+                                            )}Join Group</a>
+                                    }
+                                    { isAdmin && 
+                                        <Link 
+                                            className="btn btn-primary"
+                                            to={ `/group/${id}/edit` }
+                                        ><i className="fa fa-pencil-square" aria-hidden="true"></i></Link>
+                                    }
                                 </div>
                                 <form className="edit-phto">
                                     <i className="fa fa-camera-retro"></i>

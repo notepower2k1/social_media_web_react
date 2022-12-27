@@ -1,20 +1,19 @@
 import React ,{useState ,useEffect,useRef} from 'react'
 import ProfileService from '../../services/ProfileService';
 import {useParams} from 'react-router-dom';
-// import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled'
-// import Button from '@atlaskit/button';
+
 import Modal from 'react-bootstrap/Modal';
 import TextareaAutosize from 'react-textarea-autosize';
 import PostService from '../../services/post.service';
 import CommentComponent from '../Comment/CommentComponent';
 import ListFriend from '../Friend/ListFriend.js';
-// import LikeIcon from '@atlaskit/icon/glyph/like'
-// import CommentIcon from '@atlaskit/icon/glyph/comment'
+
 import {storage} from '../../utils/firebaseConfig';
 import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
-import FriendService from "../../services/FriendService"
 import AuthService from "../../services/auth.service";
 import ButtonFriend from '../Friend/ButtonFriend';
+
+
 function ProfileComponent() {
 
     const [isCurrentProfile,setIsCurrentProfile] = useState()
@@ -60,7 +59,7 @@ function ProfileComponent() {
     },[userID])
 
    const checkCurrentUserProfile = () => {
-    if (currentUser.id == userID){
+    if (currentUser.id === userID){
       setIsCurrentProfile(true)
     } else{
       setIsCurrentProfile(false)
@@ -206,18 +205,16 @@ function ProfileComponent() {
             </div>
             </div>
         
-            <div className="mb-2 me-2 align-self-end">
-            <button
-            onClick={handleShow}
-                        appearance="primary"
-                        // iconBefore={<EditFilledIcon label="" size="medium"></EditFilledIcon> }
-                        >Edit Profile</button>
+            <div className="d-flex mb-2 me-2 align-self-end">
+         {!isCurrentProfile && <ButtonFriend userID = {userID} />}
+
+            <button className="btn btn-primary"
+            onClick={handleShow}><i className="fa-sharp fa fa-gears"> Edit Profile</i></button>
                     
             </div>
           
             </div>
           
-          {!isCurrentProfile && <ButtonFriend userID = {userID} />}
           
 
           {/* //Render list friend */}
@@ -261,15 +258,17 @@ function ProfileComponent() {
                      </div>
                        <div className="feature-box d-flex ">
                      <button
-                    
-                    //  iconBefore={<LikeIcon label="" size="medium"></LikeIcon> }
-                     >Like</button>
+                      className="btn btn-primary w-100"
+                     ><i className="fa fa-thumbs-up"> Comment</i>
+                     </button>
                      <button 
                     
-                    //  iconBefore={<CommentIcon label="" size="medium" ></CommentIcon>}
-                     
+                     className="btn btn-primary w-100"
                      onClick={(e) => handlerOpenComment(index)(e)}
-                     >Comment</button>
+                     >
+                    <i className="fa fa-comment"> Comment</i>
+
+                     </button>
                        </div>
                      </div>
 
@@ -371,10 +370,10 @@ function ProfileComponent() {
            <div className="d-flex justify-content-between">
             <p>Giới thiệu </p>
             <button
+            className="btn btn-primary"
                         onClick={()=>setIsReadonly(prevState => !prevState)}
-                        appearance="subtle"
-                        // iconBefore={<EditFilledIcon label="" size="medium"></EditFilledIcon> }
-                        >Chỉnh sửa                     
+                        ><i className="fa fa-edit"> Chỉnh sửa</i>
+                     
                         </button>
            </div>    
            
@@ -394,10 +393,9 @@ function ProfileComponent() {
            </div>
         </Modal.Body>
         <Modal.Footer>
-          <button variant="secondary" onClick={handleClose}>
-            Close
+          <button className="btn btn-primary" onClick={() => handleUpdateProfile()}>
+          <i className="fa fa-edit"> Cập nhật</i>
           </button>
-          <button variant="primary" onClick={() => handleUpdateProfile()}>Update</button>
         </Modal.Footer>
       </Modal>
     </div>

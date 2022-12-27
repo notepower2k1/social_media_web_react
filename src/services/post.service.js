@@ -18,17 +18,22 @@ const deletePost = async (id) => {
     return await rootInstance.delete("/post/remove/" + id);
 }
 
-const updatePost = async (post) => {
-    return await rootInstance.put("/post/update", post);
+const updatePost = async (post, id) => {
+    return await rootInstance.put(`/post/update/${id}`, post);
 }
 
-const getPostByUserID = async (userID) =>{
+const readPostByUserID = async (userID) => {
     return await rootInstance.get("/post/" + userID);
+}
+
+const readEditHistoryByPostId = async (postID) => {
+    return await rootInstance.get("/post/get-history/" + postID);
 }
 
 const PostService = {
     readAllPosts,
-    getPostByUserID,
+    readPostByUserID,
+    readEditHistoryByPostId,
     createPost,
     updatePost,
     deletePost

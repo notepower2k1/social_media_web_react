@@ -1,10 +1,6 @@
 import React ,{useState,useEffect,useRef} from 'react';
 import styled from "styled-components";
 import ReplyService from '../../services/ReplyService'
-// import CrossIcon from '@atlaskit/icon/glyph/cross'
-// import EditFilledIcon from '@atlaskit/icon/glyph/edit-filled'
-// import FeedbackIcon from '@atlaskit/icon/glyph/feedback'
-// import Button from '@atlaskit/button';
 import Form from 'react-bootstrap/Form';
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'

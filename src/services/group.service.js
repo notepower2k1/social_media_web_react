@@ -16,8 +16,8 @@ const deleteGroup = async (id) => {
     return await rootInstance.delete("/group/remove/" + id);
 }
 
-const updateGroup = async (group) => {
-    return await rootInstance.put("/group/update/", group);
+const updateGroup = async (group, groupId) => {
+    return await rootInstance.put(`/group/update/${groupId}`, group);
 }
 
 const readTotalMembersById = async (groupId) => {
@@ -28,6 +28,9 @@ const readGroupsUserJoined = async (userId) => {
     return await rootInstance.get(`/group/user-joined/${userId}`);
 }
 
+const readMembersProfile = async (groupId) => {
+    return await rootInstance.get(`/group/${groupId}/member-profile`);
+}
 
 const GroupService = {
     readAllGroups,
@@ -36,7 +39,8 @@ const GroupService = {
     deleteGroup,
     updateGroup,
     readTotalMembersById,
-    readGroupsUserJoined
+    readGroupsUserJoined,
+    readMembersProfile
 };
   
 export default GroupService;

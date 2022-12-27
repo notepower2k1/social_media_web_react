@@ -3,6 +3,9 @@ import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import AuthService from "./services/auth.service";
+import AuthVerify from "./common/auth-verify";
+import PrivateRoute from "./utils/PrivateRoute";
+import Event from "./utils/Event";
 
 import Login from "./components/Login/Login";
 import Register from "./components/Register/Register";
@@ -12,10 +15,10 @@ import GroupList from "./components/Group/GroupList";
 import GroupCreate from "./components/Group/GroupCreate";
 import GroupPage from "./components/Group/GroupPage";
 import ProfileComponent from "./components/Profile/ProfileComponent";
-
-import Event from "./utils/Event";
-import PrivateRoute from "./utils/PrivateRoute";
 import Search from "./components/Search/Search";
+import GroupEdit from "./components/Group/GroupEdit";
+import ListConversation from "./components/Conversation/ListConversation";
+
 function App() {
 
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -67,6 +70,15 @@ function App() {
                 Groups
               </Link>
             </li>
+            <li>
+            { user &&  <Link to={"/conversation/" + user.id}>
+
+                Message
+
+
+            </Link> }
+              
+            </li>
           </ul>
           <ul className="setting-area">
             <li >
@@ -79,7 +91,7 @@ function App() {
               
             </li>
             <li>{user && <Link to={"/search/" + searchInput}>
-            <a href="#" title="Home" className="" data-ripple=""><i className="ti-search"></i></a>
+            {/* <a href="#" title="Home" className="" data-ripple=""><i className="ti-search"></i></a> */}
             </Link>}
                
             </li>     
@@ -91,14 +103,14 @@ function App() {
           </Link> }
             <span className="status f-online"></span>
             <div className="user-setting">
-              <a href="#" title=""><span className="status f-online"></span>online</a>
+              {/* <a href="#" title=""><span className="status f-online"></span>online</a>
               <a href="#" title=""><span className="status f-away"></span>away</a>
               <a href="#" title=""><span className="status f-off"></span>offline</a>
               <a href="#" title=""><i className="ti-user"></i> view profile</a>
               <a href="#" title=""><i className="ti-pencil-alt"></i>edit profile</a>
               <a href="#" title=""><i className="ti-target"></i>activity log</a>
               <a href="#" title=""><i className="ti-settings"></i>account setting</a>
-              <a href="#" title=""><i className="ti-power-off"></i>log out</a>
+              <a href="#" title=""><i className="ti-power-off"></i>log out</a> */}
             </div>
           </div>
           <span className="ti-menu main-menu" data-ripple=""></span>
@@ -142,7 +154,7 @@ function App() {
         )}
       </nav>
 
-      <div className="mt-3">
+      <div className="mt-5">
         <Routes>
           {/* Cần thêm feature khi jwt expired thì redirect user về /login */}
           <Route path="/login" element={<Login/>} />
@@ -169,19 +181,29 @@ function App() {
               <GroupPage />
             </PrivateRoute>
           } />
+          <Route path="/group/:id/edit" element={
+            <PrivateRoute>
+              <GroupEdit />
+            </PrivateRoute>
+          } />
 
-
-        <Route path="/profile/:userID" element={
+          <Route path="/profile/:userID" element={
             <PrivateRoute>
               <ProfileComponent />
             </PrivateRoute>
           } />
-        <Route path="/search/:keyword" element={
+          <Route path="/conversation/:userID" element={
+            <PrivateRoute>
+            <ListConversation />
+            </PrivateRoute>
+          } />
+          <Route path="/search/:keyword" element={
             <PrivateRoute>
               <Search />
             </PrivateRoute>
           } />
         </Routes>
+        <AuthVerify logOut={logOut}/>
       </div>
     </div>
   );
