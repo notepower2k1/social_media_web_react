@@ -184,11 +184,14 @@ function ListConversation() {
             { onlineUsers && onlineUsers.map(
                 (u) =>
             
-                u.userID===otherUserID?
-            <p className="text-success">Người dùng đang hoạt động
+            u.userID===otherUserID?
+            <div key={u.userID}>
+                  <p  className="text-success">Người dùng đang hoạt động
             <i className="ml-2 fa fa-globe text-success"></i>
             </p>
-            :<div></div>
+            </div>
+        
+            :<div  key={u.userID}></div>
             )}
             </div>
            

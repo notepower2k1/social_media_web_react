@@ -78,9 +78,12 @@ function Conversation({onlineUsers,renderValue,conversation,sender}) {
                                 <img src={avatar} className="rounded-circle img-fluid" alt="sunil"/>    {
                                     onlineUsers && onlineUsers.map(
                                         (u) =>
+                                        
                                         u.userID===sender.id
-                                        ?        <img className="online" src="http://www.clker.com/cliparts/e/E/F/G/p/g/alex-green-circle-md.png" alt="online"/>
-                                        :<div></div>
+                                        ?<div key={u.userID}>
+                                            <img className="online" src="http://www.clker.com/cliparts/e/E/F/G/p/g/alex-green-circle-md.png" alt="online"/>
+                                        </div>
+                                        :<div key={u.userID}></div>
                                     )
 
                                     } </div>

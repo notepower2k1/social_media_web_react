@@ -18,11 +18,7 @@ import ProfileComponent from "./components/Profile/ProfileComponent";
 import Event from "./utils/Event";
 import PrivateRoute from "./utils/PrivateRoute";
 import Search from "./components/Search/Search";
-
-
-
-
-
+import RequesterList from "./components/Friend/RequesterList";
 function App() {
 
   const [currentUser, setCurrentUser] = useState(undefined);
@@ -32,31 +28,23 @@ function App() {
 
   useEffect(() => {
 
-
     if (user) {
       setCurrentUser(user);
     }
 
     Event.on("logout", () => {
       logOut();
-
     });
-
-    
 
     return () => {
       Event.remove("logout");
     };
-
-    
   }, []);
 
   const logOut = () => {
     AuthService.logout();
     setCurrentUser(undefined);
   };
-
-
 
   return (
     <div className="theme-layout">
@@ -105,16 +93,24 @@ function App() {
                 />
               
             </li>
-            <li>{user && <Link to={"/search/" + searchInput}>
-            <a href="#" title="Home" className="" data-ripple=""><i className="ti-search"></i></a>
-            </Link>}
-               
-            </li>     
+            {/* kết quả tìm kiếm */}
+            <li>
+              {user && <Link to={"/search/" + searchInput}>
+                       <i style={{fontSize: "23px"}} className="fa fa-search"></i>
+                      </Link>}
+              </li>  
+            {/* danh sách người gửi kết bạn */}
+            <li>
+              {user && <Link to={"/list-requester/" + user.id}>
+                       <i style={{fontSize: "23px"}} className="fa fa-user-plus"></i>
+                      </Link>}
+            </li> 
+
           </ul>
           <div className="user-img">
           { user &&  <Link to={"/profile/" + user.id}>
-          <img src="images/resources/admin.jpg" alt="" />
-
+              <img src="images/resources/admin.jpg" alt="" />
+              <span>profile</span>
           </Link> }
             <span className="status f-online"></span>
             <div className="user-setting">
@@ -213,7 +209,15 @@ function App() {
               <Search />
             </PrivateRoute>
           } />
+
+        <Route path="/list-requester/:userID" element={
+            <PrivateRoute>
+              <RequesterList />
+            </PrivateRoute>
+          }/>
         </Routes>
+
+          
       </div>
     </div>
   );

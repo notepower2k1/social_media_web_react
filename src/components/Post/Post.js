@@ -4,13 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import PostService from "../../services/post.service";
 import AuthService from "../../services/auth.service";
 import ReactEmoji from 'react-emoji';
-import CommentComponent from '../Comment/CommentComponent';
+import CommentsList from '../Comment/CommentsList';
+import { Routes, Route, Link } from "react-router-dom";
+import FirebaseSerive from '../../services/firebaseService';
+import ProfileService from '../../services/ProfileService';
 
 const Post = ({data}) => {
     let navigate = useNavigate();
     const currentUser = AuthService.getCurrentUser();
 
     const [images, setImages] = useState([])
+    const [avatar,setAvatar] = useState(null);
+
 
     useEffect(() => {
         let imageString = data?.image;
@@ -22,6 +27,16 @@ const Post = ({data}) => {
 
     }, []);
 
+    useEffect(()=>{
+
+        ProfileService.getProfile(data.user.id).then((response) => {
+            FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
+                setAvatar(response)
+            })
+            
+        })
+
+    },[])
     const handleInputChange = event => {
         const { name, value } = event.target;
 
@@ -86,12 +101,12 @@ const Post = ({data}) => {
                                 </div>
                                 <div className="media m-0">
                                     <div className="d-flex mr-3">
-                                        <a href="">
+                                        <Link to={"/profile/" + data.user.id}>
                                             <img 
                                                 className="img-fluid rounded-circle" 
-                                                src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/users/4.jpg" 
-                                                alt="User"/>
-                                        </a>
+                                                src={avatar}
+                                                alt="User" />
+                                        </Link>
                                         
                                     </div>
                                     <div className="media-body">
@@ -108,12 +123,14 @@ const Post = ({data}) => {
                                             <img 
                                                 className="img-fluid" 
                                                 src={ images[0] }
+                                                alt="??"
                                             /> : 
                                         images.map((image, index) => <img 
                                             className="" 
                                             src={image}
                                             height="125"
                                             key={index}
+                                            alt="??"
                                         />)
                                     )
                                     : ""
@@ -150,7 +167,7 @@ const Post = ({data}) => {
 
 
                             <div id="comment-box" ref={el => formRef.current = el}>
-                            <CommentComponent post={data}/>
+                            <CommentsList post={data}/>
                              </div>
 
                             </div>		

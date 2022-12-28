@@ -5,7 +5,10 @@ const getAllConversation = async (userID) => {
     return await rootInstance.get("/conversation/" + userID);
 }
 
+const createConversation = async (conversation) => {
+    return await rootInstance.post("/conversation/add/" , conversation);
 
+}
 const getConversationBetweenUser = async (conversationID) => {
     return await rootInstance.get(`/conversation/reply/user/${conversationID}`);
 }
@@ -19,8 +22,8 @@ const createConversationReply = async (conversationReply) => {
     return await rootInstance.post("conversation/reply/add", conversationReply);
 }
 
-const deleteConversationReply = async (conversationID) => {
-    return await rootInstance.delete("conversation/reply/remove/"+ conversationID);
+const deleteConversationReply = async (conversationReplyID) => {
+    return await rootInstance.put(`conversation/reply/remove/` + conversationReplyID);
 }
 
 const getLastConversationReplyID = async ()=>{
@@ -47,6 +50,7 @@ const ConversationService = {
     getLastConversationReplyID,
     getCountNewMessage,
     updateStatus,
+    createConversation,
     
 };
 export default ConversationService;

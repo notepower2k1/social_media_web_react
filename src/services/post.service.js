@@ -26,12 +26,17 @@ const getPostByUserID = async (userID) =>{
     return await rootInstance.get("/post/" + userID);
 }
 
+const getFriendPostByUserID = async (userID) =>{
+    return await rootInstance.get("/post/get-by-friend/" + userID);
+}
+
 const PostService = {
     readAllPosts,
     getPostByUserID,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    getFriendPostByUserID
 };
   
 export default PostService;

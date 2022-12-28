@@ -7,10 +7,13 @@ import Loading from "../Loading/Loading";
 import PostModal from "./PostModal";
 import Post from "./Post";
 import { addPost } from "../../redux/actions/PostActions";
+import AuthService from '../../services/auth.service'
 
 import "./post.css";
 
 const PostContainer = () => {
+    const user = AuthService.getCurrentUser();
+
     const [posts, setPosts] = useState([]);
 
     const [isShowed, setIsShowed] = useState(false);
@@ -20,18 +23,18 @@ const PostContainer = () => {
     const state = useSelector(state => state.allPosts);
     
 	useEffect(() => {
-        getAllPosts();
+        getAllPosts(user.id);
     }, [state]);
 
     useEffect(() => {
-        getAllPosts();
+        getAllPosts(user.id);
         return () => {
             setPosts([]);
         }
     }, []);
-    const getAllPosts = async () => {
+    const getAllPosts = async (userID) => {
         
-        await PostService.readAllPosts()
+        await PostService.getFriendPostByUserID(userID)
 			.then(res => {
 				let allPosts = res.data;
 				allPosts.forEach(post => {

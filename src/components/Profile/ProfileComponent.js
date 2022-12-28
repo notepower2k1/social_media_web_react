@@ -1,13 +1,11 @@
 import React ,{useState ,useEffect,useRef} from 'react'
 import ProfileService from '../../services/ProfileService';
 import {useParams} from 'react-router-dom';
-
 import Modal from 'react-bootstrap/Modal';
 import TextareaAutosize from 'react-textarea-autosize';
 import PostService from '../../services/post.service';
-import CommentComponent from '../Comment/CommentComponent';
+import CommentsList from '../Comment/CommentsList';
 import ListFriend from '../Friend/ListFriend.js';
-
 import {storage} from '../../utils/firebaseConfig';
 import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
 import AuthService from "../../services/auth.service";
@@ -42,7 +40,6 @@ function ProfileComponent() {
     const OldBackground = useRef(null);
 
 
-
     useEffect(() => {
         ProfileService.getProfile(userID).then((response) => {
             setUserProfileID(response.data.userProfileID);
@@ -59,7 +56,7 @@ function ProfileComponent() {
     },[userID])
 
    const checkCurrentUserProfile = () => {
-    if (currentUser.id === userID){
+    if (currentUser.id == userID){
       setIsCurrentProfile(true)
     } else{
       setIsCurrentProfile(false)
@@ -177,6 +174,10 @@ function ProfileComponent() {
       };
     
     } 
+
+  // const handleChange = () => {
+  //   setChange(!change)
+  // }
   return (
     <div>
   <div className="container">
@@ -205,16 +206,22 @@ function ProfileComponent() {
             </div>
             </div>
         
-            <div className="d-flex mb-2 me-2 align-self-end">
-         {!isCurrentProfile && <ButtonFriend userID = {userID} />}
-
+            <div className="mb-2 me-2 align-self-end">
             <button className="btn btn-primary"
-            onClick={handleShow}><i className="fa-sharp fa fa-gears"> Edit Profile</i></button>
+            onClick={handleShow}
+                        appearance="primary"
+                        // iconBefore={<EditFilledIcon label="" size="medium"></EditFilledIcon> }
+                        >Edit Profile</button>
                     
             </div>
           
             </div>
           
+          {!isCurrentProfile &&
+           <ButtonFriend 
+              userID = {userID} 
+              // handle = {handleChange()}
+          />}
           
 
           {/* //Render list friend */}
@@ -273,7 +280,7 @@ function ProfileComponent() {
                      </div>
 
                      <div id="comment-box" ref={el => formRef.current[index] = el}>
-              <CommentComponent post={post}/>
+              <CommentsList post={post}/>
               </div>
               </div>
              
