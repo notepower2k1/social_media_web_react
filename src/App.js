@@ -19,10 +19,10 @@ import Event from "./utils/Event";
 import PrivateRoute from "./utils/PrivateRoute";
 import Search from "./components/Search/Search";
 import RequesterList from "./components/Friend/RequesterList";
+import Navbar from "./Navbar";
 function App() {
 
   const [currentUser, setCurrentUser] = useState(undefined);
-  const [searchInput, setSearchInput] = useState();
 
   const user = AuthService.getCurrentUser();
 
@@ -47,179 +47,69 @@ function App() {
   };
 
   return (
-    <div className="theme-layout">
-      <div className="topbar stick">
-        <div className="logo">
-          <a title="" href="newsfeed.html"><img src="images/logo.png" alt="" /></a>
-        </div>
-        
-        <div className="top-area">
-          <ul className="main-menu">
-            <li>
-            { user &&  <Link to={"/profile/" + user.id}>
+    <>
+    { currentUser &&  <Navbar user={user} currentUser={currentUser} logOut={logOut}/>}
+  <div className="theme-layout">
 
-                Home
-                </Link> }
-            </li>
-            <li>
-              <Link to={"/posts"}>
-                Posts
-              </Link>
-            </li>
-            <li>
-              <Link to={"/groups"}>
-                Groups
-              </Link>
-              
-            </li>
-
-            <li>
-            { user &&  <Link to={"/conversation/" + user.id}>
-
-                Message
-
-
-          </Link> }
-              
-            </li>
-          </ul>
-          <ul className="setting-area">
-            <li >
-                <input 
-                    type="text"  
-                    className="form-control "
-                    placeholder="Search..." 
-                    onChange={(e) => setSearchInput(e.target.value)}
-                />
-              
-            </li>
-            {/* kết quả tìm kiếm */}
-            <li>
-              {user && <Link to={"/search/" + searchInput}>
-                       <i style={{fontSize: "23px"}} className="fa fa-search"></i>
-                      </Link>}
-              </li>  
-            {/* danh sách người gửi kết bạn */}
-            <li>
-              {user && <Link to={"/list-requester/" + user.id}>
-                       <i style={{fontSize: "23px"}} className="fa fa-user-plus"></i>
-                      </Link>}
-            </li> 
-
-          </ul>
-          <div className="user-img">
-          { user &&  <Link to={"/profile/" + user.id}>
-              <img src="images/resources/admin.jpg" alt="" />
-              <span>profile</span>
-          </Link> }
-            <span className="status f-online"></span>
-            <div className="user-setting">
-              <a href="#" title=""><span className="status f-online"></span>online</a>
-              <a href="#" title=""><span className="status f-away"></span>away</a>
-              <a href="#" title=""><span className="status f-off"></span>offline</a>
-              <a href="#" title=""><i className="ti-user"></i> view profile</a>
-              <a href="#" title=""><i className="ti-pencil-alt"></i>edit profile</a>
-              <a href="#" title=""><i className="ti-target"></i>activity log</a>
-              <a href="#" title=""><i className="ti-settings"></i>account setting</a>
-              <a href="#" title=""><i className="ti-power-off"></i>log out</a>
-            </div>
-          </div>
-          <span className="ti-menu main-menu" data-ripple=""></span>
-        </div>
-      </div>
-     
-      <nav className="navbar navbar-expand navbar-dark bg-dark">
-
-        {currentUser ? (
-          <div className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <Link to={"/posts"} className="nav-link">
-                Posts
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link to={"/profile"} className="nav-link">
-                {currentUser.username}
-              </Link>
-            </li>
-            <li className="nav-item">
-              <a href="/login" className="nav-link" onClick={logOut}>
-                LogOut
-              </a>
-            </li>
-          </div>
-        ) : (
-          <div className="navbar-nav ml-auto">
-            <li className="nav-item">
-              <Link to={"/login"} className="nav-link">
-                Login
-              </Link>
-            </li>
-
-            <li className="nav-item">
-              <Link to={"/register"} className="nav-link">
-                Sign Up
-              </Link>
-            </li>
-          </div>
-        )}
-      </nav>
-
-      <div className="mt-3">
-        <Routes>
-          {/* Cần thêm feature khi jwt expired thì redirect user về /login */}
-          <Route path="/login" element={<Login/>} />
-          <Route path="/register" element={<Register/>} />
-          <Route path="/profile" element={<Profile/>} />
-          {/* Thêm privateroute vào các route cần auth mới truy cập được */}
-          <Route path="/posts" element={
-            <PrivateRoute>
-              <PostList />
-            </PrivateRoute>
-          } />
-          <Route path="/groups" element={
-            <PrivateRoute>
-              <GroupList />
-            </PrivateRoute>
-          } />
-          <Route path="/group/create" element={
-            <PrivateRoute>
-              <GroupCreate />
-            </PrivateRoute>
-          } />
-          <Route path="/group/:id" element={
-            <PrivateRoute>
-              <GroupPage />
-            </PrivateRoute>
-          } />
+    <Routes>
+      {/* Cần thêm feature khi jwt expired thì redirect user về /login */}
+      {!currentUser
+      ?<Route path="/" element={<Login/>} />
+      :<Route path="/" element={<PostList/>} />}
+      <Route path="/login" element={<Login/>} />
+      <Route path="/profile" element={<Profile/>} />
+      {/* Thêm privateroute vào các route cần auth mới truy cập được */}
+      <Route path="/posts" element={
+        <PrivateRoute>
+          <PostList />
+        </PrivateRoute>
+      } />
+      <Route path="/groups" element={
+        <PrivateRoute>
+          <GroupList />
+        </PrivateRoute>
+      } />
+      <Route path="/group/create" element={
+        <PrivateRoute>
+          <GroupCreate />
+        </PrivateRoute>
+      } />
+      <Route path="/group/:id" element={
+        <PrivateRoute>
+          <GroupPage />
+        </PrivateRoute>
+      } />
 
 
-        <Route path="/profile/:userID" element={
-            <PrivateRoute>
-              <ProfileComponent />
-            </PrivateRoute>
-          } />
-          <Route path="/conversation/:userID" element={
-            <PrivateRoute>
-            <ListConversation />
-            </PrivateRoute>
-          } />
-        <Route path="/search/:keyword" element={
-            <PrivateRoute>
-              <Search />
-            </PrivateRoute>
-          } />
+    <Route path="/profile/:userID" element={
+        <PrivateRoute>
+          <ProfileComponent />
+        </PrivateRoute>
+      } />
+      <Route path="/conversation/:userID" element={
+        <PrivateRoute>
+        <ListConversation />
+        </PrivateRoute>
+      } />
+    <Route path="/search/:keyword" element={
+        <PrivateRoute>
+          <Search />
+        </PrivateRoute>
+      } />
 
-        <Route path="/list-requester/:userID" element={
-            <PrivateRoute>
-              <RequesterList />
-            </PrivateRoute>
-          }/>
-        </Routes>
+    <Route path="/list-requester/:userID" element={
+        <PrivateRoute>
+          <RequesterList />
+        </PrivateRoute>
+      }/>
+    </Routes>
 
-          
-      </div>
-    </div>
+      
+</div>
+    
+    </>
+  
+
   );
 }
 export default App;

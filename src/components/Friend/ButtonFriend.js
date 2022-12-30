@@ -57,7 +57,7 @@ function ButtonFriend(props){
       return (
         <div className="button_friend">
           <button 
-                className="btn btn-danger col-3"
+                className="btn btn-danger"
                 onClick={handleRemoveFriendShip}
           >Hủy kết bạn</button>
         </div>
@@ -66,7 +66,7 @@ function ButtonFriend(props){
       return (
           <div className="button_friend">
             <button 
-                className="btn btn-secondary col-3"
+                className="btn btn-secondary"
                 onClick={handleRemoveFriendShip}
               >Hủy yêu cầu</button>
           </div>
@@ -75,7 +75,7 @@ function ButtonFriend(props){
             return (
               <div className="button_friend">
                 <button 
-                    className="btn btn-primary col-3"
+                    className="btn btn-primary"
                     onClick={handleAcceptRequest}
                 >Chấp nhận lời mời</button>
               </div>
@@ -84,7 +84,7 @@ function ButtonFriend(props){
                   return (
                     <div className="button_friend">
                       <button 
-                          className="btn btn-info col-3"
+                          className="btn btn-info"
                           onClick={handleAddRequest}
                       >Kết bạn</button>
                     </div>

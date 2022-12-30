@@ -715,7 +715,7 @@ header.sticky {
 .top-area .user-img > img {
     border-radius: 50%;
     display: inline-block;
-    transform: scale(0.7);
+    transform: scale(0.8);
     vertical-align: inherit;
 }
 

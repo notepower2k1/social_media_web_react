@@ -35,11 +35,11 @@ function ReplyLists({comment}){
         {
             listReplies.map(
                 (reply,index) =>
-                <div key={reply.id}>    
+                <li key={reply.id}>    
 
                 <Reply increaseRenderValue={increaseRenderValue} data={reply}/>
             
-                </div>
+                </li>
             )
         }
     </div>

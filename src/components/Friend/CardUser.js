@@ -1,28 +1,27 @@
 import { useEffect, useState } from "react";
-import {Form,Card,Button,Row,Col } from 'react-bootstrap'
-import FriendService from "../../services/FriendService"
-import {storage} from '../../utils/firebaseConfig';
-import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
 import {Link } from "react-router-dom";
+import FirebaseSerive from '../../services/firebaseService';
 
 function CardUser({user}) {
     const [avatar,setAvatar] = useState()
 
     useEffect(() =>{
-        const avatarRef = ref(storage,`avatarImages/${user.avatar}`);
-        getDownloadURL(avatarRef).then(url => setAvatar(url))
+        FirebaseSerive.getAvatarFromFirebase(user.avatar).then((response) => {
+            setAvatar(response)
+        })
     },[])
 
     return (
-        <Card  style={{ width: '15rem',marginTop: '20px' }}>                           
-            <Card.Body >
-            <img src={avatar}  alt="Avatar" className="rounded-circle avatar shadow-4 img-thumbnail" style={{width: "150px"}}/>
-            <Link to={"/profile/" + user.user.id}> 
-                <Card.Title>{user.firstName + " " + user.lastName}</Card.Title>
-            </Link>           
-                <Card.Text>{"User ID: " + user.user.id}</Card.Text>
-            </Card.Body>
-    </Card>)
+    <>
+        <figure>
+        <img src={avatar} alt=""/>
+        <span className="status f-online"></span>
+    </figure>
+    <div className="friendz-meta">
+        <Link to={"/profile/" + user.user.id} >{user.firstName + " " + user.lastName}</Link>
+    </div>
+    </>
+    )
 }
 
 export default CardUser

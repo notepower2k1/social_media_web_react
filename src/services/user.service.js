@@ -24,13 +24,18 @@ const joinGroup = (groupId, userId) => {
   return rootInstance.post("/user/join-group", {groupId: groupId, userId: userId});
 }
 
+const getByUserID = (userId) =>{
+  return rootInstance.get("/user" + userId);
+}
+
 const UserService = {
   getPublicContent,
   getUserBoard,
   getModeratorBoard,
   getAdminBoard,
   readUserProfile,  
-  joinGroup
+  joinGroup,
+  getByUserID
 };
 
 export default UserService;

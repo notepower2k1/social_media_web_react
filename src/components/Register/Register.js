@@ -3,6 +3,7 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
+import {Link } from "react-router-dom";
 
 import AuthService from "../../services/auth.service";
 
@@ -46,8 +47,8 @@ const vpassword = (value) => {
     }
 };
 
-const Register = () => {
-    const form = useRef();
+function Register({setIsRegistered}) {
+    const Registerform = useRef();
     const checkBtn = useRef();
 
     const [username, setUsername] = useState("");
@@ -77,7 +78,7 @@ const Register = () => {
         setMessage("");
         setSuccessful(false);
 
-        form.current.validateAll();
+        Registerform.current.validateAll();
 
         if (checkBtn.current.context._errors.length === 0) {
         AuthService.register(username, email, password).then(
@@ -100,19 +101,13 @@ const Register = () => {
     };
 
     return (
-        <div className="col-md-12">
-            <div className="card card-container">
-                <img
-                src="//ssl.gstatic.com/accounts/ui/avatar_2x.png"
-                alt="profile-img"
-                className="profile-img-card"
-                />
-
-                <Form onSubmit={handleRegister} ref={form}>
-                    {!successful && (
-                        <div>
-                            <div className="form-group">
-                                <label htmlFor="username">Username</label>
+        <>
+        <h2 className="log-title">Register</h2>
+            <Form onSubmit={handleRegister} ref={Registerform}>
+          
+            <>
+            <div className="form-group">	
+            <label className="control-label" htmlFor="username">Username</label>
                                 <Input
                                 type="text"
                                 className="form-control"
@@ -120,11 +115,11 @@ const Register = () => {
                                 value={username}
                                 onChange={onChangeUsername}
                                 validations={[required, vusername]}
-                                />
-                            </div>
+                                    />
+            </div>
 
-                            <div className="form-group">
-                                <label htmlFor="email">Email</label>
+            <div className="form-group">	
+               <label className="control-label" htmlFor="email">Email</label>
                                 <Input
                                 type="text"
                                 className="form-control"
@@ -133,10 +128,9 @@ const Register = () => {
                                 onChange={onChangeEmail}
                                 validations={[required, validEmail]}
                                 />
-                            </div>
-
-                            <div className="form-group">
-                                <label htmlFor="password">Password</label>
+            </div>
+            <div className="form-group">	
+            <label className="control-label" htmlFor="password">Password</label>
                                 <Input
                                 type="password"
                                 className="form-control"
@@ -145,15 +139,14 @@ const Register = () => {
                                 onChange={onChangePassword}
                                 validations={[required, vpassword]}
                                 />
-                            </div>
-
-                            <div className="form-group">
-                                <button className="btn btn-primary btn-block">Sign Up</button>
-                            </div>
-                        </div>
-                    )}
-
-                    {message && (
+            </div>
+            <Link onClick={()=>setIsRegistered(prev =>!prev)}>Already have an account</Link>
+            <div className="submit-btns">
+                <button className="mtr-btn signup" type="button"><span>Register</span></button>
+            </div>
+            </>
+           
+               {message && (
                         <div className="form-group">
                             <div
                                 className={
@@ -166,9 +159,8 @@ const Register = () => {
                         </div>
                     )}
                     <CheckButton style={{ display: "none" }} ref={checkBtn} />
-                </Form>
-            </div>
-        </div>
+            </Form>    
+        </>
     );
 };
 

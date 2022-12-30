@@ -112,45 +112,42 @@ function Comment({index,formRef,increaseRenderValue,data}) {
       
       
   return (
-    <div className="card-body">
+    <>
 
-    <div className="user-info row col-12">
-      <div className="col-lg-1 col-2 align-self-center">
-      <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar" />
-      </div>
-
-      <div className="user-info-text col-lg-11 col-10 ">              
-        <h5 className="card-title">{firstName} {lastName}</h5>              
-        <TextareaAutosize
-        id="TextAreaResizeable"
-        cacheMeasurements
-        defaultValue = {data.content}
-        readOnly ={isReadonly}
-        ref={inputRef} 
-        >         
-        </TextareaAutosize> 
-       
-       <div className="d-flex">
-          <div className="feature" >
-          <span className='icon feedback-icon mr-2' onClick={(e) => handlerCreateReply()}> 
-          <i className="fa fa-reply"></i>
-         </span>
-          <span className='icon delete-icon mr-2' onClick={()=> {if(window.confirm('Delete the item?')){deleteComment(data.id)}}}> 
-          <i className="fa fa-trash"></i>
-      </span>
-      <span className='icon edit-icon mr-2' onClick={(e) => UpdateHandler(e,data.id)}> 
-      <i className="fa fa-edit"></i>
-      </span>     
-            </div>
-      <p className="ms-3 card-text">{data.commentDate}</p>
-      </div>  
-      </div> 
-
-
-
+    <div class="comet-avatar">
+    <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar"/>
   </div>
 
- </div>
+  <div class="we-comment">
+														<div class="coment-head">
+															<h5>{firstName} {lastName}</h5>
+															<span>{data.commentDate}</span>
+                            
+                             
+														</div>
+                            <TextareaAutosize
+                              id="TextAreaResizeable"
+                              cacheMeasurements
+                              defaultValue = {data.content}
+                              readOnly ={isReadonly}
+                              ref={inputRef} 
+                              >         
+                            </TextareaAutosize> 
+                            <div className="d-flex we-reply">
+                              <div className="feature" >
+                              <span className='icon feedback-icon mr-2' onClick={(e) => handlerCreateReply()}> 
+                              <i className="fa fa-reply"></i>
+                            </span>
+                              <span className='icon delete-icon mr-2' onClick={()=> {if(window.confirm('Delete the item?')){deleteComment(data.id)}}}> 
+                              <i className="fa fa-trash"></i>
+                          </span>
+                          <span className='icon edit-icon mr-2' onClick={(e) => UpdateHandler(e,data.id)}> 
+                          <i className="fa fa-edit"></i>
+                          </span>     
+                                </div>
+                            </div>  
+		</div>
+  </>
   )
 }
 

@@ -55,51 +55,77 @@ function CommentsList({post}) {
     setInputComment('');
   }
 
-  
+  const handleKeyDown = async  (event) => {
+    if (event.key === 'Enter') {
+        if(!inputComment){
+            alert("please fill in field!!")
+        }
+        else{
+          saveComment(event)
+        }
+      }
+}
  
 
   return (
-    <div >
-            <div className="comment-box card">
-               <form className="border border-dark">
-               <div className="form-group mb-2 ">
+
+
+
+
+
+
+    
+            <div className="">
+               <form className="border border-dark mb-2">
+               <div className="form-group  ">
                  <TextareaAutosize
                  autoFocus
-                 cacheMeasurements
                  id="TextAreaResizeable"
                  name="inputComment" 
                  placeholder="Viết bình luận công khai..."      
                  value = {inputComment}
                  onChange= {(e)=> setInputComment(e.target.value)}
+                 onKeyDown ={(e) => handleKeyDown(e)}
                  >
                 </TextareaAutosize>                
                </div>
-                 <button disabled={!inputComment} className="btn btn-primary float-end" onClick={(e) => saveComment(e)}>Bình luận</button>
              </form>
-             {
-            listComments.map(     
-                (comment,index) =>
-                <div key={comment.id}>         
-               
-            <Comment index={index} formRef={formRef} increaseRenderValue={increaseRenderValue} data ={comment}/>
-
-            <ReplyLists comment={comment} />
-
-          
-            <div id="reply-form" ref={el => formRef.current[index] = el}>
-            <AddReplyComponent  increaseRenderValue={increaseRenderValue} comment={comment}/>
-
-            </div>
-
             
-            </div>
+
+            <ul class="we-comet">
+
+            {listComments.map(     
+                (comment,index) =>
+                <li key={comment.id}>         
+            
+
+                    <Comment index={index} formRef={formRef} increaseRenderValue={increaseRenderValue} data ={comment}/>
+
+                      <ul>
+                      <ReplyLists comment={comment} />
+                      </ul>
+                  
+
+
+                      <ul>
+
+
+                      <div id="reply-form" ref={el => formRef.current[index] = el}>
+                      <AddReplyComponent  increaseRenderValue={increaseRenderValue} comment={comment}/>
+
+                      </div>
+                      </ul>
+            
+              </li>
 
             )
-              
             }
+            </ul>
+            
 
             </div>
-    </div>
+    
+
   )
 }
 

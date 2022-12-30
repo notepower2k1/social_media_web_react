@@ -17,6 +17,7 @@ const Post = ({data}) => {
     const [avatar,setAvatar] = useState(null);
 
 
+
     useEffect(() => {
         let imageString = data?.image;
         let imagesArr = imageString.split("|");
@@ -29,10 +30,11 @@ const Post = ({data}) => {
 
     useEffect(()=>{
 
-        ProfileService.getProfile(data.user.id).then((response) => {
+        ProfileService.getProfile(data.user.id).then((response) => {       
             FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
                 setAvatar(response)
             })
+            
             
         })
 
@@ -42,7 +44,7 @@ const Post = ({data}) => {
 
     };
 
-    const deletePost = (event) => {
+    const deletePost  = (event) => {
         event.preventDefault();
         if (window.confirm("Xác nhận xóa post?") && (data.user.id === currentUser.id)) {
             PostService.deletePost(data.id)
@@ -78,104 +80,76 @@ const Post = ({data}) => {
       } 
 
     return (
-        <section className="hero">
-            <div className="container">
-                <div className="row">	
-                    <div className="col-lg-10">
-                        <div className="cardbox shadow-lg bg-white">
-                            <div className="cardbox-heading">
-                                <div className="dropdown float-right">
-                                    <button className="btn btn-flat btn-flat-icon" type="button" data-toggle="dropdown" aria-expanded="false">
-                                        <em className="fa fa-ellipsis-h"></em>
-                                    </button>
-                                    <div className="dropdown-menu dropdown-scale dropdown-menu-right" role="menu" 
-                                        style={{position: "absolute", transform: "translate3d(-136px, 28px, 0px)", top: "0px", willChange: "transform"}}
-                                    >
-                                        {/* <a className="dropdown-item" href="#">Hide post</a>
-                                        <a className="dropdown-item" href="#">Stop following</a>
-                                        <a className="dropdown-item" href="#">Report</a> */}
-                                        <a className="dropdown-item" href="#">Hide post</a>
-                                        { currentUser.id === data.user.id ? <a className="dropdown-item" href="#" onClick={ deletePost }>Delete Post</a> : "" }
-                                        
-                                    </div>
-                                </div>
-                                <div className="media m-0">
-                                    <div className="d-flex mr-3">
-                                        <Link to={"/profile/" + data.user.id}>
-                                            <img 
-                                                className="img-fluid rounded-circle" 
-                                                src={avatar}
-                                                alt="User" />
-                                        </Link>
-                                        
-                                    </div>
-                                    <div className="media-body">
-                                        <p className="m-0">{ data.userProfile.firstName.concat(" " + data.userProfile.lastName) }</p>
-                                        <small><span><i className="icon ion-md-time"></i> 10 hours ago</span></small>
-                                    </div>
-                                </div>
+        <div class="user-post">
+
+            <div class="friend-info">
+            <figure>
+                <img src={avatar} alt=""/>
+            </figure>
+            <div class="friend-name">
+                <ins>{ data.userProfile.firstName.concat(" " + data.userProfile.lastName) }</ins>
+                <span>{data.publishedDate}</span>
+            </div>
+            <div class="description">
+                    
+                    <p>
+                        {data.content}
+                    </p>
+                </div>
+            <div class="post-meta">
+                <div class="">
+                    <a href="#" title="">
+                    { data.image !== "NONE" 
+                                        ? 
+                                        (
+                                            images.length === 1 ?
+                                                <img 
+                                                    className="img-fluid" 
+                                                    src={ images[0] }
+                                                    alt=""
+                                                /> : 
+                                                <div class="row">
+                                            {
+                                            images.map((image, index) =>
+                                            <div class="col-lg-6 col-md-12 mb-4 mb-lg-0">
+
+                                                <img 
+                                                    className="shadow-1-strong rounded mb-4" 
+                                                    src={image}
+                                                    height="125"
+                                                    key={index}
+                                                    alt=""
+                                                />
+                                            </div>
+
+                                                )}
+                                            
+                                           </div>
+
+                                        )
+                                        : ""
+                                    }
+                    </a>
+                </div>	
+                <div class="we-video-info">
+                <div className="feature-box d-flex ">
+                                <button className="btn btn-primary w-100">
+                                <i className="fa fa-thumbs-up"> Like</i>
+
+                                </button>
+                                <button  className="btn btn-primary w-100"    
+                                onClick={(e) => handlerOpenComment(e)}
+                                >
+                                    <i className="fa fa-comment"> Comment</i>
+                                </button>
                             </div>
-                            <div className="p-1 pb-3" style={{ fontSize: "16px" }}>{ReactEmoji.emojify(data.content)}</div>
-                            <div className="cardbox-item">
-                                { data.image !== "NONE" ? 
-                                    (
-                                        images.length === 1 ?
-                                            <img 
-                                                className="img-fluid" 
-                                                src={ images[0] }
-                                                alt="??"
-                                            /> : 
-                                        images.map((image, index) => <img 
-                                            className="" 
-                                            src={image}
-                                            height="125"
-                                            key={index}
-                                            alt="??"
-                                        />)
-                                    )
-                                    : ""
-                                }
-                            </div>
-                            <div className="cardbox-base">
-                                <ul className="float-right">
-                                    <li><a><i className="fa fa-comments"></i></a></li>
-                                    <li><a><em className="mr-5">12</em></a></li>
-                                    <li><a><i className="fa fa-share-alt"></i></a></li>
-                                    <li><a><em className="mr-3">03</em></a></li>
-                                </ul>
-                                <ul>
-                                    <li><a><i className="fa fa-thumbs-up"></i></a></li>
-                                    <li><a href="#"><img src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/users/3.jpeg" className="img-fluid rounded-circle" alt="User"/></a></li>
-                                    <li><a href="#"><img src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/users/1.jpg" className="img-fluid rounded-circle" alt="User"/></a></li>
-                                    <li><a href="#"><img src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/users/5.jpg" className="img-fluid rounded-circle" alt="User"/></a></li>
-                                    <li><a href="#"><img src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/users/2.jpg" className="img-fluid rounded-circle" alt="User"/></a></li>
-                                    <li><a><span>242 Likes</span></a></li>
-                                </ul>			   
-                            </div>
-                            <div>
-                        <div className="feature-box d-flex ">
-                            <button className="btn btn-primary w-100">
-                            <i className="fa fa-thumbs-up"> Like</i>
-
-                            </button>
-                            <button  className="btn btn-primary w-100"    
-                            onClick={(e) => handlerOpenComment(e)}
-                            >
-                                <i className="fa fa-comment"> Comment</i>
-                            </button>
-                        </div>
-
-
-                            <div id="comment-box" ref={el => formRef.current = el}>
-                            <CommentsList post={data}/>
-                             </div>
-
-                            </div>		
-                        </div>
-                    </div>
                 </div>
             </div>
-        </section>
+            </div>
+            <div class="coment-area" id="comment-box" ref={el => formRef.current = el}>
+                <CommentsList post={data}/>
+            </div>
+        </div>
     )
 }
 

@@ -136,13 +136,16 @@ function Reply({increaseRenderValue,index,data}) {
 
 
   return (
-    <div className="ms-5 mt-4 user-info row col-12">
-    <div className="col-lg-1 col-2 align-self-center">
-     <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar" />
-     </div>
-     <div className="user-info-text col-lg-11 col-10 ">              
-     <h5 className="card-title">{firstName} {lastName}</h5>              
-
+    <>
+    <div class="comet-avatar">
+    <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar"/>
+  </div>
+  <div class="we-comment">
+    <div class="coment-head">
+      <h5>{firstName} {lastName}</h5>
+      <span>{data.dateReply}</span>
+     
+    </div>
     <TextareaAutosize
        id="TextAreaResizeable"
        cacheMeasurements
@@ -151,10 +154,8 @@ function Reply({increaseRenderValue,index,data}) {
        ref={inputRef} 
 
        >         
-       </TextareaAutosize>   
-
-
-       <div className="d-flex">
+       </TextareaAutosize>  
+       <div className="d-flex we-reply">
          <div className="feature">
          <span className='icon feedback-icon mr-2' onClick={(e) => handlerCreate()}> 
          <i className="fa fa-reply"></i>
@@ -170,34 +171,33 @@ function Reply({increaseRenderValue,index,data}) {
            </div>
      <p className="ms-3 card-text">{data.dateReply}</p>
      </div> 
+      </div>
 
-           </div>
+      
 
-             <ReplyForm
-              ref={el => formRef.current[index] = el}> 
-                    
-         <div className="mt-4 user-info row col-12">
-         <div className="col-lg-1 col-2 align-self-center">
-           <img src="https://kynguyenlamdep.com/wp-content/uploads/2022/08/avatar-cot-toc-ngau.jpg" className="rounded-circle avatar shadow-4" alt="Avatar" />
-         </div>
-         <div className="user-info-text col-lg-11 col-10 ">
-         <h5 className="card-title">UserID: {data.user.id}</h5>                                         
-                 <TextareaAutosize     
+      <ul>
+      <li>
+       <ReplyForm  ref={el => formRef.current[index] = el}> 
+       <div class="comet-avatar">
+        <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar" />
+        </div>
+        <div class="we-comment">
+        <h5>{firstName} {lastName}</h5>
+        <TextareaAutosize     
                  id="TextAreaResizeable"     
                  name="inputComment" 
                  placeholder="Viết phản hồi công khai..."     
                  value = {inputReply}
                  onChange= {(e)=> setInputReply(e.target.value)} 
-                 >
-                 </TextareaAutosize>                                          
-                 <button disabled={!inputReply} className="float-end" onClick={(e) => saveReply(e)}>Bình luận</button>
-                 </div>
-         </div>
-    
-           </ReplyForm>  
-      
+        >
+        </TextareaAutosize>  
+        <button disabled={!inputReply} className="btn btn-primary float-end" onClick={(e) => saveReply(e)}>Bình luận</button>
 
-           </div>
+        </div>
+        </ReplyForm>  
+        </li>
+        </ul>
+  </>
   )
 }
 
