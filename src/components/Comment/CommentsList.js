@@ -92,7 +92,7 @@ function CommentsList({post}) {
              </form>
             
 
-            <ul class="we-comet">
+            <ul className="we-comet">
 
             {listComments.map(     
                 (comment,index) =>

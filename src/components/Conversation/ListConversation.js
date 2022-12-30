@@ -7,15 +7,14 @@ import SendMessage from './SendMessage'
 import ProfileService from '../../services/ProfileService';
 import FirebaseSerive from '../../services/firebaseService';
 import {Link} from "react-router-dom";
-import {io} from "socket.io-client";
+import { useSelector } from "react-redux";
 
 
 function ListConversation() {
+    const { socket } = useSelector(state => state.socket);
     
-
     const user = AuthService.getCurrentUser();
 
-    const socket = useRef();
 
     const [listConversations,setListConversations] = useState([]);
     const chatItemRef = useRef([]);
@@ -69,20 +68,12 @@ function ListConversation() {
       conversationService.updateStatus(conversationID,senderID);
     }
 
-    useEffect(() => {
-      
-        socket.current =io.connect("ws://localhost:8900");
-      
-       return () => {
-        socket.current.close();
-      }
   
-    },[]);
 
     useEffect(() =>{
      
-        socket.current.emit("addUser",user.id);
-        socket.current.on("getUsers",users=>{
+        socket.emit("addUser",user.id);
+        socket.on("getUsers",users=>{
   
           setOnlineUsers(users);
         })

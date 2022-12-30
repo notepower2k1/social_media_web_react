@@ -34,7 +34,7 @@ function SendMessage({socket,increaseRenderValue,currentConversation}) {
     
 
     if (currentConversation.userOne.id === user.id){
-      socket.current.emit("sendMessage",{
+      socket.emit("sendMessage",{
         senderID:user.id,
         receiverID:currentConversation.userTwo.id,
         text:messageInput
@@ -42,7 +42,7 @@ function SendMessage({socket,increaseRenderValue,currentConversation}) {
 
     }
     else{
-      socket.current.emit("sendMessage",{
+      socket.emit("sendMessage",{
         senderID:user.id,
         receiverID:currentConversation.userOne.id,
         text:messageInput

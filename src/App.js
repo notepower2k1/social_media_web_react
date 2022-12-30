@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect ,useRef} from "react";
 import { Routes, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useDispatch } from "react-redux";
 
 import AuthService from "./services/auth.service";
 
@@ -12,6 +13,7 @@ import GroupList from "./components/Group/GroupList";
 import GroupCreate from "./components/Group/GroupCreate";
 import GroupPage from "./components/Group/GroupPage";
 import ListConversation from "./components/Conversation/ListConversation";
+import { setSocket } from "./redux/actions/SocketActions";
 
 import ProfileComponent from "./components/Profile/ProfileComponent";
 
@@ -20,11 +22,26 @@ import PrivateRoute from "./utils/PrivateRoute";
 import Search from "./components/Search/Search";
 import RequesterList from "./components/Friend/RequesterList";
 import Navbar from "./Navbar";
+import {io} from "socket.io-client";
+
+const socket = io.connect("ws://localhost:8900");
+
 function App() {
 
   const [currentUser, setCurrentUser] = useState(undefined);
 
   const user = AuthService.getCurrentUser();
+
+  const dispatch = useDispatch();
+  dispatch(setSocket(socket));
+  
+  useEffect(() => {
+      
+    return () => {
+      socket.current.close();
+    }
+
+  },[]);
 
   useEffect(() => {
 

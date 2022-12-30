@@ -137,11 +137,11 @@ function Reply({increaseRenderValue,index,data}) {
 
   return (
     <>
-    <div class="comet-avatar">
+    <div className="comet-avatar">
     <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar"/>
   </div>
-  <div class="we-comment">
-    <div class="coment-head">
+  <div className="we-comment">
+    <div className="coment-head">
       <h5>{firstName} {lastName}</h5>
       <span>{data.dateReply}</span>
      
@@ -178,10 +178,10 @@ function Reply({increaseRenderValue,index,data}) {
       <ul>
       <li>
        <ReplyForm  ref={el => formRef.current[index] = el}> 
-       <div class="comet-avatar">
+       <div className="comet-avatar">
         <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar" />
         </div>
-        <div class="we-comment">
+        <div className="we-comment">
         <h5>{firstName} {lastName}</h5>
         <TextareaAutosize     
                  id="TextAreaResizeable"     

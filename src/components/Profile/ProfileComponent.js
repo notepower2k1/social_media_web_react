@@ -343,11 +343,16 @@ function ProfileComponent() {
 							</div>
 							<div className="col-lg-6">
 								<div className="loadMore">	
-								<div class="central-meta item">
+								<div className="central-meta item">
 						
 								{
 									posts.map(
-									(post) =><Post data={post}/>)}
+									(post) =>
+                  <div key={post.id}>
+                                      <Post data={post}/>
+
+                  </div>
+                  )}
 									
 								</div>
 								</div>

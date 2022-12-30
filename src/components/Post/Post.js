@@ -80,24 +80,24 @@ const Post = ({data}) => {
       } 
 
     return (
-        <div class="user-post">
+        <div className="user-post">
 
-            <div class="friend-info">
+            <div className="friend-info">
             <figure>
                 <img src={avatar} alt=""/>
             </figure>
-            <div class="friend-name">
+            <div className="friend-name">
                 <ins>{ data.userProfile.firstName.concat(" " + data.userProfile.lastName) }</ins>
                 <span>{data.publishedDate}</span>
             </div>
-            <div class="description">
+            <div className="description">
                     
                     <p>
                         {data.content}
                     </p>
                 </div>
-            <div class="post-meta">
-                <div class="">
+            <div className="post-meta">
+                <div className="">
                     <a href="#" title="">
                     { data.image !== "NONE" 
                                         ? 
@@ -108,16 +108,16 @@ const Post = ({data}) => {
                                                     src={ images[0] }
                                                     alt=""
                                                 /> : 
-                                                <div class="row">
+                                                <div className="row">
                                             {
                                             images.map((image, index) =>
-                                            <div class="col-lg-6 col-md-12 mb-4 mb-lg-0">
+                                            <div key={index} className="col-lg-6 col-md-12 mb-4 mb-lg-0">
 
                                                 <img 
                                                     className="shadow-1-strong rounded mb-4" 
                                                     src={image}
                                                     height="125"
-                                                    key={index}
+                                                    
                                                     alt=""
                                                 />
                                             </div>
@@ -131,7 +131,7 @@ const Post = ({data}) => {
                                     }
                     </a>
                 </div>	
-                <div class="we-video-info">
+                <div className="we-video-info">
                 <div className="feature-box d-flex ">
                                 <button className="btn btn-primary w-100">
                                 <i className="fa fa-thumbs-up"> Like</i>
@@ -146,7 +146,7 @@ const Post = ({data}) => {
                 </div>
             </div>
             </div>
-            <div class="coment-area" id="comment-box" ref={el => formRef.current = el}>
+            <div className="coment-area" id="comment-box" ref={el => formRef.current = el}>
                 <CommentsList post={data}/>
             </div>
         </div>

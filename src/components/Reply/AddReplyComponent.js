@@ -53,10 +53,10 @@ function AddReplyComponent({increaseRenderValue,comment}) {
     <div>
 
              <div ref={formRef} className='reply-box'>
-             <div class="comet-avatar">
+             <div className="comet-avatar">
               <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar" />
               </div>
-              <div class="we-comment">
+              <div className="we-comment">
               <h5>{firstName} {lastName}</h5>
               <TextareaAutosize     
                       id="TextAreaResizeable"     
