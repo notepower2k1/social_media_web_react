@@ -7,12 +7,12 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 import PostService from "../../services/post.service";
 import {storage} from "../../utils/firebaseConfig";
-import { addPost } from "../../redux/actions/PostActions";
+import { addPost ,updatePost } from "../../redux/actions/PostActions";
 import "./modal.css";
 
 
 
-const PostModal = ({ handleClose }) => {
+const PostModal = ({ handleClose ,oldData,isGroupPost,groupID }) => {
 
     const [content, setContent] = useState("");
     const [images, setImages] = useState([]);
@@ -39,16 +39,42 @@ const PostModal = ({ handleClose }) => {
         form.current.validateAll(); */
         let imagesUrl = handleUploadImages(images);
         imagesUrl.then(res => {
-            console.log(res);
             let imagesString = res.reduce((accum, current) => {
                 return accum.concat("|" + current);
             }, "")
-            console.log(imagesString);
-            PostService.createPost({content: content, image: images.length !== 0 ? imagesString : "NONE"})
-            .then(res => {
-                console.log(res.data);
-                dispatch(addPost(res.data));
-            });
+
+            if(isGroupPost)
+            {
+                if (oldData !== null) {
+                    PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
+                        .then(res => {
+                            console.log(res.data);
+                            dispatch(updatePost(res.data));
+                        });
+                } else {
+                    PostService.createPostGroup({content: content, image: images.length !== 0 ? imagesString : "NONE"},groupID)
+                        .then(res => {
+                            console.log(res.data);
+                            dispatch(addPost(res.data));
+                        });
+                }
+            }
+            else{
+                if (oldData !== null) {
+                    PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
+                        .then(res => {
+                            console.log(res.data);
+                            dispatch(updatePost(res.data));
+                        });
+                } else {
+                    PostService.createPost({content: content, image: images.length !== 0 ? imagesString : "NONE"})
+                        .then(res => {
+                            console.log(res.data);
+                            dispatch(addPost(res.data));
+                        });
+                }
+            }
+            
         })
         
         //Bắt lỗi và hiển thị...
@@ -89,17 +115,13 @@ const PostModal = ({ handleClose }) => {
         
     } */
     const handleUploadImages = async (images) => {
-        /* eslint no-var: 0 */
-        const imagesUrlArray = [];
-        /* eslint no-var: 0 */
+        const imagesArray = [];
         for (let i = 0; i < images.length; i++) {
-            /* eslint-disable no-await-in-loop */
             const storageRef = ref(storage, `post_images/${images[i].file.name}`);
             const upload = await uploadBytesResumable(storageRef, images[i].file);
-            const imageUrl = await getDownloadURL(storageRef);
-            imagesUrlArray.push(imageUrl);
+            imagesArray.push(images[i].file.name);
         }
-        return imagesUrlArray;
+        return imagesArray;
     };
 
     return (

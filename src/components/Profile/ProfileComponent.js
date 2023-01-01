@@ -12,6 +12,13 @@ import ButtonFriend from '../Friend/ButtonFriend';
 import { Routes, Route, Link } from "react-router-dom";
 import Post from "../Post/Post"
 import UserService from "../../services/user.service";
+import LikePostService from "../../services/likepost.service";
+import { useSelector, useDispatch } from "react-redux";
+import { addPost } from "../../redux/actions/PostActions";
+
+
+import Loading from "../Loading/Loading";
+import PostModal from "../Post/PostModal";
 
 function ProfileComponent() {
 
@@ -34,8 +41,24 @@ function ProfileComponent() {
     const [uploadBackground,setUploadBackground] = useState(null);
 
     const [posts,setPosts] = useState([]);
-    
 
+    const [postsLiked, setPostLiked] = useState([]);
+
+
+    const [renderValue,setRenderValue] = useState(0)
+
+    const [selectedPost, setSelectedPost] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [isShowed, setIsShowed] = useState(false);
+
+    const [isGroupPost, setIsGroupPost] = useState(false);
+
+    const dispatch = useDispatch();
+    const state = useSelector(state => state.allPosts);
+
+    const handleRender = ()=>{
+      setRenderValue(c=>c+1);
+    }
 
     const OldImage = useRef(null);
     const OldBackground = useRef(null);
@@ -53,7 +76,7 @@ function ProfileComponent() {
             getImageFromFirebase(response.data.avatar,response.data.background)
             setUserName(response.data.user.username)
         })
-        getUserPost()
+
         checkCurrentUserProfile()
     },[userID])
 
@@ -65,6 +88,9 @@ function ProfileComponent() {
     }
    }
 
+
+    
+  
 
 
     const getImageFromFirebase=(avatar,background)=>{
@@ -91,7 +117,9 @@ function ProfileComponent() {
       setUploadAvatar(null);
       setUploadBackground(null);
     }
-    const handleShow = () => {
+   
+    const handleShow = (e) => {
+      e.preventDefault();
       setShow(true);
 
     }
@@ -150,55 +178,97 @@ function ProfileComponent() {
         
   }
 
-  const getUserProfileByUser = async (user) => {
-	return await UserService.readUserProfile(user);
-	}
 
-  const getUserPost = async () => {
-	await PostService.getPostByUserID(userID)
-		.then(res => {
-			let allPosts = res.data;
-			allPosts.forEach(post => {
-				getUserProfileByUser(post.user)
-				.then(profileRes => {
-					let userProfile = profileRes.data;
-					post.userProfile = userProfile;
-					setPosts(prev => {
-						if (prev.every(curPostValue => curPostValue.id !== post.id)) {
-							return [...prev, post];
-						} else {
-							return [...prev];
-						}
-					});				
-				});
-			})
-		})
-		.catch(e => {
-			console.log(e);
-		});
-}  
+   
+    useEffect(() => {
+        getAllPosts();
+        getPostsCurrentUserLiked(currentUser.id);
 
+        return () => {
+            setPosts([]);
+        }
+    }, [renderValue,state]);
+
+  
+
+
+
+
+
+   
+    const getPostsCurrentUserLiked = async (userID) => {
+        await LikePostService.readPostUserLiked(userID)
+            .then(res => {
+                setPostLiked(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+
+    const getAllPosts = async () => {
+        setLoading(true);
+        setIsGroupPost(false);
+        await PostService.getPostByUserID(currentUser.id)
+			.then(res => {
+				let allPosts = res.data;
+
+                
+				allPosts.forEach(post => {
+
+                    if (postsLiked.some(postLiked => postLiked.post.id === post.id)) {
+                        post.isLiked = true;
+                    } 
+                    else 
+                    {
+                        post.isLiked = false;
+                    }
+                    
+					getUserProfileByUser(post.user)
+					.then(profileRes => {
+						let userProfile = profileRes.data;
+						post.userProfile = userProfile;
+
+                    
+
+                        setPosts(prev => {
+                            if (prev.every(curPostValue => curPostValue.id !== post.id)) {
+                                return [...prev, post];
+                            } else {
+                                return [...prev];
+                            }
+                        });
+                        if (state.allPosts.every(curPostValue => curPostValue.id !== post.id)) {
+                            dispatch(addPost(post));
+                        }
+					});
+				})
+            })
+            .catch(e => {
+                console.log(e);
+            });
+            setLoading(false);
+
+    }  
+     
+    const getUserProfileByUser = async (user) => {
+        return await UserService.readUserProfile(user);
+    }
+
+
+
+
+    const showModal = () => {
+        setIsShowed(true);
+    }
+
+    const hideModal = () => {
+        setIsShowed(false);
+    }
  
 
-    const formRef = useRef([]);
-    const handlerOpenComment = function(idx) {
-      return function(e)
-      {
-        
-        const currentForm = formRef.current[idx];
-        if (currentForm) {
-    
-         
-          if (currentForm.style.display === "none" || currentForm.style.display === "") {
-            currentForm.style.display = "block";
-          } else {
-            currentForm.style.display = "none";
-          }
-        }
-      };
-    
-    } 
-
+   
   // const handleChange = () => {
   //   setChange(!change)
   // }
@@ -224,7 +294,7 @@ function ProfileComponent() {
 				<i className="fa fa-camera-retro"></i>
 				<label className="fileContainer">
 					Edit Cover Photo
-				<input type="file"/>
+				<input type="file" onClick={(e) => handleShow(e)}/>
 				</label>
 			</form>
 			<div className="container-fluid">
@@ -237,7 +307,7 @@ function ProfileComponent() {
 									<i className="fa fa-camera-retro"></i>
 									<label className="fileContainer">
 										Edit Display Photo
-										<input type="file"/>
+										<input type="file" onClick={(e) => handleShow(e)}/>
 									</label>
 								</form>
 							</figure>
@@ -345,14 +415,25 @@ function ProfileComponent() {
 								<div className="loadMore">	
 								<div className="central-meta item">
 						
-								{
-									posts.map(
-									(post) =>
-                  <div key={post.id}>
-                                      <Post data={post}/>
-
-                  </div>
-                  )}
+							  { isShowed ? <PostModal 
+                                handleClose={ hideModal } 
+                                oldData={ selectedPost }
+                                isGroupPost = {isGroupPost}
+                            /> : '' }
+                                {
+                                    posts === undefined || posts.length === 0  || loading
+                                    ?  <Loading />
+                                    : posts.map((post, index) => (
+                                        <div className="central-meta item" key={index}>
+                                            <Post data={post}  handleRender={ handleRender }
+                                selected={ setSelectedPost }
+                                onShowModal={ showModal }
+                                />
+                                            </div>
+                                        
+                                       
+                                    ))
+                                }
 									
 								</div>
 								</div>
@@ -377,7 +458,7 @@ function ProfileComponent() {
 
 
 
-            <Modal
+      <Modal
             size="lg"
         show={show}
         onHide={handleClose}

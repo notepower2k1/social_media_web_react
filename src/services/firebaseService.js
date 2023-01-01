@@ -29,9 +29,14 @@ const getBackGroundFromFirebase= async (background)=>{
 
 }
 
+const getImageUrlFromFirebase = async (image) => {
+    const avatarRef = ref(storage,`post_images/${image}`);
+    return await getDownloadURL(avatarRef);
+}
 const FirebaseSerive = {
     getAvatarFromFirebase,
-    getBackGroundFromFirebase
+    getBackGroundFromFirebase,
+    getImageUrlFromFirebase,
 };
 
 export default FirebaseSerive

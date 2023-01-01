@@ -10,6 +10,8 @@ function Navbar({user,currentUser,logOut}) {
     const [searchInput, setSearchInput] = useState();
     const [avatar,setAvatar] = useState(null)
 
+
+
     useEffect(()=>{
 
         ProfileService.getProfile(user.id).then((response) => {
@@ -36,8 +38,7 @@ function Navbar({user,currentUser,logOut}) {
 }
   return (
 
-    <>
-
+   
    <div className="topbar stick">
         <div className="logo">
           <Link to={"/posts"}><img src="https://scontent.fdad2-1.fna.fbcdn.net/v/t1.15752-9/317636730_608631167735920_975038834038231370_n.png?stp=cp0_dst-png&_nc_cat=101&ccb=1-7&_nc_sid=ae9488&_nc_ohc=QNDdebCd7-MAX9k2HJ2&_nc_ht=scontent.fdad2-1.fna&oh=03_AdT_hDq8H2AkDSd0Eu6QT0JszTDwqB8igQm8piFOKgY_WQ&oe=63D4FEC9" alt="" /></Link>
@@ -112,7 +113,7 @@ function Navbar({user,currentUser,logOut}) {
       </div>
      
       
-      </>
+    
 
   )
 }

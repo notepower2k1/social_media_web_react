@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect ,useRef} from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import PostService from "../../services/post.service";
 import AuthService from "../../services/auth.service";
@@ -8,26 +9,46 @@ import CommentsList from '../Comment/CommentsList';
 import { Routes, Route, Link } from "react-router-dom";
 import FirebaseSerive from '../../services/firebaseService';
 import ProfileService from '../../services/ProfileService';
+import { getPassedTime } from "../../utils/spUtils";
+import PostHistory from "./PostHistory";
+import UserService from "../../services/user.service";
+import LikePostService from "../../services/likepost.service";
 
-const Post = ({data}) => {
+const Post = ({data,handleRender, selected, onShowModal }) => {
     let navigate = useNavigate();
     const currentUser = AuthService.getCurrentUser();
 
     const [images, setImages] = useState([])
     const [avatar,setAvatar] = useState(null);
+    const [isShowed, setIsShowed] = useState(false);
+    const dispatch = useDispatch();
+    const [totalLikes, setTotalLikes] = useState(0);
 
 
 
     useEffect(() => {
-        let imageString = data?.image;
-        let imagesArr = imageString.split("|");
+        if (data?.image !== "NONE") {
+            let imageString = data.image;
+            let imagesArr = imageString.split("|");
 
-        let preProcessArr = imagesArr.filter(image => image);
-        
-        setImages(preProcessArr);
-
+            let preProcessArr = imagesArr.filter(image => image);
+            preProcessArr.forEach(imageFileName => {
+                getImageFromFirebase(imageFileName);
+            });
+        }
+        return () => {
+            setImages([]);
+        };
     }, []);
 
+    const getImageFromFirebase = async (image) => {
+        FirebaseSerive.getImageUrlFromFirebase(image)
+            .then((url) => {
+                setImages(prev => [...prev, url])
+            });
+    }
+
+    
     useEffect(()=>{
 
         ProfileService.getProfile(data.user.id).then((response) => {       
@@ -44,7 +65,7 @@ const Post = ({data}) => {
 
     };
 
-    const deletePost  = (event) => {
+    const handleDeletePost   = (event) => {
         event.preventDefault();
         if (window.confirm("Xác nhận xóa post?") && (data.user.id === currentUser.id)) {
             PostService.deletePost(data.id)
@@ -79,16 +100,97 @@ const Post = ({data}) => {
       
       } 
 
+      const handleShowEditHistory = (e) => {
+        e.preventDefault();
+        setIsShowed(true);
+    }
+
+    const handleHideEditHistory = (e) => {
+        e.preventDefault();
+        setIsShowed(false);
+    }
+
+    const handleRepost = (event) => {
+        event.preventDefault();
+        
+        selected(prev => data);
+        onShowModal();
+    };
+
+
+    const handleLikePost = async (event) => {
+        await UserService.likePost(data.id, currentUser.id)
+              .then((res) => {
+                  // console.log(res.data);
+                  readTotalLikes();
+                  handleRender()
+  
+              })
+              .catch((err) => {
+                  console.log(err);
+              }) 
+              
+      }
+      // Cần thêm @Modifying và @Transactional bên Repository mới Delete được
+      const handleDisLikePost = async (event) => {
+          // console.log(data.id, currentUser.id)
+        await UserService.dislikePost(data.id, currentUser.id)
+              .then((res) => {
+                  // console.log(res.data);
+                  readTotalLikes();
+                  handleRender()
+              })
+              .catch((err) => {
+                  console.log(err);
+              })
+      }
+  
+      // Function để gọi lại cho tiện
+      const readTotalLikes = () => {
+          LikePostService.readTotalLikesById(data.id)
+              .then(res => {
+                  setTotalLikes(res.data);
+              })
+              .catch(err => {
+                  console.log(err.response)
+              })
+        }
+  
     return (
         <div className="user-post">
-
+             { isShowed ? <PostHistory 
+                handleClose={ handleHideEditHistory } 
+                postId={ data.id }
+            /> : '' }
+            <div className="dropdown float-right">
+                                    <button className="btn btn-flat btn-flat-icon" type="button" data-toggle="dropdown" aria-expanded="false">
+                                        <em className="fa fa-ellipsis-h"></em>
+                                    </button>
+                                    <div className="dropdown-menu dropdown-scale dropdown-menu-right" role="menu" 
+                                        style={{position: "absolute", transform: "translate3d(-136px, 28px, 0px)", top: "0px", willChange: "transform"}}
+                                    >
+                                        {/* <a className="dropdown-item" href="#">Hide post</a>
+                                        <a className="dropdown-item" href="#">Stop following</a>
+                                        <a className="dropdown-item" href="#">Report</a> */}
+                                        <a className="dropdown-item" href="#" onClick={ handleShowEditHistory }>History Editting</a>
+                                        { currentUser.id === data.user.id ? 
+                                            <>
+                                                <a className="dropdown-item" href="#" onClick={ handleRepost }>Repost</a>
+                                                <a className="dropdown-item" href="#" onClick={ handleDeletePost }>Delete Post</a> 
+                                            </>
+                                        : "" }
+                                        
+                                    </div>
+            </div>
             <div className="friend-info">
             <figure>
                 <img src={avatar} alt=""/>
             </figure>
             <div className="friend-name">
                 <ins>{ data.userProfile.firstName.concat(" " + data.userProfile.lastName) }</ins>
-                <span>{data.publishedDate}</span>
+                <Link to={"/detail/post/" + data.id} >{getPassedTime(new Date(data.publishedDate)) }</Link>
+
+              
             </div>
             <div className="description">
                     
@@ -132,11 +234,20 @@ const Post = ({data}) => {
                     </a>
                 </div>	
                 <div className="we-video-info">
-                <div className="feature-box d-flex ">
-                                <button className="btn btn-primary w-100">
-                                <i className="fa fa-thumbs-up"> Like</i>
+                <p>{totalLikes}</p>
 
-                                </button>
+                <div className="feature-box d-flex ">
+                {data.isLiked 
+                                ? 
+                                    <button className="btn btn-primary w-100"   onClick={ handleDisLikePost }>
+                                    <i className="fa fa-thumbs-down"> Dislike</i>
+                                    </button>
+                                :  
+                                    <button className="btn btn-primary w-100"   onClick={ handleLikePost }>
+                                    <i className="fa fa-thumbs-up"> Like</i>
+                                    </button>                           
+                            }
+
                                 <button  className="btn btn-primary w-100"    
                                 onClick={(e) => handlerOpenComment(e)}
                                 >
@@ -150,6 +261,7 @@ const Post = ({data}) => {
                 <CommentsList post={data}/>
             </div>
         </div>
+                                
     )
 }
 

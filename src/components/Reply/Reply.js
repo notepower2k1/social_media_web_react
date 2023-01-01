@@ -21,12 +21,21 @@ function Reply({increaseRenderValue,index,data}) {
 
     const [isReadonly, setIsReadonly] = useState(true);
    
-    const dateReply = new Date().toISOString().slice(0, 10);
     const user = AuthService.getCurrentUser();
 
     const formRef = useRef([]);
     const inputRef = useRef([]);
 
+    const convertTime = (date) =>{
+    
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  
+      const dateValue  = new Date(date);
+      
+      let time = date.match(/\d\d:\d\d/);
+  
+      return  time + " / " + dateValue.toLocaleDateString("en-US", options);
+    }
     useEffect(()=>{
 
       ProfileService.getProfile(data.user.id).then((response) => {
@@ -44,10 +53,13 @@ function Reply({increaseRenderValue,index,data}) {
 
     var reply = inputReply;
     var comment = data.comment
-    const temp = {reply,dateReply,user,comment}
+
+    const temp = {reply,user,comment}
 
     
     ReplyService.createReply(temp).then((res)=>{
+        const currentForm = formRef.current;
+        currentForm.style.display = "none"
         increaseRenderValue()
     }).catch((err)=>{
         console.log(err)
@@ -64,11 +76,12 @@ function Reply({increaseRenderValue,index,data}) {
     var reply = inputUpdateReply;
     var comment = data.comment
 
-    const temp = {reply,dateReply,user,comment}
+    const temp = {reply,user,comment}
 
     
     ReplyService.updateReply(id,temp).then((res)=>{
       alert("Update Sucess!")
+      increaseRenderValue();
     
   }).catch((err)=>{
       console.log(err)
@@ -143,7 +156,7 @@ function Reply({increaseRenderValue,index,data}) {
   <div className="we-comment">
     <div className="coment-head">
       <h5>{firstName} {lastName}</h5>
-      <span>{data.dateReply}</span>
+      <span>{convertTime(data.dateReply)}</span>
      
     </div>
     <TextareaAutosize
@@ -169,7 +182,6 @@ function Reply({increaseRenderValue,index,data}) {
      <i className="fa fa-edit"></i>
      </span>     
            </div>
-     <p className="ms-3 card-text">{data.dateReply}</p>
      </div> 
       </div>
 

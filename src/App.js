@@ -23,6 +23,20 @@ import Search from "./components/Search/Search";
 import RequesterList from "./components/Friend/RequesterList";
 import Navbar from "./Navbar";
 import {io} from "socket.io-client";
+import PostDetail from "./components/Post/PostDetail";
+
+import AddUserRole from './components/Admin/UserRole/AddUserRole';
+import EditUserRole from './components/Admin/UserRole/EditUserRole';
+import UserRoleDataTable from './components/Admin/UserRole/UserRoleDataTable';
+
+import AddGroup from './components/Admin/Group/AddGroup';
+import EditGroup from './components/Admin/Group/EditGroup';
+import GroupDataTable from './components/Admin/Group/GroupDataTable';
+
+
+
+import Chart from "./components/Admin/Statitics/Chart";
+import CountRow from './components/Admin/Statitics/CoutRow';
 
 const socket = io.connect("ws://localhost:8900");
 
@@ -38,7 +52,7 @@ function App() {
   useEffect(() => {
       
     return () => {
-      socket.current.close();
+      socket.close();
     }
 
   },[]);
@@ -76,11 +90,19 @@ function App() {
       <Route path="/login" element={<Login/>} />
       <Route path="/profile" element={<Profile/>} />
       {/* Thêm privateroute vào các route cần auth mới truy cập được */}
+
       <Route path="/posts" element={
         <PrivateRoute>
           <PostList />
         </PrivateRoute>
       } />
+
+      <Route path="/detail/post/:postID" element={
+        <PrivateRoute>
+          <PostDetail />
+        </PrivateRoute>
+      } />
+
       <Route path="/groups" element={
         <PrivateRoute>
           <GroupList />
@@ -119,9 +141,27 @@ function App() {
           <RequesterList />
         </PrivateRoute>
       }/>
+
+
+
+        <Route exact path="/admin/user-role/read" element={<UserRoleDataTable/>}/>
+        <Route exact path="/admin/user-role/create" element={<AddUserRole/>}/>W
+        <Route path="/admin/user-role/edit/:userID/:roleID" element={<EditUserRole/>}/>
+
+        <Route exact path="/admin/group/read" element={<GroupDataTable/>}/>
+        <Route exact path="/admin/group/create" element={<AddGroup/>}/>
+        <Route path="/admin/group/edit/:id" element={<EditGroup/>}/>
+
+     
+        <Route exact path="admin/chart" element={<Chart/>}/>
+        <Route exact path="admin/countRow" element={<CountRow/>}/>    
     </Routes>
 
       
+
+   
+     
+
 </div>
     
     </>

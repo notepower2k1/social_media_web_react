@@ -10,13 +10,21 @@ function Comment({index,formRef,increaseRenderValue,data}) {
     const [isReadonly, setIsReadonly] = useState(true);
     const user = AuthService.getCurrentUser();
     const inputRef = useRef();
-    const commentDate = new Date().toISOString().slice(0, 10);;
 
     const [firstName,setFirstName] = useState('');
     const [lastName,setLastName] = useState('');
     const [avatar,setAvatar] = useState(null);
 
-
+    const convertTime = (date) =>{
+    
+      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' ,timeZone:'Asia/Ho_Chi_Minh'};
+  
+      const dateValue  = new Date(date);
+      
+      let time = date.match(/\d\d:\d\d/);
+  
+      return  time + " / " + dateValue.toLocaleDateString("en-US", options);
+    }
     useEffect(()=>{
 
         ProfileService.getProfile(data.user.id).then((response) => {
@@ -64,11 +72,13 @@ function Comment({index,formRef,increaseRenderValue,data}) {
       const updateComment = (inputUpdateComment,commentID)=>{
         var content = inputUpdateComment;
         var post = data.post
-        const temp = {content,commentDate,user,post}
+
+        const temp = {content,user,post}
     
         
         CommentService.updateComments(commentID,temp).then((res)=>{
           alert("Update Sucess!")
+          increaseRenderValue();
         
       }).catch((err)=>{
           console.log(err)
@@ -121,7 +131,7 @@ function Comment({index,formRef,increaseRenderValue,data}) {
   <div className="we-comment">
 														<div className="coment-head">
 															<h5>{firstName} {lastName}</h5>
-															<span>{data.commentDate}</span>
+															<span>{convertTime(data.commentDate)}</span>
                             
                              
 														</div>

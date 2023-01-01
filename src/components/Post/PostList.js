@@ -8,40 +8,82 @@ import PostModal from "./PostModal";
 import Post from "./Post";
 import { addPost } from "../../redux/actions/PostActions";
 import AuthService from '../../services/auth.service'
+import LikePostService from "../../services/likepost.service";
 
 import "./post.css";
 
 const PostContainer = () => {
-    const user = AuthService.getCurrentUser();
+    const currentUser = AuthService.getCurrentUser();
 
     const [posts, setPosts] = useState([]);
-
+    const [selectedPost, setSelectedPost] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [isShowed, setIsShowed] = useState(false);
+    const [postsLiked, setPostLiked] = useState([]);
 
+    const [isGroupPost, setIsGroupPost] = useState(false);
+
+    const [renderValue,setRenderValue] = useState(0)
+
+    const handleRender = ()=>{
+        setRenderValue(c=>c+1);
+      }
     /* const forceUpdate = useForceUpdate(); */
     const dispatch = useDispatch();
     const state = useSelector(state => state.allPosts);
     
-	useEffect(() => {
-        getAllPosts(user.id);
-    }, [state]);
-
     useEffect(() => {
-        getAllPosts(user.id);
+        getAllPosts();
+        getPostsCurrentUserLiked(currentUser.id);
+
         return () => {
             setPosts([]);
         }
-    }, []);
-    const getAllPosts = async (userID) => {
-        
-        await PostService.getFriendPostByUserID(userID)
+    }, [state]);
+
+  
+
+
+
+
+
+   
+    const getPostsCurrentUserLiked = async (userID) => {
+        await LikePostService.readPostUserLiked(userID)
+            .then(res => {
+                setPostLiked(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+
+    const getAllPosts = async () => {
+        setLoading(true);
+        setIsGroupPost(false);
+        await PostService.getPostByUserID(currentUser.id)
 			.then(res => {
 				let allPosts = res.data;
+
+                
 				allPosts.forEach(post => {
+
+                    if (postsLiked.some(postLiked => postLiked.post.id === post.id)) {
+                        post.isLiked = true;
+                    } 
+                    else 
+                    {
+                        post.isLiked = false;
+                    }
+                    
 					getUserProfileByUser(post.user)
 					.then(profileRes => {
 						let userProfile = profileRes.data;
 						post.userProfile = userProfile;
+
+                    
+
                         setPosts(prev => {
                             if (prev.every(curPostValue => curPostValue.id !== post.id)) {
                                 return [...prev, post];
@@ -58,6 +100,8 @@ const PostContainer = () => {
             .catch(e => {
                 console.log(e);
             });
+            setLoading(false);
+
     }  
      
     const getUserProfileByUser = async (user) => {
@@ -134,71 +178,7 @@ const PostContainer = () => {
                                     </li>
                                     </ul>
                                 </div>
-                                <div className="widget">
-                                    <h4 className="widget-title">Recent Activity</h4>
-                                    <ul className="activitiez">
-                                    <li>
-                                        <div className="activity-meta">
-                                        <i>10 hours Ago</i>
-                                        <span><a href="#" title="">Commented on Video posted </a></span>
-                                        <h6>by <a href="time-line.html">black demon.</a></h6>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="activity-meta">
-                                        <i>30 Days Ago</i>
-                                        <span><a href="#" title="">Posted your status. “Hello guys, how are you?”</a></span>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div className="activity-meta">
-                                        <i>2 Years Ago</i>
-                                        <span><a href="#" title="">Share a video on her timeline.</a></span>
-                                        <h6>"<a href="#">you are so funny mr.been.</a>"</h6>
-                                        </div>
-                                    </li>
-                                    </ul>
-                                </div>
-                                <div className="widget stick-widget">
-                                    <h4 className="widget-title">Who's follownig</h4>
-                                    <ul className="followers">
-                                    <li>
-                                        <figure><img src="images/resources/friend-avatar2.jpg" alt=""/></figure>
-                                        <div className="friend-meta">
-                                        <h4><a href="time-line.html" title="">Kelly Bill</a></h4>
-                                        <a href="#" title="" className="underline">Add Friend</a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <figure><img src="images/resources/friend-avatar4.jpg" alt=""/></figure>
-                                        <div className="friend-meta">
-                                        <h4><a href="time-line.html" title="">Issabel</a></h4>
-                                        <a href="#" title="" className="underline">Add Friend</a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <figure><img src="images/resources/friend-avatar6.jpg" alt=""/></figure>
-                                        <div className="friend-meta">
-                                        <h4><a href="time-line.html" title="">Andrew</a></h4>
-                                        <a href="#" title="" className="underline">Add Friend</a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <figure><img src="images/resources/friend-avatar8.jpg" alt=""/></figure>
-                                        <div className="friend-meta">
-                                        <h4><a href="time-line.html" title="">Sophia</a></h4>
-                                        <a href="#" title="" className="underline">Add Friend</a>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <figure><img src="images/resources/friend-avatar3.jpg" alt=""/></figure>
-                                        <div className="friend-meta">
-                                        <h4><a href="time-line.html" title="">Allen</a></h4>
-                                        <a href="#" title="" className="underline">Add Friend</a>
-                                        </div>
-                                    </li>
-                                    </ul>
-                                </div>
+                            
                                 </aside>
                                 </div>
 
@@ -207,51 +187,54 @@ const PostContainer = () => {
                                 <div className="central-meta">
 									<div className="new-postbox">
 										<div className="">
-											<form method="post" onClick={ showModal } >
+											<div onClick={ showModal } >
 												<textarea disabled></textarea>
 												<div className="attachments">
 													<ul>
 														<li>
 															<i className="fa fa-music"></i>
 															<label className="fileContainer">
-																<input type="file"/>
 															</label>
 														</li>
 														<li>
 															<i className="fa fa-image"></i>
 															<label className="fileContainer">
-																<input type="file"/>
 															</label>
 														</li>
 														<li>
 															<i className="fa fa-video-camera"></i>
 															<label className="fileContainer">
-																<input type="file"/>
 															</label>
 														</li>
 														<li>
 															<i className="fa fa-camera"></i>
 															<label className="fileContainer">
-																<input type="file"/>
 															</label>
 														</li>
 														<li>
-															<button type="submit">Post</button>
+															<button className="btn btn-primary" onClick={ showModal } >Post</button>
 														</li>
 													</ul>
 												</div>
-											</form>
+											</div>
 										</div>
 									</div>
 								</div>
 
-                                { isShowed ? <PostModal handleClose={ hideModal } /> : '' }
+                            { isShowed ? <PostModal 
+                                handleClose={ hideModal } 
+                                oldData={ selectedPost }
+                                isGroupPost = {isGroupPost}
+                            /> : '' }
                                 {
-                                    posts === undefined || posts.length === 0 ?
-                                        <Loading />
+                                    posts === undefined || posts.length === 0  || loading
+                                    ?  <Loading />
                                     : posts.map((post, index) => (
                                         <div className="central-meta item" key={index}>
-                                            <Post data={post}/>
+                                            <Post data={post}  handleRender={ handleRender }
+                                selected={ setSelectedPost }
+                                onShowModal={ showModal }
+                                />
                                             </div>
                                         
                                        

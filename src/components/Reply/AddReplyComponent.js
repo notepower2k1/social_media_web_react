@@ -13,7 +13,6 @@ import FirebaseSerive from '../../services/firebaseService';
 function AddReplyComponent({increaseRenderValue,comment}) {
 
     const [inputReply,setInputReply] = useState("");
-    const dateReply = new Date().toISOString().slice(0, 10);
     const user = AuthService.getCurrentUser();
     const formRef = useRef([])
     const [firstName,setFirstName] = useState('');
@@ -35,12 +34,15 @@ function AddReplyComponent({increaseRenderValue,comment}) {
     const saveReply = (e)=>{
         e.preventDefault();
         var reply = inputReply;
-        const temp = {reply,dateReply,user,comment}
+
+        const temp = {reply,user,comment}
         
         ReplyService.createReply(temp).then((res)=>{
             const currentForm = formRef.current;
             currentForm.style.display = "none"
             increaseRenderValue();  
+
+        
 
         }).catch((err)=>{
             console.log(err)

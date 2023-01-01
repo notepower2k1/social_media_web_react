@@ -16,8 +16,8 @@ const deleteGroup = async (id) => {
     return await rootInstance.delete("/group/remove/" + id);
 }
 
-const updateGroup = async (group) => {
-    return await rootInstance.put("/group/update/", group);
+const updateGroup = async (id,group) => {
+    return await rootInstance.put("/group/update/"+id, group);
 }
 
 const readTotalMembersById = async (groupId) => {

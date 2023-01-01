@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import UserService from "../../services/user.service";
 import GroupService from "../../services/group.service";
@@ -35,10 +35,10 @@ const Group = ({ data, user }) => {
     return (
         <div className="nearly-pepls">
             <figure>
-                <a href="time-line.html" title=""><img src="images/resources/group1.jpg" alt="" /></a>
+                <Link to={"/group/"+data.id} title=""><img src="images/resources/group1.jpg" alt="" /></Link>
             </figure>
             <div className="pepl-info">
-                <h4><a href="time-line.html" title="">{ data.groupName }</a></h4>
+                <h4><Link to={"/group/"+data.id}>{ data.groupName }</Link></h4>
                 <span>(public-private)</span>
                 <em>{ totalMembers } thành viên</em>
                 {

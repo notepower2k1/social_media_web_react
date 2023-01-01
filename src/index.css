@@ -6,6 +6,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+.header {
+  position: sticky;
+  top: 0px;
+  z-index: 1;
+}
 .avatar{
   width: 44px;
   height:44px;

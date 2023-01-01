@@ -5,16 +5,13 @@ import ReplyService from '../../services/ReplyService'
 import Reply from './Reply';
 
 
-function ReplyLists({comment}){
+function ReplyLists({renderValue,increaseRenderValue,comment}){
 
     const [listReplies,setListReplies] = useState([]);
 
-    const [renderValue,setRenderValue] = useState(0);
 
 
-    const increaseRenderValue = ()=>{
-      setRenderValue(c=>c+1)
-    }
+   
     useEffect(() => {
       getAllReplies();
     },[renderValue] );

@@ -15,13 +15,12 @@ function CommentsList({post}) {
 
   //Dữ liệu để save
   const [inputComment,setInputComment] = useState("");
-  
+
 
   const [renderValue,setRenderValue] = useState(0);
   
   const user = AuthService.getCurrentUser();
 
-  const commentDate = new Date().toISOString().slice(0, 10);;
 
 
   const formRef = useRef([]);
@@ -43,8 +42,8 @@ function CommentsList({post}) {
   const saveComment = (e)=>{
     e.preventDefault();
     var content = inputComment;
-    
-    const temp = {content,commentDate,user,post}
+
+    const temp = {content,user,post}
 
     CommentService.createComment(temp).then((res)=>{
       increaseRenderValue();
@@ -102,7 +101,7 @@ function CommentsList({post}) {
                     <Comment index={index} formRef={formRef} increaseRenderValue={increaseRenderValue} data ={comment}/>
 
                       <ul>
-                      <ReplyLists comment={comment} />
+                      <ReplyLists renderValue={renderValue} increaseRenderValue={increaseRenderValue} comment={comment} />
                       </ul>
                   
 

@@ -64,7 +64,7 @@ function ConversationReply({increaseRenderValue,socket,renderValue,currentConver
 
     useEffect(()=>{
 
-      socket.current.on("getMessage",data=>{
+      socket.on("getMessage",data=>{
         setArrivalMessage({
           id :lastID ,
           reply:data.text,

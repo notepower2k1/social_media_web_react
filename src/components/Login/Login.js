@@ -134,7 +134,7 @@ function Login() {
           </div>
           </Form>
           </div>
-        :<div class="log-reg-area reg">
+        :<div class="log-reg-area">
         <Register setIsRegistered={setIsRegistered}/>
         </div>
         }
