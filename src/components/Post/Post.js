@@ -1,22 +1,29 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect ,useRef } from "react";
+import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import ReactEmoji from 'react-emoji';
 
 import PostHistory from "./PostHistory";
 import PostService from "../../services/post.service";
 import AuthService from "../../services/auth.service";
-import CommentComponent from '../Comment/CommentComponent';
-import { getImageUrlFromFirebase } from "../../utils/firebasePort";
+import CommentsList from '../Comment/CommentsList';
+import FirebaseService from "../../services/firebase.service";
+import LikePostService from "../../services/likepost.service";
+import UserService from "../../services/user.service";
+import ProfileService from "../../services/ProfileService";
 import { removePost } from "../../redux/actions/PostActions";
 import { getPassedTime } from "../../utils/spUtils";
 
 const Post = ({ data, callBack, selected, onShowModal }) => {
     const currentUser = AuthService.getCurrentUser();
     const formRef = useRef([]);
+
     const [images, setImages] = useState([]);
+    const [avatar,setAvatar] = useState(null);
     const [isShowed, setIsShowed] = useState(false);
-    
+    const [totalLikes, setTotalLikes] = useState(0);
+
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -29,13 +36,19 @@ const Post = ({ data, callBack, selected, onShowModal }) => {
                 getImageFromFirebase(imageFileName);
             });
         }
+
+        ProfileService.getProfile(data.user.id).then((response) => {       
+            FirebaseService.getAvatarFromFirebase(response.data.avatar).then((response) => {
+                setAvatar(response)
+            })
+        })
         return () => {
             setImages([]);
         };
     }, []);
     
     const getImageFromFirebase = async (image) => {
-        getImageUrlFromFirebase("post_images", image)
+        FirebaseService.getImageUrlFromFirebase(image)
             .then((url) => {
                 setImages(prev => [...prev, url])
             });
@@ -83,114 +96,151 @@ const Post = ({ data, callBack, selected, onShowModal }) => {
         setIsShowed(false);
     }
 
+    const handleLikePost = async (event) => {
+        await UserService.likePost(data.id, currentUser.id)
+            .then((res) => {
+                // console.log(res.data);
+                readTotalLikes();
+                callBack(prev => !prev);
+
+            })
+            .catch((err) => {
+                console.log(err);
+            }) 
+              
+    }
+    // Cần thêm @Modifying và @Transactional bên Repository mới Delete được
+    const handleDisLikePost = async (event) => {
+        // console.log(data.id, currentUser.id)
+    await UserService.dislikePost(data.id, currentUser.id)
+            .then((res) => {
+                // console.log(res.data);
+                readTotalLikes();
+                callBack(prev => !prev);
+            })
+            .catch((err) => {
+                console.log(err);
+            })
+    }
+  
+    // Function để gọi lại cho tiện
+    const readTotalLikes = () => {
+        LikePostService.readTotalLikesById(data.id)
+            .then(res => {
+                setTotalLikes(res.data);
+            })
+            .catch(err => {
+                console.log(err.response)
+            })
+    }
+
+    
+
     return (
-        <section className="hero">
-            { isShowed ? <PostHistory 
-                handleClose={ handleHideEditHistory } 
-                postId={ data.id }
-            /> : '' }
-            <div className="container">
-                <div className="row">	
-                    <div className="col-lg-10">
-                        <div className="cardbox shadow-lg bg-white">
-                            <div className="cardbox-heading">
-                                <div className="dropdown float-right">
-                                    <button className="btn btn-flat btn-flat-icon" type="button" data-toggle="dropdown" aria-expanded="false">
-                                        <em className="fa fa-ellipsis-h"></em>
-                                    </button>
-                                    <div className="dropdown-menu dropdown-scale dropdown-menu-right" role="menu" 
-                                        style={{position: "absolute", transform: "translate3d(-136px, 28px, 0px)", top: "0px", willChange: "transform"}}
-                                    >
-                                        {/* <a className="dropdown-item" href="#">Hide post</a>
-                                        <a className="dropdown-item" href="#">Stop following</a>
-                                        <a className="dropdown-item" href="#">Report</a> */}
-                                        <a className="dropdown-item" href="#" onClick={ handleShowEditHistory }>History Editting</a>
-                                        <a className="dropdown-item" href="#">Hide</a>
-                                        { currentUser.id === data.user.id ? 
-                                            <>
-                                                <a className="dropdown-item" href="#" onClick={ handleRepost }>Repost</a>
-                                                <a className="dropdown-item" href="#" onClick={ handleDeletePost }>Delete Post</a> 
-                                            </>
-                                        : "" }
-                                        
-                                    </div>
-                                </div>
-                                <div className="media m-0">
-                                    <div className="d-flex mr-3">
-                                        <a href="">
-                                            <img 
-                                                className="img-fluid rounded-circle" 
-                                                src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/users/4.jpg" 
-                                                alt="User"/>
-                                        </a>
-                                        
-                                    </div>
-                                    <div className="media-body">
-                                        <p className="m-0">test{/* { data.userProfile.firstName.concat(" " + data.userProfile.lastName) } */}</p>
-                                        <small><span>{ getPassedTime(new Date(data.publishedDate)) }</span></small>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="p-1 pb-3" style={{ fontSize: "16px" }}>{ReactEmoji.emojify(data.content)}</div>
-                            <div className="cardbox-item">
-                                { data?.image !== "NONE" ? 
-                                    (
-                                        images.length === 1 ?
-                                            <img 
-                                                className="img-fluid" 
-                                                src={ images[0] }
-                                            /> : 
-                                        images.map((image, index) => <img 
-                                            className="" 
+        <div className="user-post">
+            { 
+                isShowed 
+                ?   <PostHistory 
+                        handleClose={ handleHideEditHistory } 
+                        postId={ data.id }
+                    /> : '' 
+            }
+            <div className="dropdown float-right">
+                <button className="btn btn-flat btn-flat-icon" type="button" data-toggle="dropdown" aria-expanded="false">
+                    <em className="fa fa-ellipsis-h"></em>
+                </button>
+                <div className="dropdown-menu dropdown-scale dropdown-menu-right" role="menu" 
+                    style={{position: "absolute", transform: "translate3d(-136px, 28px, 0px)", top: "0px", willChange: "transform"}}
+                >
+                    {/* <a className="dropdown-item" href="#">Hide post</a>
+                    <a className="dropdown-item" href="#">Stop following</a>
+                    <a className="dropdown-item" href="#">Report</a> */}
+                    <a className="dropdown-item" href="#" onClick={ handleShowEditHistory }>History Editting</a>
+                    { currentUser.id === data.user.id ? 
+                        <>
+                            <a className="dropdown-item" href="#" onClick={ handleRepost }>Repost</a>
+                            <a className="dropdown-item" href="#" onClick={ handleDeletePost }>Delete Post</a> 
+                        </>
+                    : "" }
+                    
+                </div>
+            </div>
+            <div className="friend-info">
+            <figure>
+                <img src={avatar} alt=""/>
+            </figure>
+            <div className="friend-name">
+                <ins>{ data.userProfile.firstName.concat(" " + data.userProfile.lastName) }</ins>
+                <Link to={"/detail/post/" + data.id} >{getPassedTime(new Date(data.publishedDate)) }</Link>
+
+                
+            </div>
+            <div className="description">
+                    
+                    <p>
+                        {ReactEmoji.emojify(data.content)}
+                    </p>
+                </div>
+            <div className="post-meta">
+                <div className="">
+                    <a href="#" title="">
+                    { 
+                        data.image !== "NONE" 
+                            ?   (
+                                    images.length === 1 ?
+                                        <img 
+                                            className="img-fluid" 
+                                            src={ images[0] }
+                                            alt=""
+                                        /> : 
+                                        <div className="row">
+                                    {
+                                    images.map((image, index) =>
+                                    <div key={index} className="col-lg-6 col-md-12 mb-4 mb-lg-0">
+                                        <img 
+                                            className="shadow-1-strong rounded mb-4" 
                                             src={image}
                                             height="125"
-                                            key={index}
-                                        />)
-                                    )
-                                    : ""
-                                }
-                            </div>
-                            <div className="cardbox-base">
-                                <ul className="float-right">
-                                    <li><a><i className="fa fa-comments"></i></a></li>
-                                    <li><a><em className="mr-5">12</em></a></li>
-                                    <li><a><i className="fa fa-share-alt"></i></a></li>
-                                    <li><a><em className="mr-3">03</em></a></li>
-                                </ul>
-                                <ul>
-                                    <li><a><i className="fa fa-thumbs-up"></i></a></li>
-                                    <li><a href="#"><img src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/users/3.jpeg" className="img-fluid rounded-circle" alt="User"/></a></li>
-                                    <li><a href="#"><img src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/users/1.jpg" className="img-fluid rounded-circle" alt="User"/></a></li>
-                                    <li><a href="#"><img src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/users/5.jpg" className="img-fluid rounded-circle" alt="User"/></a></li>
-                                    <li><a href="#"><img src="http://www.themashabrand.com/templates/bootsnipp/post/assets/img/users/2.jpg" className="img-fluid rounded-circle" alt="User"/></a></li>
-                                    <li><a><span>242 Likes</span></a></li>
-                                </ul>			   
-                            </div>
-                            <div>
-                        <div className="feature-box d-flex ">
-                            <button
-                                className="btn btn-primary mx-auto"
-                            // iconBefore={<LikeIcon label="" size="medium"></LikeIcon> }
-                            >Like</button>
-                            <button 
-                                className="btn btn-primary mx-auto"
-                            // iconBefore={<CommentIcon label="" size="medium" ></CommentIcon>}
-                          
+                                            alt=""
+                                        />
+                                    </div>
+                                        )}
+                                    </div>
+                                )
+                            : ""
+                    }
+                    </a>
+                </div>	
+                <div className="we-video-info">
+                    <p>{totalLikes}</p>
+
+                    <div className="feature-box d-flex ">
+                        {
+                            data.isLiked 
+                                ? 
+                                    <button className="btn btn-primary w-100"   onClick={ handleDisLikePost }>
+                                    <i className="fa fa-thumbs-down"> Dislike</i>
+                                    </button>
+                                :  
+                                    <button className="btn btn-primary w-100"   onClick={ handleLikePost }>
+                                    <i className="fa fa-thumbs-up"> Like</i>
+                                    </button>                           
+                        }
+
+                        <button  
+                        className="btn btn-primary w-100"    
                             onClick={(e) => handleOpenComment(e)}
-                            >Comment</button>
-                        </div>
-
-
-                            <div id="comment-box" ref={el => formRef.current = el}>
-                            <CommentComponent post={data}/>
-                             </div>
-
-                            </div>		
-                        </div>
+                        >
+                            <i className="fa fa-comment"> Comment</i>
+                        </button>
                     </div>
                 </div>
             </div>
-        </section>
+            </div>
+       <div className="coment-area" id="comment-box" ref={el => formRef.current = el}>
+           <CommentsList post={data}/>
+       </div>
+   </div>
     )
 }
 

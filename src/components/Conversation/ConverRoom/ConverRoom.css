@@ -29,36 +29,3 @@
     background-color: rgb(108, 117, 125, 0.3);
     border: none;
 }
-
-.dragprop-area {
-    display: none;
-    border: 1px solid rgb(63, 58, 58);
-    border-radius: 10px;
-    height: 100%;
-    width: 100%;
-    /* display: flex; */
-    align-items: center;
-    justify-content: center;
-    font-weight: 500;
-    font-size: 28px;
-}
-
-.image-raw-list {
-    display: flex;
-    flex-wrap: wrap;
-}
-
-.image-item {
-    padding: 8px;
-    height: fit-content;
-}
-
-.image-item img {
-    height: 100px;
-    cursor: pointer;
-}
-
-.image-item>div {
-    position: relative;
-    max-width: fit-content;
-}

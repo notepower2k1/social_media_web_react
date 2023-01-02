@@ -1,4 +1,6 @@
 import rootInstance from "./utilsService/rootInstance";
+
+
 const getProfile = async (userID) => {
     return await rootInstance.get("/profile/" + userID);
 }
@@ -13,11 +15,16 @@ const updateProfile = async (userID,profile) => {
 }
 
 
+const getFriendProfile = async (userID) => {
+    return await rootInstance.get("/profile/friendprofile/" + userID);
+
+}
 
 const ProfileService = {
     getProfile,
     createProfile,
     updateProfile,
+    getFriendProfile,
 };
   
 export default ProfileService;

@@ -21,7 +21,7 @@ const updateGroup = async (group, groupId) => {
 }
 
 const readTotalMembersById = async (groupId) => {
-    return await rootInstance.get(`/group/${groupId}/total-member/`);
+    return await rootInstance.get(`/group/${groupId}/total-member`);
 }
 
 const readGroupsUserJoined = async (userId) => {

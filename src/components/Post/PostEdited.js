@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import ReactEmoji from 'react-emoji';
 
-import { getImageUrlFromFirebase } from "../../utils/firebasePort";
+import FirebaseService from '../../services/firebase.service';
+import ProfileService from '../../services/ProfileService';
 import { getPassedTime } from "../../utils/spUtils";
 const PostEdited = ({ post }) => {
 
@@ -23,7 +24,7 @@ const PostEdited = ({ post }) => {
     }, []);
 
     const getImageFromFirebase = async (image) => {
-        getImageUrlFromFirebase("post_images", image)
+        FirebaseService.getImageUrlFromFirebase(image)
             .then((url) => {
                 setImages(prev => [...prev, url])
             });

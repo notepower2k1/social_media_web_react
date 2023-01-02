@@ -1,18 +1,24 @@
 import React ,{useState ,useEffect,useRef} from 'react'
 import ProfileService from '../../services/ProfileService';
 import {useParams} from 'react-router-dom';
-
 import Modal from 'react-bootstrap/Modal';
 import TextareaAutosize from 'react-textarea-autosize';
 import PostService from '../../services/post.service';
-import CommentComponent from '../Comment/CommentComponent';
 import ListFriend from '../Friend/ListFriend.js';
-
 import {storage} from '../../utils/firebaseConfig';
 import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
 import AuthService from "../../services/auth.service";
 import ButtonFriend from '../Friend/ButtonFriend';
+import { Routes, Route, Link } from "react-router-dom";
+import Post from "../Post/Post"
+import UserService from "../../services/user.service";
+import LikePostService from "../../services/likepost.service";
+import { useSelector, useDispatch } from "react-redux";
+import { addPost } from "../../redux/actions/PostActions";
 
+
+import Loading from "../Loading/Loading";
+import PostModal from "../Post/PostModal";
 
 function ProfileComponent() {
 
@@ -28,19 +34,34 @@ function ProfileComponent() {
     const [background,setBackground] = useState(null)
     const [about,setAbout] = useState("")
     const [locationID,setLocationID] = useState(0)
-
+    const [userName,setUserName] = useState("")
     const {userID} = useParams();
 
     const [uploadAvatar,setUploadAvatar] = useState(null);
     const [uploadBackground,setUploadBackground] = useState(null);
 
     const [posts,setPosts] = useState([]);
-    
 
+    const [postsLiked, setPostLiked] = useState([]);
+
+
+    const [renderValue,setRenderValue] = useState(0)
+
+    const [selectedPost, setSelectedPost] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [isShowed, setIsShowed] = useState(false);
+
+    const [isGroupPost, setIsGroupPost] = useState(false);
+
+    const dispatch = useDispatch();
+    const state = useSelector(state => state.allPosts);
+
+    const handleRender = ()=>{
+      setRenderValue(c=>c+1);
+    }
 
     const OldImage = useRef(null);
     const OldBackground = useRef(null);
-
 
 
     useEffect(() => {
@@ -53,19 +74,23 @@ function ProfileComponent() {
             setDob(response.data.dateOfBirth);
             setLocationID(response.data.locationID);
             getImageFromFirebase(response.data.avatar,response.data.background)
+            setUserName(response.data.user.username)
         })
-        getUserPost()
+
         checkCurrentUserProfile()
     },[userID])
 
    const checkCurrentUserProfile = () => {
-    if (currentUser.id === userID){
+    if (currentUser.id == userID){
       setIsCurrentProfile(true)
     } else{
       setIsCurrentProfile(false)
     }
    }
 
+
+    
+  
 
 
     const getImageFromFirebase=(avatar,background)=>{
@@ -92,7 +117,9 @@ function ProfileComponent() {
       setUploadAvatar(null);
       setUploadBackground(null);
     }
-    const handleShow = () => {
+   
+    const handleShow = (e) => {
+      e.preventDefault();
       setShow(true);
 
     }
@@ -151,149 +178,280 @@ function ProfileComponent() {
         
   }
 
-   
 
-    const getUserPost=()=>{
-      PostService.getPostByUserID(userID).then((response)=>{
-        setPosts(response.data)
-    });
+   
+    useEffect(() => {
+        getAllPosts();
+        getPostsCurrentUserLiked(currentUser.id);
+
+        return () => {
+            setPosts([]);
+        }
+    }, [renderValue,state]);
+
+    const getPostsCurrentUserLiked = async (userID) => {
+        await LikePostService.readPostUserLiked(userID)
+            .then(res => {
+                setPostLiked(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
-    const formRef = useRef([]);
-    const handlerOpenComment = function(idx) {
-      return function(e)
-      {
-        
-        const currentForm = formRef.current[idx];
-        if (currentForm) {
-    
-         
-          if (currentForm.style.display === "none" || currentForm.style.display === "") {
-            currentForm.style.display = "block";
-          } else {
-            currentForm.style.display = "none";
-          }
-        }
-      };
-    
-    } 
+
+    const getAllPosts = async () => {
+        setLoading(true);
+        setIsGroupPost(false);
+        await PostService.getPostByUserID(currentUser.id)
+			.then(res => {
+				let allPosts = res.data;
+
+                
+				allPosts.forEach(post => {
+
+                    if (postsLiked.some(postLiked => postLiked.post.id === post.id)) {
+                        post.isLiked = true;
+                    } 
+                    else 
+                    {
+                        post.isLiked = false;
+                    }
+                    
+					getUserProfileByUser(post.user)
+					.then(profileRes => {
+						let userProfile = profileRes.data;
+						post.userProfile = userProfile;
+
+                    
+
+                        setPosts(prev => {
+                            if (prev.every(curPostValue => curPostValue.id !== post.id)) {
+                                return [...prev, post];
+                            } else {
+                                return [...prev];
+                            }
+                        });
+                        if (state.allPosts.every(curPostValue => curPostValue.id !== post.id)) {
+                            dispatch(addPost(post));
+                        }
+					});
+				})
+            })
+            .catch(e => {
+                console.log(e);
+            });
+            setLoading(false);
+
+    }  
+     
+    const getUserProfileByUser = async (user) => {
+        return await UserService.readUserProfile(user);
+    }
+
+
+
+
+    const showModal = () => {
+        setIsShowed(true);
+    }
+
+    const hideModal = () => {
+        setIsShowed(false);
+    }
+ 
+
+   
+  // const handleChange = () => {
+  //   setChange(!change)
+  // }
   return (
     <div>
-  <div className="container">
-  <div className="container h-100">
-    <div className="row d-flex justify-content-center align-items-center h-100">
-      <div className="col col-lg-10 col-xl-10">
-        <div className="card">
-            <div>
-
-            <div className="rounded-top text-white d-flex flex-row" style={{backgroundImage:`url(${background})`, 
+  <section>
+		<div className="feature-photo">
+			<figure>
+      <div className="rounded-top text-white d-flex flex-row" style={{backgroundImage:`url(${background})`, 
           backgroundRepeat: 'no-repeat', 
           backgroundSize: 'cover',
           backgroundPosition: 'center'
-            , height:"300px"}}>
-                
-              
-            </div>
-         
-          </div>
-          <div className="d-flex justify-content-between" style={{backgroundColor: "#f8f9fa"}}>
-            <div className="ms-4 mt-2 d-flex">
-            <img src={avatar}  alt="Avatar" className="rounded-circle avatar shadow-4 img-thumbnail" style={{width: "150px"}}/>
-            <div className="ms-3 align-self-end">
-                <h5 className="text-title">{lastName} {firstName}</h5>
-                <p className="text-title">New York</p>
-            </div>
-            </div>
-        
-            <div className="d-flex mb-2 me-2 align-self-end">
-         {!isCurrentProfile && <ButtonFriend userID = {userID} />}
-
-            <button className="btn btn-primary"
-            onClick={handleShow}><i className="fa-sharp fa fa-gears"> Edit Profile</i></button>
-                    
-            </div>
-          
-            </div>
-          
-          
-
-          {/* //Render list friend */}
-            <div className="card-body p-4 text-black">
-              {userID && <ListFriend userID = {userID}/>}
-            </div>
-
-
-          <div className="card-body p-4 text-black">
-            <div className="mb-5" style={{backgroundColor: "#f8f9fa"}}>
-              <p className="lead fw-normal mb-1">About</p>
-              <div className="p-4">
-                <p className="font-italic mb-1">{about}</p>
+            , height:"600px"}}>
               </div>
-            </div>
-            <div className="mb-4">
-           
-            <p className="lead fw-normal mb-0">Recent posts</p>
-        
+      </figure>
+			<div className="add-btn">
+      {!isCurrentProfile && <ButtonFriend 
+              userID = {userID} 
+              // handle = {handleChange()}
+          />}
+			</div>
+			<form className="edit-phto">
+				<i className="fa fa-camera-retro"></i>
+				<label className="fileContainer">
+					Edit Cover Photo
+				<input type="file" onClick={(e) => handleShow(e)}/>
+				</label>
+			</form>
+			<div className="container-fluid">
+				<div className="row merged">
+					<div className="col-lg-2 col-sm-3">
+						<div className="user-avatar">
+							<figure>
+								<img src={avatar} alt=""/>
+								<form className="edit-phto">
+									<i className="fa fa-camera-retro"></i>
+									<label className="fileContainer">
+										Edit Display Photo
+										<input type="file" onClick={(e) => handleShow(e)}/>
+									</label>
+								</form>
+							</figure>
+						</div>
+					</div>
+					<div className="col-lg-10 col-sm-9">
+						<div className="timeline-info">
+							<ul>
+								<li className="admin-name">
+								  <h5>{firstName} {lastName}</h5>
+								</li>
+								<li>
+									<Link className="active" title="" data-ripple="">time line</Link>
+									<Link className=""  title="" data-ripple="">Photos</Link>
+									<Link className=""  title="" data-ripple="">Videos</Link>
+									<Link className=""  title="" data-ripple="">Friends</Link>
+									<Link className=""  title="" data-ripple="">Groups</Link>
+									<Link className=""  title="" data-ripple="">about</Link>
+									<Link className=""  title="" data-ripple="">more</Link>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+		
+	<section>
+		<div className="gap gray-bg">
+			<div className="container-fluid">
+				<div className="row">
+					<div className="col-lg-12">
+						<div className="row" id="page-contents">
+							<div className="col-lg-3">
+								<aside className="sidebar static">		
+									<div className="widget">
+										<h4 className="widget-title">Recent Activity</h4>
+										<ul className="activitiez">
+											<li>
+												<div className="activity-meta">
+													<i>10 hours Ago</i>
+													<span><Link  title="">Commented on Video posted </Link></span>
+													<h6>by <Link >black demon.</Link></h6>
+												</div>
+											</li>
+											<li>
+												<div className="activity-meta">
+													<i>30 Days Ago</i>
+													<span><Link  title="">Posted your status. “Hello guys, how are you?”</Link></span>
+												</div>
+											</li>
+											<li>
+												<div className="activity-meta">
+													<i>2 Years Ago</i>
+													<span><Link title="">Share a video on her timeline.</Link></span>
+													<h6>"<Link >you are so funny mr.been.</Link>"</h6>
+												</div>
+											</li>
+										</ul>
+									</div>
+									<div className="widget stick-widget">
+										<h4 className="widget-title">Who's follownig</h4>
+										<ul className="followers">
+											<li>
+												<figure><img src="images/resources/friend-avatar2.jpg" alt=""/></figure>
+												<div className="friend-meta">
+													<h4><Link title="">Kelly Bill</Link></h4>
+													<Link  title="" className="underline">Add Friend</Link>
+												</div>
+											</li>
+											<li>
+												<figure><img src="images/resources/friend-avatar4.jpg" alt=""/></figure>
+												<div className="friend-meta">
+													<h4><Link  title="">Issabel</Link></h4>
+													<Link  title="" className="underline">Add Friend</Link>
+												</div>
+											</li>
+											<li>
+												<figure><img src="images/resources/friend-avatar6.jpg" alt=""/></figure>
+												<div className="friend-meta">
+													<h4><Link  title="">Andrew</Link></h4>
+													<Link  title="" className="underline">Add Friend</Link>
+												</div>
+											</li>
+											<li>
+												<figure><img src="images/resources/friend-avatar8.jpg" alt=""/></figure>
+												<div className="friend-meta">
+													<h4><Link  title="">Sophia</Link></h4>
+													<Link  title="" className="underline">Add Friend</Link>
+												</div>
+											</li>
+											<li>
+												<figure><img src="images/resources/friend-avatar3.jpg" alt=""/></figure>
+												<div className="friend-meta">
+													<h4><Link  title="">Allen</Link></h4>
+													<Link  title="" className="underline">Add Friend</Link>
+												</div>
+											</li>
+										</ul>
+									</div>
+								</aside>
+							</div>
+							<div className="col-lg-6">
+								<div className="loadMore">	
+								<div className="central-meta item">
+						
+							  { isShowed ? <PostModal 
+                                handleClose={ hideModal } 
+                                oldData={ selectedPost }
+                                isGroupPost = {isGroupPost}
+                            /> : '' }
+                                {
+                                    posts === undefined || posts.length === 0  || loading
+                                    ?  <Loading />
+                                    : posts.map((post, index) => (
+                                        <div className="central-meta item" key={index}>
+                                            <Post data={post}  handleRender={ handleRender }
+                                selected={ setSelectedPost }
+                                onShowModal={ showModal }
+                                />
+                                            </div>
+                                        
+                                       
+                                    ))
+                                }
+									
+								</div>
+								</div>
+							</div>
+							<div className="col-lg-3">
+								<aside className="sidebar static">						
+									<div className="widget friend-list stick-widget">
+										<h4 className="widget-title">Friends</h4>
+										<ul id="people-list" className="friendz-list">
+                    {userID && <ListFriend userID = {userID}/>}			
+										</ul>
+										
+									</div>
+								</aside>
+							</div>
+						</div>	
+					</div>
+				</div>
+			</div>
+		</div>	
+	</section>
 
-              <div>
-              {
-                 posts.map(
-                  (post,index) =>
-                 <div className="mt-3 " key={post.id}>
-                     <div className="card">
-                     <div className="card-body">
-                         <div className="user-info d-flex">
-                         <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar" />
-
-                         <div className="user-info-text align-self-center ms-3">
-                             <h5 className="card-title">UserID: {post.user.id}</h5>
-                             <h6 className="card-subtitle mb-2 text-muted">{post.publishedDate}</h6>
-                         </div>
-                         </div>
-                        <div className="content-box">
-                         <p className="card-text">{post.content}</p>
-
-                         <img src="https://www.shutterstock.com/image-vector/new-post-vector-lettering-typography-260nw-1780835693.jpg"  alt="..."/>
-                         </div>
-                     </div>
-                       <div className="feature-box d-flex ">
-                     <button
-                      className="btn btn-primary w-100"
-                     ><i className="fa fa-thumbs-up"> Comment</i>
-                     </button>
-                     <button 
-                    
-                     className="btn btn-primary w-100"
-                     onClick={(e) => handlerOpenComment(index)(e)}
-                     >
-                    <i className="fa fa-comment"> Comment</i>
-
-                     </button>
-                       </div>
-                     </div>
-
-                     <div id="comment-box" ref={el => formRef.current[index] = el}>
-              <CommentComponent post={post}/>
-              </div>
-              </div>
-             
-             )
-              }
-              </div>
-             
-            </div>
-          
-         
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-            </div>
 
 
-
-            <Modal
+      <Modal
             size="lg"
         show={show}
         onHide={handleClose}

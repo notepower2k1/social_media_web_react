@@ -16,7 +16,6 @@ function Friend({userId}){
         getListFriendUserByID(userId).then(res => setListFriend(res))
     },[userId,change])
 
-    console.log('render');
     const handleAcceptRequest = (userId1) => {
         acceptRequest(userId1,userId).then(() => setChange(!change))
     }

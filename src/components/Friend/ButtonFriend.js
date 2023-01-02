@@ -1,41 +1,94 @@
 import React ,{useState ,useEffect,useRef} from 'react'
+
 import AuthService from "../../services/auth.service";
-import FriendService from "../../services/FriendService"
-
-
+import FriendService from "../../services/friend.service"
 
 function ButtonFriend(props){
 
     // -------------
-    const [listFriendCurrentUser,setListFriendCurrentUser] = useState()
-    const [isFriend,setIsFriend] = useState(true)
+    const [isFriend,setIsFriend] = useState()
+    const [isRequesting, setIsRequesting] = useState()
+    const [isRequester, setIsRequester] = useState()
+    const [change,setChange] = useState()
     const currentUser = AuthService.getCurrentUser();
+
     useEffect(() =>{
-        FriendService.getListFriend(currentUser.id).then(res => setListFriendCurrentUser(res.data))
-        checkIsFriend()
-    })
-
-    const checkIsFriend = () => {
-        if (listFriendCurrentUser){
-          let isFr = false
-          listFriendCurrentUser.map((userProfile) => {
-            if (userProfile.user.id == props.userID){
-              isFr = true
-            }
-          })
-          if (isFr){
-            setIsFriend(true)
-          } else{
-            setIsFriend(false)
+        FriendService.checkIsFriend(currentUser.id,props.userID).then(res => 
+          {
+            setIsFriend(res)
           }
-        }
-      }
-    // const [isCurrentProfile,setIsCurrentProfile] = useState()
+        )
+        FriendService.checkIsRequesting(currentUser.id,props.userID).then(res => 
+          {
+            setIsRequesting(res)
+          }
+        )
+        FriendService.checkIsRequester(currentUser.id,props.userID).then(res => 
+          {
+            setIsRequester(res)
+          }
+        )
+    },[props.userID,change])
 
-    return <div className="button_friend">
-            {isFriend ?
-              <button className="btn btn-danger col-3">Hủy kết bạn</button> 
-            : <button className="btn btn-info col-3">Kết bạn</button>}
+    const handleAddRequest = () => {
+      FriendService.addRequest(currentUser.id,props.userID).then(res => setChange(!change))
+    }
+
+    const handleRemoveFriendShip = () => {
+      FriendService.removeFriendShip(currentUser.id,props.userID).then(res => 
+        {
+          setChange(!change)
+        }
+      )
+      props.handle()
+    }
+
+    const handleAcceptRequest = () => {
+      FriendService.acceptRequest(currentUser.id,props.userID).then(res => 
+        {
+          setChange(!change)
+        }
+      )
+      
+    }
+
+    if (isFriend){
+      return (
+        <div className="button_friend">
+          <button 
+                className="btn btn-danger"
+                onClick={handleRemoveFriendShip}
+          >Hủy kết bạn</button>
+        </div>
+      )
+    } else if (isRequesting) {
+      return (
+          <div className="button_friend">
+            <button 
+                className="btn btn-secondary"
+                onClick={handleRemoveFriendShip}
+              >Hủy yêu cầu</button>
           </div>
+      )
+          } else if (isRequester) {
+            return (
+              <div className="button_friend">
+                <button 
+                    className="btn btn-primary"
+                    onClick={handleAcceptRequest}
+                >Chấp nhận lời mời</button>
+              </div>
+            )
+                } else{
+                  return (
+                    <div className="button_friend">
+                      <button 
+                          className="btn btn-info"
+                          onClick={handleAddRequest}
+                      >Kết bạn</button>
+                    </div>
+                  )
+                }
+    
 }
 export default ButtonFriend

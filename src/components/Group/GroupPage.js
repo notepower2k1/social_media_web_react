@@ -1,23 +1,45 @@
 import React, { useEffect, useState} from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import Loading from "../Loading/Loading";
+import { useSelector, useDispatch } from "react-redux";
 
+import Post from "../Post/Post";
+import Loading from "../Loading/Loading";
+import PostModal from "../Post/PostModal";
 import GroupService from "../../services/group.service";
 import AuthService from "../../services/auth.service";
 import UserService from "../../services/user.service";
+import PostService from "../../services/post.service";
+import { addPost } from "../../redux/actions/PostActions";
+
+import "../Post/post.css";
 
 const GroupPage = () => {
 
+    const [posts, setPosts] = useState([]);
+    const [selectedPost, setSelectedPost] = useState(null);
     const [group, setGroup] = useState(null);
     const [totalMembers, setTotalMembers] = useState(0);
     const [loading, setLoading] = useState("");
     const [isJoined, setIsJoined] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
+    const [isShowed, setIsShowed] = useState(false);
+    const [reload, setReload] = useState(false);
+    const [isGroupPost, setIsGroupPost] = useState(true);
+
+    const dispatch = useDispatch();
+    const state = useSelector(state => state.allPosts);
 
     const currentUser = AuthService.getCurrentUser();
     
     const navigate = useNavigate();
     let { id } = useParams();
+
+    useEffect(() => {
+        getAllPosts();
+        return () => {
+            setPosts([]);
+        }
+    }, [reload, state]);
 
     useEffect(() => {
         getGroup(id)
@@ -50,6 +72,43 @@ const GroupPage = () => {
             });
     }, [totalMembers, isJoined, loading]);
 
+    const getAllPosts = async () => {
+        setLoading(true);
+        setIsGroupPost(true)
+        await PostService.getPostsGroup(id)
+			.then(res => {
+				let allPosts = res.data;
+				allPosts.forEach(post => {
+					getUserProfileByUser(post.user)
+					.then(profileRes => {
+						let userProfile = profileRes.data;
+						post.userProfile = userProfile;
+                        setPosts(prev => {
+                            if (prev.every(curPostValue => curPostValue.id !== post.id)) {
+                                return [...prev, post];
+                            } else {
+                                return [...prev];
+                            }
+                        });
+                        if (state.allPosts.every(curPostValue => curPostValue.id !== post.id)) {
+                            dispatch(addPost(post));
+                        }
+					});
+				})
+            })
+            .catch(e => {
+                console.log(e);
+            });
+            setLoading(false);
+    }  
+    
+    const showModal = () => {
+        setIsShowed(true);
+    }
+
+    const hideModal = () => {
+        setIsShowed(false);
+    }
     
     const handleJoinGroup = async (event) => {
         event.preventDefault();
@@ -66,8 +125,6 @@ const GroupPage = () => {
 
     const handleLeaveGroup = async (event) => {
         event.preventDefault();
-        //Nếu admin rời nhóm thì chuyển quyền cho thành viên khác
-        //Nếu là admin thì có quyền buộc thành viên khác rời nhóm
         if (isAdmin) {
             if (window.confirm("Bạn là admin nếu rời nhóm, nhóm sẽ tự động xóa.\nXác nhận xóa?")) {
                 await UserService.leaveGroup(id, currentUser.id);
@@ -99,6 +156,10 @@ const GroupPage = () => {
     }
     const checkUserIsAdminGroup = async (groupId, userId) => {
         return await UserService.checkUserIsAdminGroup(groupId, userId);
+    }
+
+    const getUserProfileByUser = async (user) => {
+        return await UserService.readUserProfile(user);
     }
 
     return (
@@ -176,67 +237,71 @@ const GroupPage = () => {
                                     </div>
                                 </div>
                             </div>
-                    </section>
+                        </section>
                             
-                    <section>
-                        <div className="gap gray-bg">
-                            <div className="container-fluid">
-                                <div className="row">
-                                    <div className="col-lg-12">
-                                        <div className="row" id="page-contents">
-                                            <div className="col-lg-6">
-                                                <div className="loadMore">
-                                                    <div className="central-meta item">
-                                                        <div className="new-postbox">
-                                                            <figure>
-                                                                <img src="../../images/resources/admin2.jpg" alt="" />
-                                                            </figure>
-                                                            <div className="newpst-input">
-                                                                <form method="post">
-                                                                    <textarea rows="2" placeholder="write something"></textarea>
-                                                                    <div className="attachments">
-                                                                        <ul>
-                                                                            <li>
-                                                                                <i className="fa fa-music"></i>
-                                                                                <label className="fileContainer">
-                                                                                    <input type="file" />
-                                                                                </label>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i className="fa fa-image"></i>
-                                                                                <label className="fileContainer">
-                                                                                    <input type="file" />
-                                                                                </label>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i className="fa fa-video-camera"></i>
-                                                                                <label className="fileContainer">
-                                                                                    <input type="file" />
-                                                                                </label>
-                                                                            </li>
-                                                                            <li>
-                                                                                <i className="fa fa-camera"></i>
-                                                                                <label className="fileContainer">
-                                                                                    <input type="file" />
-                                                                                </label>
-                                                                            </li>
-                                                                            <li>
-                                                                                <button type="submit">Publish</button>
-                                                                            </li>
-                                                                        </ul>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                        <section className="d-flex justify-content-center">
+                            <div className="col-lg-8">
+                                <div className="central-meta">
+                                    <div className="new-postbox">
+                                        <div className="">
+                                            <div onClick={ showModal } >
+                                                <textarea disabled></textarea>
+                                                <div className="attachments">
+                                                    <ul>
+                                                        <li>
+                                                            <i className="fa fa-music"></i>
+                                                            <label className="fileContainer">
+                                                            </label>
+                                                        </li>
+                                                        <li>
+                                                            <i className="fa fa-image"></i>
+                                                            <label className="fileContainer">
+                                                            </label>
+                                                        </li>
+                                                        <li>
+                                                            <i className="fa fa-video-camera"></i>
+                                                            <label className="fileContainer">
+                                                            </label>
+                                                        </li>
+                                                        <li>
+                                                            <i className="fa fa-camera"></i>
+                                                            <label className="fileContainer">
+                                                            </label>
+                                                        </li>
+                                                        <li>
+                                                            <button className="btn btn-primary" onClick={ showModal } >Post</button>
+                                                        </li>
+                                                    </ul>
                                                 </div>
                                             </div>
-                                        </div>	
+                                        </div>
                                     </div>
                                 </div>
+
+                                { 
+                                    isShowed ? 
+                                        <PostModal 
+                                            handleClose={ hideModal } 
+                                            oldData={ selectedPost }
+                                            isGroupPost={isGroupPost}
+                                            groupID = {id}
+                                        /> : '' 
+                                }
+                                {
+                                    posts === undefined || posts.length === 0  || loading
+                                    ?   <Loading />
+                                    :   posts.map((post, index) => (
+                                            <div className="central-meta item" key={index}>
+                                                <Post 
+                                                    data={post}  callBack={ setReload }
+                                                    selected={ setSelectedPost }
+                                                    onShowModal={ showModal }
+                                                />
+                                            </div>
+                                        ))
+                                }
                             </div>
-                        </div>	
-                    </section>
+                        </section>
                     </div>
                 ) : <Loading />
             }

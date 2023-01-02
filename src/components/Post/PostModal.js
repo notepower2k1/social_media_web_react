@@ -10,7 +10,7 @@ import { storage } from "../../utils/firebaseConfig";
 import { addPost, updatePost } from "../../redux/actions/PostActions";
 import "./modal.css";
 
-const PostModal = ({ handleClose, oldData }) => {
+const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
 
     const [content, setContent] = useState("");
     const [images, setImages] = useState([]);
@@ -40,18 +40,34 @@ const PostModal = ({ handleClose, oldData }) => {
             let imagesString = res.reduce((accum, current) => {
                 return accum.concat("|" + current);
             }, "")
-            if (oldData !== null) {
-                PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
-                    .then(res => {
-                        console.log(res.data);
-                        dispatch(updatePost(res.data));
-                    });
+            if(isGroupPost) {
+                if (oldData !== null) {
+                    PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
+                        .then(res => {
+                            console.log(res.data);
+                            dispatch(updatePost(res.data));
+                        });
+                } else {
+                    PostService.createPostGroup({content: content, image: images.length !== 0 ? imagesString : "NONE"},groupID)
+                        .then(res => {
+                            console.log(res.data);
+                            dispatch(addPost(res.data));
+                        });
+                }
             } else {
-                PostService.createPost({content: content, image: images.length !== 0 ? imagesString : "NONE"})
-                    .then(res => {
-                        console.log(res.data);
-                        dispatch(addPost(res.data));
-                    });
+                if (oldData !== null) {
+                    PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
+                        .then(res => {
+                            console.log(res.data);
+                            dispatch(updatePost(res.data));
+                        });
+                } else {
+                    PostService.createPost({content: content, image: images.length !== 0 ? imagesString : "NONE"})
+                        .then(res => {
+                            console.log(res.data);
+                            dispatch(addPost(res.data));
+                        });
+                }
             }
         })
         
@@ -72,26 +88,6 @@ const PostModal = ({ handleClose, oldData }) => {
         setImages(listImages);
     }
 
-    /* const handleUpload = (file) => {
-        if (!file) {
-            alert("Please choose a file first!")
-        }
-         
-        const storageRef = ref(storage, `/files/${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on(
-            "state_changed",
-            (snapshot) => { },
-            (err) => console.log(err),
-            () => { 
-                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    setImageUrl(new URL(url).toString());
-                });
-            }
-        ); 
-        
-    } */
     const handleUploadImages = async (images) => {
         const imagesArray = [];
         for (let i = 0; i < images.length; i++) {
