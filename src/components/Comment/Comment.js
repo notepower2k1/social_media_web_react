@@ -3,7 +3,11 @@ import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
 import CommentService from '../../services/CommentService'
 import ProfileService from '../../services/ProfileService';
+<<<<<<< HEAD
 import FirebaseSerive from '../../services/firebaseService';
+=======
+import FirebaseService from '../../services/firebase.service';
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 
 function Comment({index,formRef,increaseRenderValue,data}) {
 
@@ -30,7 +34,11 @@ function Comment({index,formRef,increaseRenderValue,data}) {
         ProfileService.getProfile(data.user.id).then((response) => {
             setFirstName(response.data.firstName);
             setLastName(response.data.lastName);
+<<<<<<< HEAD
             FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
+=======
+            FirebaseService.getAvatarFromFirebase(response.data.avatar).then((response) => {
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                 setAvatar(response)
             })
             

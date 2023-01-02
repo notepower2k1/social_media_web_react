@@ -6,7 +6,6 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.6);
     z-index: 1;
-    
 }
 
 .modal-main {
@@ -18,9 +17,6 @@
     transform: translate(-50%,-50%);
     border-radius: 10px;
     overflow: hidden;
-}
-
-.upload__image-wrapper {
 }
 
 .image-item__btn-wrapper {

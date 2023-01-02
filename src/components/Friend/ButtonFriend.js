@@ -1,8 +1,7 @@
 import React ,{useState ,useEffect,useRef} from 'react'
+
 import AuthService from "../../services/auth.service";
-import FriendService from "../../services/FriendService"
-
-
+import FriendService from "../../services/friend.service"
 
 function ButtonFriend(props){
 

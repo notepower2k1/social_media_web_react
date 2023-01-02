@@ -3,9 +3,10 @@ import { useDispatch } from "react-redux";
 import Form from "react-validation/build/form";
 import Textarea from "react-validation/build/textarea";
 import ImageUploading from 'react-images-uploading';
-import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytesResumable } from "firebase/storage";
 
 import PostService from "../../services/post.service";
+<<<<<<< HEAD
 import {storage} from "../../utils/firebaseConfig";
 import { addPost ,updatePost } from "../../redux/actions/PostActions";
 import "./modal.css";
@@ -13,6 +14,13 @@ import "./modal.css";
 
 
 const PostModal = ({ handleClose ,oldData,isGroupPost,groupID }) => {
+=======
+import { storage } from "../../utils/firebaseConfig";
+import { addPost, updatePost } from "../../redux/actions/PostActions";
+import "./modal.css";
+
+const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 
     const [content, setContent] = useState("");
     const [images, setImages] = useState([]);
@@ -42,9 +50,13 @@ const PostModal = ({ handleClose ,oldData,isGroupPost,groupID }) => {
             let imagesString = res.reduce((accum, current) => {
                 return accum.concat("|" + current);
             }, "")
+<<<<<<< HEAD
 
             if(isGroupPost)
             {
+=======
+            if(isGroupPost) {
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                 if (oldData !== null) {
                     PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
                         .then(res => {
@@ -58,8 +70,12 @@ const PostModal = ({ handleClose ,oldData,isGroupPost,groupID }) => {
                             dispatch(addPost(res.data));
                         });
                 }
+<<<<<<< HEAD
             }
             else{
+=======
+            } else {
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                 if (oldData !== null) {
                     PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
                         .then(res => {
@@ -74,7 +90,10 @@ const PostModal = ({ handleClose ,oldData,isGroupPost,groupID }) => {
                         });
                 }
             }
+<<<<<<< HEAD
             
+=======
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
         })
         
         //Bắt lỗi và hiển thị...
@@ -94,26 +113,6 @@ const PostModal = ({ handleClose ,oldData,isGroupPost,groupID }) => {
         setImages(listImages);
     }
 
-    /* const handleUpload = (file) => {
-        if (!file) {
-            alert("Please choose a file first!")
-        }
-         
-        const storageRef = ref(storage, `/files/${file.name}`);
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on(
-            "state_changed",
-            (snapshot) => { },
-            (err) => console.log(err),
-            () => { 
-                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    setImageUrl(new URL(url).toString());
-                });
-            }
-        ); 
-        
-    } */
     const handleUploadImages = async (images) => {
         const imagesArray = [];
         for (let i = 0; i < images.length; i++) {
@@ -129,7 +128,7 @@ const PostModal = ({ handleClose ,oldData,isGroupPost,groupID }) => {
            
             <section className="modal-main p-3 col-md-6 col-lg-4">
                 <div>
-                    <h3 className="text-center">Tạo bài viết</h3>
+                    <h3 className="text-center">{ oldData === null ? "Create Post" : "Update Post" }</h3>
                     <button type="button" className="btn btn-secondary position-absolute" style={{top: "0px", right: "0px"}} onClick={handleClose}>
                         <i className="fa fa-times" aria-hidden="true"></i>
                     </button>
@@ -146,7 +145,6 @@ const PostModal = ({ handleClose ,oldData,isGroupPost,groupID }) => {
                             //validations={[required]}
                         />
 
-                         
                         {/* <button onClick={ () => setShowEmojis(!showEmojis) }>
                             open
                         </button>
@@ -199,16 +197,16 @@ const PostModal = ({ handleClose ,oldData,isGroupPost,groupID }) => {
                                     </button> */}
                                     <div className="image-raw-list">
                                         {imageList.map((image, index) => (
-                                            <div key={index} className="image-item">
-                                                <div>
-                                                    <img src={image['dataURL']} alt="" onClick={() => onImageUpdate(index)} />
-                                                    <div className="image-item__btn-wrapper">
-                                                        <button className="btn btn-danger" onClick={() => onImageRemove(index)}>
-                                                                <i className="fa fa-times" aria-hidden="true"></i>
-                                                        </button>
+                                                <div key={index} className="image-item">
+                                                    <div>
+                                                        <img src={image['dataURL']} alt="" onClick={() => onImageUpdate(index)} />
+                                                        <div className="image-item__btn-wrapper">
+                                                            <button className="btn btn-danger" onClick={() => onImageRemove(index)}>
+                                                                    <i className="fa fa-times" aria-hidden="true"></i>
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
                                         ))}
                                     </div>
                                 </div>
@@ -219,7 +217,7 @@ const PostModal = ({ handleClose ,oldData,isGroupPost,groupID }) => {
                         type="button" 
                         className="btn btn-primary w-100" 
                         onClick={ handleSubmit }
-                    > Đăng </button>
+                    > Post </button>
                     
                     {/* <div className="form-group">
                         <button className="btn btn-primary btn-block" disabled={loading}>

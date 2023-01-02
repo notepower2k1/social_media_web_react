@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React ,{useState,useRef,useEffect} from 'react';
 
 // import Button from '@atlaskit/button';
@@ -6,12 +7,33 @@ import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
 import ProfileService from '../../services/ProfileService';
 import FirebaseSerive from '../../services/firebaseService';
+=======
+import React ,{useState,useEffect,useRef} from 'react';
+import ReplyService from '../../services/ReplyService'
+
+
+import Reply from './Reply';
+
+
+function ReplyLists({renderValue,increaseRenderValue,comment}){
+
+    const [listReplies,setListReplies] = useState([]);
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 
 
 
+   
+    useEffect(() => {
+      getAllReplies();
+    },[renderValue] );
 
-function AddReplyComponent({increaseRenderValue,comment}) {
+    const getAllReplies =()=>{
+      ReplyService.getReplies(comment.id).then((response) => {
+          setListReplies(response.data);       
+      });
+    }
 
+<<<<<<< HEAD
     const [inputReply,setInputReply] = useState("");
     const user = AuthService.getCurrentUser();
     const formRef = useRef([])
@@ -48,11 +70,16 @@ function AddReplyComponent({increaseRenderValue,comment}) {
             console.log(err)
         });
         
+=======
+    
+  
+    
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 
-        setInputReply("")
-      }
+    
   return (
     <div>
+<<<<<<< HEAD
 
              <div ref={formRef} className='reply-box'>
              <div className="comet-avatar">
@@ -72,9 +99,20 @@ function AddReplyComponent({increaseRenderValue,comment}) {
 
               </div>
                   </div>
+=======
+        {
+            listReplies.map(
+                (reply,index) =>
+                <li key={reply.id}>    
+
+                <Reply increaseRenderValue={increaseRenderValue} data={reply}/>
+            
+                </li>
+            )
+        }
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
     </div>
   )
 }
 
-
-export default AddReplyComponent;
+export default ReplyLists;

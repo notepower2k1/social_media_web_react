@@ -1,39 +1,38 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Form from "react-validation/build/form";
 
 import GroupService from "../../services/group.service";
+import UserService from "../../services/user.service";
+import AuthService from "../../services/auth.service";
 import { addGroup } from "../../redux/actions/GroupActions";
 
 const GroupCreate = () => {
+
+    const currentUser = AuthService.getCurrentUser();
     
-    const [id, setId] = useState();
     const [name, setName] = useState("");
-    
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    
-    useEffect(() => {
-
-    }, [])
-
-    useEffect(() => {
-
-    })
 
     const handleSubmit = async (event) => {
         event.preventDefault();
         let newGroup = {groupName: name, groupAbout: "none"};
         await GroupService.createGroup(newGroup)
             .then(res => {
-                setId(res.data);
+                UserService.joinGroup(res.data.id, currentUser.id)
+                    .catch((err) => {
+                        console.log(err);
+                    });
                 dispatch(addGroup(res.data));
                 navigate("/group/" + res.data.id);
             })
             .catch(err => {
                 console.log(err);
             });
+        
     }
 
     const handleChangeName = (event) => {

@@ -1,7 +1,13 @@
 import React, { useState, useEffect } from "react";
 import ReactEmoji from 'react-emoji';
+<<<<<<< HEAD
 import FirebaseSerive from '../../services/firebaseService';
 
+=======
+
+import FirebaseService from '../../services/firebase.service';
+import ProfileService from '../../services/ProfileService';
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 import { getPassedTime } from "../../utils/spUtils";
 const PostEdited = ({ post }) => {
 
@@ -23,7 +29,11 @@ const PostEdited = ({ post }) => {
     }, []);
 
     const getImageFromFirebase = async (image) => {
+<<<<<<< HEAD
         FirebaseSerive.getImageUrlFromFirebase(image)
+=======
+        FirebaseService.getImageUrlFromFirebase(image)
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
             .then((url) => {
                 setImages(prev => [...prev, url])
             });

@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import {useNavigate} from "react-router-dom";
 import { Form, Button, Container, Alert } from 'react-bootstrap';
+<<<<<<< HEAD
+=======
+
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 import GroupService from "../../../services/group.service";
 
 const GroupForm = () => {

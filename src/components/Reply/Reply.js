@@ -1,6 +1,10 @@
 import React ,{useState,useEffect,useRef} from 'react';
 import ProfileService from '../../services/ProfileService';
+<<<<<<< HEAD
 import FirebaseSerive from '../../services/firebaseService';
+=======
+import FirebaseSerive from '../../services/firebase.service';
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 import AuthService from '../../services/auth.service'
 import ReplyService from '../../services/ReplyService'
 import TextareaAutosize from 'react-textarea-autosize';

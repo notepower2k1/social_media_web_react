@@ -4,6 +4,6 @@ import AuthService from "../services/auth.service";
 
 export default function PrivateRoute({ children }) {
     const currentUser = AuthService?.getCurrentUser();
-    return currentUser !== null ? children : <Navigate to="/login" replace />;
+    return (currentUser !== null) ? children : <Navigate to="/login" replace />;
 }
 

@@ -81,8 +81,13 @@ img{ max-width:100%;}
 .time_date {
   color: #747474;
   display: block;
+<<<<<<< HEAD
   font-size: 12px;
   margin: 8px 0 0;
+=======
+  font-size: 10px;
+  margin: 0 0 8px;
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 }
 .received_withd_msg { width: 57%;}
 .mesgs {
@@ -103,6 +108,10 @@ img{ max-width:100%;}
 .sent_msg {
   float: right;
   width: 46%;
+<<<<<<< HEAD
+=======
+  margin-right: 12px;
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 }
 .input_msg_write input {
   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
@@ -161,4 +170,11 @@ img{ max-width:100%;}
   position: absolute;
   right:0;
   bottom: 0;
+<<<<<<< HEAD
+=======
+}
+
+.fit-content-message {
+  width: fit-content;
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 }

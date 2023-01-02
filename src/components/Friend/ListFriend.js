@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import {Form,Card,Button,Row,Col } from 'react-bootstrap'
-import FriendService from "../../services/FriendService"
+import FriendService from "../../services/friend.service"
 import {Link } from "react-router-dom";
 import CardUser from "./CardUser";
 function ListFriend(props){

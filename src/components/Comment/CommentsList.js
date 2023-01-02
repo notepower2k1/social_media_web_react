@@ -1,7 +1,13 @@
+<<<<<<< HEAD
 
 import React ,{useState ,useEffect,useRef} from 'react'
 import CommentService from '../../services/CommentService'
 import ReplyLists from '../Reply/ReplyLists';
+=======
+import React ,{useState ,useEffect,useRef} from 'react'
+import CommentService from '../../services/CommentService'
+import ReplyLists from '../Reply/ReplyList';
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 import AddReplyComponent from '../Reply/AddReplyComponent';
 import TextareaAutosize from 'react-textarea-autosize';
 import Comment from './Comment';

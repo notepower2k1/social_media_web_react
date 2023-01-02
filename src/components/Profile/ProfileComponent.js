@@ -183,6 +183,7 @@ function ProfileComponent() {
     useEffect(() => {
         getAllPosts();
         getPostsCurrentUserLiked(currentUser.id);
+<<<<<<< HEAD
 
         return () => {
             setPosts([]);
@@ -196,6 +197,14 @@ function ProfileComponent() {
 
 
    
+=======
+
+        return () => {
+            setPosts([]);
+        }
+    }, [renderValue,state]);
+
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
     const getPostsCurrentUserLiked = async (userID) => {
         await LikePostService.readPostUserLiked(userID)
             .then(res => {

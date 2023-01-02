@@ -3,7 +3,11 @@ import { Link ,useNavigate  } from "react-router-dom";
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 import ProfileService from './services/ProfileService';
+<<<<<<< HEAD
 import FirebaseSerive from './services/firebaseService';
+=======
+import FirebaseSerive from './services/firebase.service';
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 
 function Navbar({user,currentUser,logOut}) {
 
@@ -90,7 +94,11 @@ function Navbar({user,currentUser,logOut}) {
 				
 				</li>
 				<li>
+<<<<<<< HEAD
 					<Link to={"/conversation/" + user.id} title="Messages" data-ripple=""><i className="fa-2x fa fa-comment"></i><span></span></Link>
+=======
+					<Link to={"/conversation"} title="Messages" data-ripple=""><i className="fa-2x fa fa-comment"></i><span></span></Link>
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 					
 				</li>
 				

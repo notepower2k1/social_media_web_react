@@ -3,7 +3,11 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import { isEmail } from "validator";
+<<<<<<< HEAD
 import {Link } from "react-router-dom";
+=======
+import { Link } from "react-router-dom";
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 
 import AuthService from "../../services/auth.service";
 
@@ -47,8 +51,13 @@ const vpassword = (value) => {
     }
 };
 
+<<<<<<< HEAD
 function Register({setIsRegistered}) {
     const Registerform = useRef();
+=======
+const Register = ({setIsRegistered}) => {
+    const form = useRef();
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
     const checkBtn = useRef();
 
     const [username, setUsername] = useState("");
@@ -102,6 +111,7 @@ function Register({setIsRegistered}) {
 
     return (
         <>
+<<<<<<< HEAD
         <h2 className="log-title">Register</h2>
             <Form onSubmit={handleRegister} ref={Registerform}>
           
@@ -159,6 +169,63 @@ function Register({setIsRegistered}) {
                         </div>
                     )}
                     <CheckButton style={{ display: "none" }} ref={checkBtn} />
+=======
+            <h2 className="log-title">Register</h2>
+            <Form onSubmit={handleRegister} ref={form}>
+                <div className="form-group">	
+                    <label className="control-label" htmlFor="username">Username</label>
+                    <Input
+                        type="text"
+                        className="form-control"
+                        name="username"
+                        value={username}
+                        onChange={onChangeUsername}
+                        validations={[required, vusername]}
+                    />
+                </div>
+
+                <div className="form-group">	
+                    <label className="control-label" htmlFor="email">Email</label>
+                    <Input
+                        type="text"
+                        className="form-control"
+                        name="email"
+                        value={email}
+                        onChange={onChangeEmail}
+                        validations={[required, validEmail]}
+                    />
+                </div>
+                <div className="form-group">	
+                    <label className="control-label" htmlFor="password">Password</label>
+                    <Input
+                        type="password"
+                        className="form-control"
+                        name="password"
+                        value={password}
+                        onChange={onChangePassword}
+                        validations={[required, vpassword]}
+                    />
+                </div>
+                <Link onClick={()=> setIsRegistered(prev =>!prev) }>Already have an account</Link>
+                <div className="submit-btns">
+                    <button className="mtr-btn signup" type="button"><span>Register</span></button>
+                </div>
+                {
+                    message && (
+                            <div className="form-group">
+                                <div
+                                    className={
+                                    successful ? "alert alert-success" : "alert alert-danger"
+                                    }
+                                    role="alert"
+                                >
+                                    {message}
+                                </div>
+                            </div>
+                        )
+                    }
+                <CheckButton style={{ display: "none" }} ref={checkBtn} />
+>>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
             </Form>    
         </>
     );
