@@ -15,6 +15,8 @@ import UserService from "../../services/user.service";
 import LikePostService from "../../services/likepost.service";
 import { useSelector, useDispatch } from "react-redux";
 import { addPost } from "../../redux/actions/PostActions";
+import FriendService from '../../services/friend.service';
+import CardUser from '../Friend/CardUser';
 
 
 import Loading from "../Loading/Loading";
@@ -24,6 +26,10 @@ function ProfileComponent() {
 
     const [isCurrentProfile,setIsCurrentProfile] = useState()
     const currentUser = AuthService.getCurrentUser();
+
+    //0:timeline, 1:listFriend
+    const [stateSwitch,setStateSwitch] = useState(0)
+
 
     const [userProfileID,setUserProfileID] = useState(0)
     const [firstName,setFirstName] = useState('')
@@ -64,6 +70,8 @@ function ProfileComponent() {
     const OldBackground = useRef(null);
 
 
+    const [listFriend,setListFriend] = useState([]);
+
     useEffect(() => {
         ProfileService.getProfile(userID).then((response) => {
             setUserProfileID(response.data.userProfileID);
@@ -75,8 +83,12 @@ function ProfileComponent() {
             setLocationID(response.data.locationID);
             getImageFromFirebase(response.data.avatar,response.data.background)
             setUserName(response.data.user.username)
+            setStateSwitch(0)
+            setPosts([])
         })
+        FriendService.getListFriend(userID).then(res => setListFriend(res.data))
 
+        checkCurrentUserProfile()
         checkCurrentUserProfile()
     },[userID])
 
@@ -183,28 +195,12 @@ function ProfileComponent() {
     useEffect(() => {
         getAllPosts();
         getPostsCurrentUserLiked(currentUser.id);
-<<<<<<< HEAD
 
         return () => {
             setPosts([]);
         }
     }, [renderValue,state]);
 
-  
-
-
-
-
-
-   
-=======
-
-        return () => {
-            setPosts([]);
-        }
-    }, [renderValue,state]);
-
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
     const getPostsCurrentUserLiked = async (userID) => {
         await LikePostService.readPostUserLiked(userID)
             .then(res => {
@@ -296,7 +292,6 @@ function ProfileComponent() {
 			<div className="add-btn">
       {!isCurrentProfile && <ButtonFriend 
               userID = {userID} 
-              // handle = {handleChange()}
           />}
 			</div>
 			<form className="edit-phto">
@@ -311,7 +306,7 @@ function ProfileComponent() {
 					<div className="col-lg-2 col-sm-3">
 						<div className="user-avatar">
 							<figure>
-								<img src={avatar} alt=""/>
+								<img src={avatar} alt="" width="155px" height="152px"/>
 								<form className="edit-phto">
 									<i className="fa fa-camera-retro"></i>
 									<label className="fileContainer">
@@ -328,15 +323,12 @@ function ProfileComponent() {
 								<li className="admin-name">
 								  <h5>{firstName} {lastName}</h5>
 								</li>
-								<li>
-									<Link className="active" title="" data-ripple="">time line</Link>
-									<Link className=""  title="" data-ripple="">Photos</Link>
-									<Link className=""  title="" data-ripple="">Videos</Link>
-									<Link className=""  title="" data-ripple="">Friends</Link>
-									<Link className=""  title="" data-ripple="">Groups</Link>
-									<Link className=""  title="" data-ripple="">about</Link>
-									<Link className=""  title="" data-ripple="">more</Link>
+								<li style={{marginRight: "150px"}}>
+									<Link className="" onClick={() => setStateSwitch(0)}>Time Line</Link>
+									{isCurrentProfile && <Link className=""  onClick={() => setStateSwitch(1)}>Friends</Link>}
+								
 								</li>
+                
 							</ul>
 						</div>
 					</div>
@@ -354,74 +346,15 @@ function ProfileComponent() {
 							<div className="col-lg-3">
 								<aside className="sidebar static">		
 									<div className="widget">
-										<h4 className="widget-title">Recent Activity</h4>
-										<ul className="activitiez">
-											<li>
-												<div className="activity-meta">
-													<i>10 hours Ago</i>
-													<span><Link  title="">Commented on Video posted </Link></span>
-													<h6>by <Link >black demon.</Link></h6>
-												</div>
-											</li>
-											<li>
-												<div className="activity-meta">
-													<i>30 Days Ago</i>
-													<span><Link  title="">Posted your status. “Hello guys, how are you?”</Link></span>
-												</div>
-											</li>
-											<li>
-												<div className="activity-meta">
-													<i>2 Years Ago</i>
-													<span><Link title="">Share a video on her timeline.</Link></span>
-													<h6>"<Link >you are so funny mr.been.</Link>"</h6>
-												</div>
-											</li>
-										</ul>
+										<h4 className="widget-title">About me</h4>
+                    <p align="center">{about}</p>
 									</div>
-									<div className="widget stick-widget">
-										<h4 className="widget-title">Who's follownig</h4>
-										<ul className="followers">
-											<li>
-												<figure><img src="images/resources/friend-avatar2.jpg" alt=""/></figure>
-												<div className="friend-meta">
-													<h4><Link title="">Kelly Bill</Link></h4>
-													<Link  title="" className="underline">Add Friend</Link>
-												</div>
-											</li>
-											<li>
-												<figure><img src="images/resources/friend-avatar4.jpg" alt=""/></figure>
-												<div className="friend-meta">
-													<h4><Link  title="">Issabel</Link></h4>
-													<Link  title="" className="underline">Add Friend</Link>
-												</div>
-											</li>
-											<li>
-												<figure><img src="images/resources/friend-avatar6.jpg" alt=""/></figure>
-												<div className="friend-meta">
-													<h4><Link  title="">Andrew</Link></h4>
-													<Link  title="" className="underline">Add Friend</Link>
-												</div>
-											</li>
-											<li>
-												<figure><img src="images/resources/friend-avatar8.jpg" alt=""/></figure>
-												<div className="friend-meta">
-													<h4><Link  title="">Sophia</Link></h4>
-													<Link  title="" className="underline">Add Friend</Link>
-												</div>
-											</li>
-											<li>
-												<figure><img src="images/resources/friend-avatar3.jpg" alt=""/></figure>
-												<div className="friend-meta">
-													<h4><Link  title="">Allen</Link></h4>
-													<Link  title="" className="underline">Add Friend</Link>
-												</div>
-											</li>
-										</ul>
-									</div>
+									
 								</aside>
 							</div>
 							<div className="col-lg-6">
 								<div className="loadMore">	
+                { stateSwitch == 0 ?
 								<div className="central-meta item">
 						
 							  { isShowed ? <PostModal 
@@ -445,6 +378,8 @@ function ProfileComponent() {
                                 }
 									
 								</div>
+                 : <ListFriend userCurrentID = {currentUser.id}/>
+                }
 								</div>
 							</div>
 							<div className="col-lg-3">
@@ -452,7 +387,10 @@ function ProfileComponent() {
 									<div className="widget friend-list stick-widget">
 										<h4 className="widget-title">Friends</h4>
 										<ul id="people-list" className="friendz-list">
-                    {userID && <ListFriend userID = {userID}/>}			
+                    {listFriend.map((user) => (
+                          <CardUser key={user.id} user = {user}/>
+                        ))}	
+
 										</ul>
 										
 									</div>

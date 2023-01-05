@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React ,{useState,useRef,useEffect} from 'react';
 
 // import Button from '@atlaskit/button';
@@ -6,34 +5,13 @@ import ReplyService from '../../services/ReplyService'
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
 import ProfileService from '../../services/ProfileService';
-import FirebaseSerive from '../../services/firebaseService';
-=======
-import React ,{useState,useEffect,useRef} from 'react';
-import ReplyService from '../../services/ReplyService'
-
-
-import Reply from './Reply';
-
-
-function ReplyLists({renderValue,increaseRenderValue,comment}){
-
-    const [listReplies,setListReplies] = useState([]);
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
+import FirebaseSerive from '../../services/firebase.service';
 
 
 
-   
-    useEffect(() => {
-      getAllReplies();
-    },[renderValue] );
 
-    const getAllReplies =()=>{
-      ReplyService.getReplies(comment.id).then((response) => {
-          setListReplies(response.data);       
-      });
-    }
+function AddReplyComponent({increaseRenderValue,comment}) {
 
-<<<<<<< HEAD
     const [inputReply,setInputReply] = useState("");
     const user = AuthService.getCurrentUser();
     const formRef = useRef([])
@@ -41,9 +19,10 @@ function ReplyLists({renderValue,increaseRenderValue,comment}){
     const [lastName,setLastName] = useState('');
     const [avatar,setAvatar] = useState(null);
 
+
     useEffect(()=>{
 
-      ProfileService.getProfile(comment.user.id).then((response) => {
+      ProfileService.getProfile(user.id).then((response) => {
           setFirstName(response.data.firstName);
           setLastName(response.data.lastName);
           FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
@@ -70,16 +49,11 @@ function ReplyLists({renderValue,increaseRenderValue,comment}){
             console.log(err)
         });
         
-=======
-    
-  
-    
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 
-    
+        setInputReply("")
+      }
   return (
     <div>
-<<<<<<< HEAD
 
              <div ref={formRef} className='reply-box'>
              <div className="comet-avatar">
@@ -99,20 +73,9 @@ function ReplyLists({renderValue,increaseRenderValue,comment}){
 
               </div>
                   </div>
-=======
-        {
-            listReplies.map(
-                (reply,index) =>
-                <li key={reply.id}>    
-
-                <Reply increaseRenderValue={increaseRenderValue} data={reply}/>
-            
-                </li>
-            )
-        }
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
     </div>
   )
 }
 
-export default ReplyLists;
+
+export default AddReplyComponent;

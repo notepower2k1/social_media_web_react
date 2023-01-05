@@ -6,21 +6,11 @@ import ImageUploading from 'react-images-uploading';
 import { ref, uploadBytesResumable } from "firebase/storage";
 
 import PostService from "../../services/post.service";
-<<<<<<< HEAD
-import {storage} from "../../utils/firebaseConfig";
-import { addPost ,updatePost } from "../../redux/actions/PostActions";
-import "./modal.css";
-
-
-
-const PostModal = ({ handleClose ,oldData,isGroupPost,groupID }) => {
-=======
 import { storage } from "../../utils/firebaseConfig";
 import { addPost, updatePost } from "../../redux/actions/PostActions";
 import "./modal.css";
 
 const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 
     const [content, setContent] = useState("");
     const [images, setImages] = useState([]);
@@ -50,13 +40,7 @@ const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
             let imagesString = res.reduce((accum, current) => {
                 return accum.concat("|" + current);
             }, "")
-<<<<<<< HEAD
-
-            if(isGroupPost)
-            {
-=======
             if(isGroupPost) {
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                 if (oldData !== null) {
                     PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
                         .then(res => {
@@ -70,12 +54,7 @@ const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
                             dispatch(addPost(res.data));
                         });
                 }
-<<<<<<< HEAD
-            }
-            else{
-=======
             } else {
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                 if (oldData !== null) {
                     PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
                         .then(res => {
@@ -90,10 +69,6 @@ const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
                         });
                 }
             }
-<<<<<<< HEAD
-            
-=======
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
         })
         
         //Bắt lỗi và hiển thị...

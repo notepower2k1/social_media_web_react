@@ -1,15 +1,12 @@
 import React ,{useState,useEffect,useRef} from 'react';
 import ProfileService from '../../services/ProfileService';
-<<<<<<< HEAD
-import FirebaseSerive from '../../services/firebaseService';
-=======
 import FirebaseSerive from '../../services/firebase.service';
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 import AuthService from '../../services/auth.service'
 import ReplyService from '../../services/ReplyService'
 import TextareaAutosize from 'react-textarea-autosize';
 import Form from 'react-bootstrap/Form';
 import styled from "styled-components";
+import AddReplyComponent from './AddReplyComponent';
 
 
 const ReplyForm = styled(Form)`
@@ -25,7 +22,7 @@ function Reply({increaseRenderValue,index,data}) {
 
     const [isReadonly, setIsReadonly] = useState(true);
    
-    const user = AuthService.getCurrentUser();
+    const currentuser = AuthService.getCurrentUser();
 
     const formRef = useRef([]);
     const inputRef = useRef([]);
@@ -58,12 +55,11 @@ function Reply({increaseRenderValue,index,data}) {
     var reply = inputReply;
     var comment = data.comment
 
-    const temp = {reply,user,comment}
+    const temp = {reply,currentuser,comment}
 
     
     ReplyService.createReply(temp).then((res)=>{
-        const currentForm = formRef.current;
-        currentForm.style.display = "none"
+      
         increaseRenderValue()
     }).catch((err)=>{
         console.log(err)
@@ -80,7 +76,7 @@ function Reply({increaseRenderValue,index,data}) {
     var reply = inputUpdateReply;
     var comment = data.comment
 
-    const temp = {reply,user,comment}
+    const temp = {reply,currentuser,comment}
 
     
     ReplyService.updateReply(id,temp).then((res)=>{
@@ -176,15 +172,21 @@ function Reply({increaseRenderValue,index,data}) {
          <div className="feature">
          <span className='icon feedback-icon mr-2' onClick={(e) => handlerCreate()}> 
          <i className="fa fa-reply"></i>
+         </span>
 
-        </span>
-         <span className='icon delete-icon mr-2 ' onClick={()=> {if(window.confirm('Delete the item?')){deleteReply(data.id)}}}> 
-         <i className="fa fa-trash"></i>
+          { currentuser.id === data.user.id 
+            ?<>
+                  <span className='icon delete-icon mr-2 ' onClick={()=> {if(window.confirm('Delete the item?')){deleteReply(data.id)}}}> 
+                    <i className="fa fa-trash"></i>
+                      </span>
+                <span className='icon edit-icon mr-2' onClick={(e) => handlerUpdate(e,data.id)}> 
+                <i className="fa fa-edit"></i>
+                </span>    
+            </>
+            :<></>
+            }
 
-     </span>
-     <span className='icon edit-icon mr-2' onClick={(e) => handlerUpdate(e,data.id)}> 
-     <i className="fa fa-edit"></i>
-     </span>     
+              
            </div>
      </div> 
       </div>
@@ -193,24 +195,11 @@ function Reply({increaseRenderValue,index,data}) {
 
       <ul>
       <li>
+        
        <ReplyForm  ref={el => formRef.current[index] = el}> 
-       <div className="comet-avatar">
-        <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar" />
-        </div>
-        <div className="we-comment">
-        <h5>{firstName} {lastName}</h5>
-        <TextareaAutosize     
-                 id="TextAreaResizeable"     
-                 name="inputComment" 
-                 placeholder="Viết phản hồi công khai..."     
-                 value = {inputReply}
-                 onChange= {(e)=> setInputReply(e.target.value)} 
-        >
-        </TextareaAutosize>  
-        <button disabled={!inputReply} className="btn btn-primary float-end" onClick={(e) => saveReply(e)}>Bình luận</button>
-
-        </div>
+       <AddReplyComponent  increaseRenderValue={increaseRenderValue} comment={data.comment}/>
         </ReplyForm>  
+
         </li>
         </ul>
   </>

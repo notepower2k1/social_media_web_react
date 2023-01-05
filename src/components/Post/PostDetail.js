@@ -3,15 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import {useParams} from 'react-router-dom';
 import PostService from "../../services/post.service";
 import UserService from "../../services/user.service";
-<<<<<<< HEAD
-import Loading from "../Loading/Loading";
 import PostModal from "./PostModal";
 import Post from "./Post";
-import { addPost } from "../../redux/actions/PostActions";
-=======
-import PostModal from "./PostModal";
-import Post from "./Post";
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 import AuthService from '../../services/auth.service'
 
 import "./post.css";
@@ -188,8 +181,4 @@ function PostDetail() {
   )
 }
 
-<<<<<<< HEAD
 export default PostDetail;
-=======
-export default PostDetail;
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193

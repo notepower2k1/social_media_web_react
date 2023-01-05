@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
-<<<<<<< HEAD
-import { Link, Router, useNavigate } from 'react-router-dom';
-import {useParams} from 'react-router-dom';
-=======
 import { Link, useNavigate } from 'react-router-dom';
 
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 import "../../../App.css";
 
 // import detailLogo from '../../../images/details.png';

@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-<<<<<<< HEAD
-import axios from "axios";
-=======
-
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 import "../../../App.css";
 import GroupService from "../../../services/group.service";
 

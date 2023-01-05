@@ -52,12 +52,6 @@ const Group = ({ data, user, callBack }) => {
     return (
         <div className="nearly-pepls">
             <figure>
-<<<<<<< HEAD
-                <Link to={"/group/"+data.id} title=""><img src="images/resources/group1.jpg" alt="" /></Link>
-            </figure>
-            <div className="pepl-info">
-                <h4><Link to={"/group/"+data.id}>{ data.groupName }</Link></h4>
-=======
                 <Link to={`/group/${data.id}`}>
                     <img src="images/resources/group1.jpg" alt="" />
                 </Link>
@@ -67,7 +61,6 @@ const Group = ({ data, user, callBack }) => {
                 <h4><Link to={`/group/${data.id}`}>
                     { data.groupName }
                 </Link></h4>
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                 <span>(public-private)</span>
                 <em>{ totalMembers } thành viên</em>
                 {

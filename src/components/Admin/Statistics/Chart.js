@@ -2,14 +2,18 @@ import React, { useEffect, useState } from 'react';
 import {Chart as ChartJS, BarElement, CategoryScale, LinearScale} from 'chart.js';
 // eslint-disable-next-line no-unused-vars
 import {Bar, Doughnut, Pie, Line} from 'react-chartjs-2';
-
+import axios from "axios";
 import "../../../App.css";
 import UserService from "../../../services/user.service";
 import PostService from "../../../services/post.service";
 import GroupService from "../../../services/group.service";
-
+import StatiticsService from '../../../services/statitics.service';
+import { MONTHS } from "../../../utils/spUtils";
 // Import hết luôn tránh bị lỗi lúc chuyển Chart
 import "chart.js/auto";
+import PostChart from './PostChart';
+import UserChart from './UserChart';
+import CommentChart from './CommentChart';
 ChartJS.register(
     CategoryScale,
     LinearScale,
@@ -34,11 +38,12 @@ const Chart = () => {
     const [totalPostYear, setTotalPostYear] = useState([]);
     const [totalPostMonth, setTotalPostMonth] = useState([]);
     const [selectedYearPublished, setSelectedYearPublished] = useState(2020);
-
-    const [listRegisteredYears, setListRegisteredYears] = useState([]);
-    const [listPublishedYears, setListPublishedYears] = useState([]);
-    
+    const [PostPerMonth, setTotalPostPerMonth] = useState([])
+   
     const [groups, setGroups] = useState([]);
+
+    const [year2Selected , setYear2Selected] = useState();
+
 
 
     var totalUserByYear =  {
@@ -129,19 +134,9 @@ const Chart = () => {
   }
 
 
-    var options = {
-        maintainAspectRatio: false,
-        scales: {
-          y: {
-            beginAtZero: true
-          }
-        },
-        legend: {
-            labels: {
-                fontSize: 26
-            }
-        }
-    }
+   
+
+   
 
     const fetchYearRegister = async () => {
       await UserService.getYearByUser().then(response => {
@@ -204,7 +199,6 @@ const Chart = () => {
       await PostService.getYearByPost().then(response => {
           // console.log(response.data);
           setPublishedYears(response.data);
-          
         })
         .catch(err => {
           console.log(err)
@@ -238,7 +232,7 @@ const Chart = () => {
       await PostService.countPostByMonth(year=selectedYearPublished).then(response => {
           // console.log(response.data);
           setTotalPostMonth(response.data);
-          
+          console.log(response.data);
         })
         .catch(err => {
           console.log(err)
@@ -269,126 +263,97 @@ const Chart = () => {
     };
   
     useEffect(() => {
-      fetchUser();
-      fetchYearRegister();
-      countUserByYear();
-      fetchMonthRegister();
-      countUserByMonth();
-
-      fetchPost();
       fetchYearPublished();
-      countPostByYear();
-      fetchMonthPublished();
-      countPostByMonth();
-      fetchGroup();
-      
-    }, [selectedYearRegister, selectedYearPublished]);
-  // Render lại khi selectedYear thay đổi
+      fetchUser()
+      fetchPost()
+      fetchGroup()
+
+
+
+    }, []);
+  // First Chart
+  
+
+
 
   return (
-    // Grid
-    <div className='row'>
-        <div>
-          Total User: {users.length}
-          <br></br>
-          Total Post: {posts.length}
-          <br></br>
-          Total Group: {groups.length}
-          
+    // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+    <div className="">
+      
+      <section className="content">
+        <div className="container-fluid">
+               {/* Small boxes (Stat box) */}
+        <div className="row">
+          <div className="col-lg-3 col-6">
+            {/* small box */}
+            <div className="small-box bg-info">
+              <div className="inner">
+                <h3>{users.length}</h3>
+                <p style={{color: 'white'}}>User Registrations</p>
+              </div>
+              <div className="icon">
+                <i className="ion ion-person-add" />
+              </div>
+              {/* <a href="#" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></a> */}
+            </div>
+          </div>
+          {/* ./col */}
+          <div className="col-lg-3 col-6">
+            {/* small box */}
+            <div className="small-box bg-success">
+              <div className="inner">
+                <h3>{posts.length}<sup style={{fontSize: 20}}></sup></h3>
+                <p style={{color: 'white'}}>Posts Published</p>
+              </div>
+              <div className="icon">
+                <i className="ion ion-stats-bars" />
+              </div>
+              {/* <a href="#" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></a> */}
+            </div>
+          </div>
+          {/* ./col */}
+          <div className="col-lg-3 col-6">
+            {/* small box */}
+            <div className="small-box bg-warning">
+              <div className="inner">
+                <h3 style={{color: 'white'}}>{groups.length}</h3>
+                <p style={{color: 'white'}}>Total Group</p>
+              </div>
+              <div className="icon">
+                <i className="ion ion-person-add" />
+              </div>
+              {/* <a href="#" className="small-box-footer">More info <i className="fas fa-arrow-circle-right" /></a> */}
+            </div>
+            
+          </div>
+          <div className="col-lg-3 col-6">
+          <div class="small-box bg-danger">
+              <div className="inner">
+                <h3 style={{color: 'white'}}>65</h3>
+
+                <p style={{color: 'white'}}>Chua nghi ra</p>
+              </div>
+              <div className="icon">
+                <i className="ion ion-pie-graph"></i>
+              </div>
+              {/* <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a> */}
+            </div>
+          </div>
+          {/* ./col */}
         </div>
-    {/* Đổi thành BarChart, LineChart, PieChart, DoughnutChart tuỳ ý
-    {/* Thêm thẻ ul để hiển thị nhiều Chart */}
-    {/* col-..., mt-..., me-..., ... */}
-       <ul className='col-12'>
-        <Bar
-              height = {400}
-              data = {totalUserByYear}
-              options = {options}
-          />
-       </ul>
+ 
+        <PostChart published_years={published_years}/>
+      
+        <UserChart published_years={published_years}/>
 
-       <ul className='col-12'>
-        <Bar
-              height = {400}
-              data = {totalUserByMonth}
-              options = {options}
-          />
-       </ul>
-      <ul>
+        <CommentChart published_years={published_years}/>
 
-
-      {/* <select value={selectedYearRegister} onChange={(event) => setSelectedYearRegister(event.target.value)}>
-                <option value={2020}>2020</option>
-                <option value={2021}>2021</option>
-                <option value={2022}>2022</option>
-                <option value={2023}>2023</option>
-                <option value={2024}>2024</option>
-      </select> */}
-
-      <select value={selectedYearRegister} onChange={(e) => setSelectedYearRegister(e.target.value)}>
-                {registered_years && registered_years.map( 
-                  (item) =>
-                  
-                  <option value={item}> {item}</option>
-                 )
-                }
-               
-        </select>
-
-      </ul>
-       <ul className='col-12'>
-       <Bar
-              height = {400}
-              data = {totalPostByYear}
-              options = {options}
-          />
-       </ul>
-
-       <ul className='col-12'>
-       <Bar
-              height = {400}
-              data = {totalPostByMonth}
-              options = {options}
-          />
-       </ul>
-
-      {/* <select value={selectedYearPublished} onChange={(event) => setSelectedYearPublished(event.target.value)}>
-                <option value={2020}>2020</option>
-                <option value={2021}>2021</option>
-                <option value={2022}>2022</option>
-                <option value={2023}>2023</option>
-                <option value={2024}>2024</option>
-      </select> */}
-
-     <div>
-     <select value={selectedYearPublished} onChange={(e) => setSelectedYearPublished(e.target.value)}>
-                {published_years && published_years.map( 
-                  (item) =>
-                  
-                  <option value={item}> {item}</option>
-                 )
-                }
-               
-        </select>
-     </div>
-
-       <ul className='col-6'>
-       <Pie
-              height = {400}
-              data = {totalUserByYear}
-              options = {options}
-          />
-       </ul>
-
-       <ul className='col-6'>
-       <Doughnut
-              height = {400}
-              data = {totalUserByYear}
-              options = {options}
-          />
-       </ul>
-    </div>
+      </div>
+      
+      
+      </section>
     
+    </div>
   )
 }
 

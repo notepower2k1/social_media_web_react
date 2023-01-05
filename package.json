@@ -27,10 +27,6 @@
     "react-textarea-autosize": "^8.4.0",
     "react-validation": "^3.0.7",
     "redux": "^4.2.0",
-<<<<<<< HEAD
-    "socket.io": "^4.5.4",
-=======
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
     "socket.io-client": "^4.5.4",
     "styled-components": "^5.3.6",
     "use-socket.io-client": "^1.1.0",

@@ -9,13 +9,7 @@ import LikePostService from "../../services/likepost.service";
 import Loading from "../Loading/Loading";
 import PostModal from "./PostModal";
 import Post from "./Post";
-<<<<<<< HEAD
-import { addPost } from "../../redux/actions/PostActions";
-import AuthService from '../../services/auth.service'
-import LikePostService from "../../services/likepost.service";
-=======
 import { addPost, setAllPosts } from "../../redux/actions/PostActions";
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 
 import "./post.css";
 
@@ -23,24 +17,6 @@ const PostContainer = () => {
     const currentUser = AuthService.getCurrentUser();
 
     const [posts, setPosts] = useState([]);
-<<<<<<< HEAD
-    const [selectedPost, setSelectedPost] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [isShowed, setIsShowed] = useState(false);
-    const [postsLiked, setPostLiked] = useState([]);
-
-    const [isGroupPost, setIsGroupPost] = useState(false);
-
-    const [renderValue,setRenderValue] = useState(0)
-
-    const handleRender = ()=>{
-        setRenderValue(c=>c+1);
-      }
-    /* const forceUpdate = useForceUpdate(); */
-    const dispatch = useDispatch();
-    const state = useSelector(state => state.allPosts);
-    
-=======
     const [isShowed, setIsShowed] = useState(false);
     const [reload, setReload] = useState(false);
     const [loading, setLoading] = useState(true);
@@ -54,14 +30,12 @@ const PostContainer = () => {
     const state = useSelector(state => state.allPosts);
 
 	useEffect(() => {
-        console.log(state);
         getAllPosts();
         return () => {
             setPosts([]);
         }
     }, [reload, state]);
 
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
     useEffect(() => {
         getAllPosts();
         getPostsCurrentUserLiked(currentUser.id);
@@ -69,67 +43,17 @@ const PostContainer = () => {
         return () => {
             setPosts([]);
         }
-<<<<<<< HEAD
-    }, [state]);
-
-  
-
-
-
-
-
-   
-    const getPostsCurrentUserLiked = async (userID) => {
-        await LikePostService.readPostUserLiked(userID)
-            .then(res => {
-                setPostLiked(res.data);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }
-=======
     }, []);
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 
 
     const getAllPosts = async () => {
         setLoading(true);
-<<<<<<< HEAD
-        setIsGroupPost(false);
-        await PostService.getPostByUserID(currentUser.id)
-=======
         await PostService.readAllPosts()
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 			.then(res => {
 				let allPosts = res.data;
 
                 
 				allPosts.forEach(post => {
-<<<<<<< HEAD
-
-                    if (postsLiked.some(postLiked => postLiked.post.id === post.id)) {
-                        post.isLiked = true;
-                    } 
-                    else 
-                    {
-                        post.isLiked = false;
-                    }
-                    
-					getUserProfileByUser(post.user)
-					.then(profileRes => {
-						let userProfile = profileRes.data;
-						post.userProfile = userProfile;
-
-                    
-
-                        setPosts(prev => {
-                            if (prev.every(curPostValue => curPostValue.id !== post.id)) {
-                                return [...prev, post];
-                            } else {
-                                return [...prev];
-                            }
-=======
                     if (postsLiked.some(postLiked => postLiked.post.id === post.id)) {
                         post.isLiked = true;
                     } else {
@@ -146,7 +70,6 @@ const PostContainer = () => {
                                     return [...prev];
                                 }
                             });
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                         });
                     if (state.allPosts.every(curPostValue => curPostValue.id !== post.id)) {
                         dispatch(addPost(post));
@@ -156,11 +79,6 @@ const PostContainer = () => {
             .catch(e => {
                 console.log(e);
             });
-<<<<<<< HEAD
-            setLoading(false);
-
-    }  
-=======
         setLoading(false);
     }
 
@@ -173,7 +91,6 @@ const PostContainer = () => {
                 console.log(err);
             })
     }
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
      
     const getUserProfileByUser = async (user) => {
         return await UserService.readUserProfile(user);
@@ -188,68 +105,6 @@ const PostContainer = () => {
     }
 
     return (
-<<<<<<< HEAD
-       
-            <section>
-                <div className="gap gray-bg">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-lg-12">
-                            <div className="row" id="page-contents">
-                                <div className="col-lg-3">
-                                <aside className="sidebar static">
-                                <div className="widget">
-                                    <h4 className="widget-title">Shortcuts</h4>
-                                    <ul className="naves">
-                                    <li>
-                                        <i className="ti-clipboard"></i>
-                                        <a href="newsfeed.html" title="">News feed</a>
-                                    </li>
-                                    <li>
-                                        <i className="ti-mouse-alt"></i>
-                                        <a href="inbox.html" title="">Inbox</a>
-                                    </li>
-                                    <li>
-                                        <i className="ti-files"></i>
-                                        <a href="fav-page.html" title="">My pages</a>
-                                    </li>
-                                    <li>
-                                        <i className="ti-user"></i>
-                                        <a href="timeline-friends.html" title="">friends</a>
-                                    </li>
-                                    <li>
-                                        <i className="ti-image"></i>
-                                        <a href="timeline-photos.html" title="">images</a>
-                                    </li>
-                                    <li>
-                                        <i className="ti-video-camera"></i>
-                                        <a href="timeline-videos.html" title="">videos</a>
-                                    </li>
-                                    <li>
-                                        <i className="ti-comments-smiley"></i>
-                                        <a href="messages.html" title="">Messages</a>
-                                    </li>
-                                    <li>
-                                        <i className="ti-bell"></i>
-                                        <a href="notifications.html" title="">Notifications</a>
-                                    </li>
-                                    <li>
-                                        <i className="ti-share"></i>
-                                        <a href="people-nearby.html" title="">People Nearby</a>
-                                    </li>
-                                    <li>
-                                        <i className="fa fa-bar-chart-o"></i>
-                                        <a href="insights.html" title="">insights</a>
-                                    </li>
-                                    <li>
-                                        <i className="ti-power-off"></i>
-                                        <a href="landing.html" title="">Logout</a>
-                                    </li>
-                                    </ul>
-                                </div>
-                            
-                                </aside>
-=======
         <section>
             <div className="gap gray-bg">
                 <div className="container-fluid">
@@ -309,69 +164,10 @@ const PostContainer = () => {
                                         </div>
                                 
                                     </aside>
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                                 </div>
 
                             
                                 <div className="col-lg-6">
-<<<<<<< HEAD
-                                <div className="central-meta">
-									<div className="new-postbox">
-										<div className="">
-											<div onClick={ showModal } >
-												<textarea disabled></textarea>
-												<div className="attachments">
-													<ul>
-														<li>
-															<i className="fa fa-music"></i>
-															<label className="fileContainer">
-															</label>
-														</li>
-														<li>
-															<i className="fa fa-image"></i>
-															<label className="fileContainer">
-															</label>
-														</li>
-														<li>
-															<i className="fa fa-video-camera"></i>
-															<label className="fileContainer">
-															</label>
-														</li>
-														<li>
-															<i className="fa fa-camera"></i>
-															<label className="fileContainer">
-															</label>
-														</li>
-														<li>
-															<button className="btn btn-primary" onClick={ showModal } >Post</button>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-
-                            { isShowed ? <PostModal 
-                                handleClose={ hideModal } 
-                                oldData={ selectedPost }
-                                isGroupPost = {isGroupPost}
-                            /> : '' }
-                                {
-                                    posts === undefined || posts.length === 0  || loading
-                                    ?  <Loading />
-                                    : posts.map((post, index) => (
-                                        <div className="central-meta item" key={index}>
-                                            <Post data={post}  handleRender={ handleRender }
-                                selected={ setSelectedPost }
-                                onShowModal={ showModal }
-                                />
-                                            </div>
-                                        
-                                       
-                                    ))
-                                }
-=======
                                     <div className="central-meta">
                                         <div className="new-postbox">
                                             <div className="">
@@ -428,7 +224,6 @@ const PostContainer = () => {
                                                 </div>
                                             ))
                                     }
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                                 </div>
                                 <div className="col-lg-3">
                                     <aside className="sidebar static">
@@ -507,11 +302,7 @@ const PostContainer = () => {
                                                 </div>
                                             </div>
                                         </div>
-<<<<<<< HEAD
-                                      
-=======
                                         
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                                         <div className="widget friend-list stick-widget">
                                             <h4 className="widget-title">Friends</h4>
                                             <div id="searchDir"></div>
@@ -526,11 +317,7 @@ const PostContainer = () => {
                                                         <i><a href="https://wpkixx.com/cdn-cgi/l/email-protection" className="__cf_email__" data-cfemail="a0d7c9ced4c5d2d3cfccc4c5d2e0c7cdc1c9cc8ec3cfcd">[email&#160;protected]</a></i>
                                                     </div>
                                                 </li>
-<<<<<<< HEAD
-                                              
-=======
                                                 
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                                             </ul>
                                             <div className="chat-box">
                                                 <div className="chat-head">
@@ -598,20 +385,11 @@ const PostContainer = () => {
                                     </aside>
                                 </div>
                             </div>
-<<<<<<< HEAD
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-       
-=======
                         </div>
                     </div>
                 </div>
             </div>
         </section>
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
     );
 }
 

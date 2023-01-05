@@ -66,12 +66,6 @@ const GroupList = () => {
                         <span><i className="fa fa-users"></i> Groups</span>
                     </div>
                     <ul className="nearby-contct">
-<<<<<<< HEAD
-                    {  newGroups && newGroups.map((group, index) => 
-                    <li key={ index } onClick={()=> navigate("/group/"+ group.id)}> 
-                    <Group data={ group } user={ currentUser }/> 
-                    </li>) }
-=======
                     {  newGroups && newGroups.map((group, index) => <li key={ index }> 
                             <Group 
                                 data={ group } 
@@ -79,7 +73,6 @@ const GroupList = () => {
                                 callBack={ setReload }
                             /> 
                         </li>) }
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
                     </ul>
                 </div>
             </div>

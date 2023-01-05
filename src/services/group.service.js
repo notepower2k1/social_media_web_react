@@ -16,13 +16,8 @@ const deleteGroup = async (id) => {
     return await rootInstance.delete("/group/remove/" + id);
 }
 
-<<<<<<< HEAD
-const updateGroup = async (id,group) => {
-    return await rootInstance.put("/group/update/"+id, group);
-=======
 const updateGroup = async (group, groupId) => {
     return await rootInstance.put(`/group/update/${groupId}`, group);
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 }
 
 const readTotalMembersById = async (groupId) => {

@@ -1,21 +1,17 @@
-<<<<<<< HEAD
-
 import React ,{useState ,useEffect,useRef} from 'react'
 import CommentService from '../../services/CommentService'
 import ReplyLists from '../Reply/ReplyLists';
-=======
-import React ,{useState ,useEffect,useRef} from 'react'
-import CommentService from '../../services/CommentService'
-import ReplyLists from '../Reply/ReplyList';
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 import AddReplyComponent from '../Reply/AddReplyComponent';
 import TextareaAutosize from 'react-textarea-autosize';
 import Comment from './Comment';
 import AuthService from '../../services/auth.service'
-
+import { useSelector } from 'react-redux';
+import NotificationService from '../../services/NotificationService';
 
 
 function CommentsList({post}) {
+
+  const { socket } = useSelector(state => state.socket);
 
   const [listComments,setListComments] = useState([]);
 
@@ -53,6 +49,11 @@ function CommentsList({post}) {
 
     CommentService.createComment(temp).then((res)=>{
       increaseRenderValue();
+
+      NotificationService.createNotification(user.id,post.user.id,`profile/${post.user.id}`,3).then(noty => {
+        socket.emit("sendNotification",noty.data)
+      })
+
     }).catch((err)=>{
         console.log(err)
     });

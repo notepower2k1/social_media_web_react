@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 const monthNames = ["January", "February", "March", "April", "May", "June",
 "July", "August", "September", "October", "November", "December"
 ];
@@ -34,8 +30,6 @@ export const getPassedTime = (time) => {
         return monthNames[time.getMonth()] + " " + time.getDate() + ", " + time.getYear();
     }
 
-<<<<<<< HEAD
-=======
 }
 
 export const isURL = (str) => {
@@ -46,5 +40,21 @@ export const isURL = (str) => {
         '(\\?[;&a-z\\d%_.~+=-]*)?'+
         '(\\#[-a-z\\d_]*)?$','i');
     return pattern.test(str);
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 }
+
+
+export const MONTHS = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+  

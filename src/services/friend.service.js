@@ -23,19 +23,19 @@ const acceptRequest = async (userId1,userId2) => {
 
 const checkIsFriend = async (currentUserID,userId) => {
     const listFriendCurrentUser = await getListFriend(currentUserID).then(res => res.data);
-    return listFriendCurrentUser.some(userProfile => userProfile.user.id === userId)
+    return listFriendCurrentUser.some(userProfile => userProfile.user.id == userId)
 }
 
 //hàm kiểm tra current user có đang gửi kết bạn cho user hay khống
 const checkIsRequesting = async (currentUserID,userId) => {
     const listCurrentUserRequesting = await getListRequesting(currentUserID).then(res => res.data);
-    return listCurrentUserRequesting.some(userProfile => userProfile.user.id === userId)
+    return listCurrentUserRequesting.some(userProfile => userProfile.user.id == userId)
 }
 
 //hàm kiểm tra current user có đang gửi kết bạn cho user hay khống
 const checkIsRequester = async (currentUserID,userId) => {
     const listCurrentUserRequester = await getListRequester(currentUserID).then(res => res.data);
-    return listCurrentUserRequester.some(userProfile => userProfile.user.id === userId)
+    return listCurrentUserRequester.some(userProfile => userProfile.user.id == userId)
 }
 
 //delete friendship 

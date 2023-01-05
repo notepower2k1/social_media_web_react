@@ -1,11 +1,13 @@
 import { useEffect, useState} from "react";
-import {Card,Row,Col } from 'react-bootstrap'
+import {Form,Card,Button,Row,Col } from 'react-bootstrap'
 import { useParams } from "react-router-dom";
 import SearchService from "../../services/SearchService"
 import {Link } from "react-router-dom";
+import UserChild from "./UserChild";
+import PostChild from "./PostChild";
+
 function Search(){
     const [listSearch,setlistSearch] = useState()
-
     const {keyword} = useParams();
 
     console.log(keyword);
@@ -17,47 +19,58 @@ function Search(){
 
     console.log(listSearch);
     return (
-        <div style={{ padding: 20 }}>
+        <div className="container">
+            <div className="container h-100">
+                <div className="row d-flex justify-content-center align-items-center h-100">
+                    <div className="col col-lg-8 col-xl-10">
+                    {listSearch &&
+                        <div >
+                        <h5 className="mb-3" >Kết quả tìm kiếm cho từ khóa: <span style={{color: "red"}}>           {listSearch.keyword}
+                        </span></h5>
+                        
+                        {/* user result */}
+                        <div className="central-meta">
+                            <div class="frnds">
+                                <h5><b>Mọi người</b></h5>
+                                <div class="tab-content">
+                                    <div class="tab-pane active fade show " id="frends" >
+                                        <ul class="nearby-contct">
+                                        {listSearch.userProfiles.map((user) =>(
+                                            <UserChild user={user}/>
+                                        ))}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* post result */}
+                        <div className="central-meta">
+                            <div class="frnds">
+                                <h5><b>Bài post</b></h5>
+                                <div class="tab-content">
+                                    <div class="tab-pane active fade show " id="frends" >
+                                        <ul class="nearby-contct">
+                                        {listSearch.posts.map((postWithUser) =>(
+                                            <PostChild postWithUser={postWithUser}/>
+                                        ))}
+                                        </ul>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>}
             {listSearch && <div className="result_search">
-                <h4 >Kết quả tìm kiếm cho từ khóa: <span style={{color: "red"}}>{listSearch.keyword}</span></h4>
-                <h1>Mọi người</h1>
-                <Row style={{display: 'flex',justifyContent: 'flex-start' }}>
-                {listSearch.userProfiles.map((user) =>(
-                    <Col key= {user.userProfileID} lg='3'>
-                        <Card  
-                            style={{ width: '15rem',marginTop: '20px' }}
-                        >
-                            <Card.Body >
-                            <img className="col-3" src={user.avatar}></img>
-                            <Link to={"/profile/" + user.user.id}> 
-                                <Card.Title>{user.firstName + " " + user.lastName}</Card.Title>
-                            </Link>
-                                <Card.Text>{user.about}</Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                ))}
-                </Row >
-                <h1>Bài post</h1>
-                <Row >
-                {listSearch.posts.map((postWithUser) =>(
-                    <Col lg='3'>
-                        <Card 
-                            style={{ width: '15rem',marginTop: '20px' }}
-                        >
-                            <Card.Body >
-                                <Card.Title>{postWithUser.userProfile.firstName + " " + postWithUser.userProfile.lastName}</Card.Title>
-                                <Card.Text>{postWithUser.post.content}</Card.Text>
-                                <Card.Text>Ngày post: {postWithUser.post.publishedDate}</Card.Text>
-                            </Card.Body>
-                        </Card>
-                    </Col>
-                ))}
-                </Row>
-                <h1>Fanpage</h1>
             </div>}
             
-        </div>
+        
+                        </div>
+                    </div>
+                </div>
+            </div>
+        
+        
     )
 }
 

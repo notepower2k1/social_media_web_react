@@ -4,17 +4,9 @@ const readAllPosts = async () => {
     return await rootInstance.get("/post/all");
 }
 
-<<<<<<< HEAD
-
 const readPostById = async (id) => {
     return await rootInstance.get("/post/detail/" + id);
 }
- 
-=======
-const readPostById = async (id) => {
-    return await rootInstance.get("/post/detail/" + id);
-}
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 
 const createPost = async (post) => {
     return await rootInstance.post("/post/add", post);
@@ -52,25 +44,6 @@ const getPostsGroup = async (groupID) =>{
     return await rootInstance.get("/post/get-post-group/" + groupID);
 }
 
-<<<<<<< HEAD
-
-const getYearByPost = () => {
-    return rootInstance.get("/post/year-register");
-  };
-  
-  const countPostByYear = () => {
-    return rootInstance.get(`/post/count-by-year`);
-  };
-  
-  const getMonthByPost = (year) => {
-    return rootInstance.get(`/post/month-register/${year}`, {year: year});
-  };
-  
-  const countPostByMonth = (year) => {
-    return rootInstance.get(`/post/count-by-month/${year}`, {year: year});
-  };
-  
-=======
 const getYearByPost = () => {
     return rootInstance.get("/post/year-register");
 };
@@ -87,7 +60,6 @@ const countPostByMonth = (year) => {
     return rootInstance.get(`/post/count-by-month/${year}`, {year: year});
 };
 
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 const PostService = {
     readPostById,
     readAllPosts,
@@ -97,16 +69,6 @@ const PostService = {
     createPost,
     updatePost,
     deletePost,
-<<<<<<< HEAD
-    getFriendPostByUserID,
-    readPostById,
-    getPostsGroup,
-    createPostGroup,
-    getYearByPost,
-    countPostByYear,
-    getMonthByPost,
-    countPostByMonth,
-=======
     getPostByUserID,
     getFriendPostByUserID,
     getPostsGroup,
@@ -114,7 +76,6 @@ const PostService = {
     countPostByYear,
     getMonthByPost,
     countPostByMonth
->>>>>>> 011f4c225c0dd8ea303285014bf400362909f193
 };
   
 export default PostService;
