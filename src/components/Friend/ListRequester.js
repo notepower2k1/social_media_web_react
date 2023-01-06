@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
-import {Card,Row,Col } from 'react-bootstrap'
+import { Row,Col } from 'react-bootstrap'
 import { useParams } from "react-router-dom";
 import FriendService from "../../services/friend.service"
-import {Link } from "react-router-dom";
 import FriendChild from "./FriendChild";
 function ListRequester(){
 

@@ -2,7 +2,7 @@ import React ,{useState ,useEffect,useRef} from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
 import CommentService from '../../services/CommentService'
-import ProfileService from '../../services/ProfileService';
+import ProfileService from '../../services/profile.service';
 import FirebaseSerive from '../../services/firebase.service';
 
 function Comment({index,formRef,increaseRenderValue,data}) {
@@ -73,8 +73,8 @@ function Comment({index,formRef,increaseRenderValue,data}) {
       const updateComment = (inputUpdateComment,commentID)=>{
         var content = inputUpdateComment;
         var post = data.post
-
-        const temp = {content,currentuser,post}
+        var user = data.user
+        const temp = {content,user,post}
     
         
         CommentService.updateComments(commentID,temp).then((res)=>{
@@ -85,7 +85,7 @@ function Comment({index,formRef,increaseRenderValue,data}) {
           console.log(err)
       });
       
-    
+      console.log(temp)
        
       }
     

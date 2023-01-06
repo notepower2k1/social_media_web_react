@@ -1,18 +1,30 @@
 import React, { useEffect, useState, useRef } from "react";
 import Form from "react-validation/build/form";
 
+import AuthService from '../../../services/auth.service';
 import ConversationService from "../../../services/conver.service";
 
-const ConverRoomCreate = ({ friends, onToggleChat, usersInChat, onShow }) => {
+const ConverRoomAdd = ({ conver, onToggleChat, usersInChat, onShow, onSetOtherMemProfiles }) => {
+
+    const user = AuthService.getCurrentUser();
 
     const form = useRef();
     /* const checkboxs = useRef([]); */
 
+    const [friends, setFriends] = useState([]);
     const [membersID, setMembersID] = useState([]);
     /* const [isChecked, setIsChecked] = useState(false); */
 
     useEffect(() => {
+        ConversationService.readOthersFriendNotJoined(conver.id, user.id)
+            .then(res => {
+                setFriends(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            });
         return () => {
+            setFriends([]);
             setMembersID([]);
         }
     }, []);
@@ -23,16 +35,30 @@ const ConverRoomCreate = ({ friends, onToggleChat, usersInChat, onShow }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        membersID.push(usersInChat.userID);
-        membersID.push(usersInChat.otherUserID);
-        console.log(membersID);
-        ConversationService.createConversationRoom({ membersID })
-            .then(res => {
-                onToggleChat();
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        if (!usersInChat) {
+            ConversationService.addUserToConverRoom(conver.id, { membersID })
+                .then(res => {
+                    let profilesData = res.data;
+                    profilesData.forEach(profile => {
+                        onSetOtherMemProfiles(prev => [...prev, profile]);
+                    });
+                    onShow(prev => !prev);
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        } else {
+            membersID.push(usersInChat.userID);
+            membersID.push(usersInChat.otherUserID);
+            ConversationService.createConversationRoom({ membersID })
+                .then(res => {
+                    onToggleChat();
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        }
+    
     }
 
     const handleChange = ({target: {checked, value: checkedValue}}) => {
@@ -48,7 +74,7 @@ const ConverRoomCreate = ({ friends, onToggleChat, usersInChat, onShow }) => {
         <div className="modal-container">
             <div className="modal-main p-3 col-md-6 col-lg-4"> 
             <div className="border-bottom">
-                <h3 className="text-center">Add New Group Chat</h3>
+                <h3 className="text-center">{ usersInChat ? "Create room chat" : "Add members" }</h3>
                 <button 
                     type="button" className="btn btn-secondary position-absolute" 
                     style={{top: "0px", right: "0px"}}
@@ -81,7 +107,7 @@ const ConverRoomCreate = ({ friends, onToggleChat, usersInChat, onShow }) => {
                         type="button" 
                         className="btn btn-primary w-100" 
                         onClick={ handleSubmit }
-                > Create </button>
+                > { usersInChat ? "Create" : "Add" } </button>
             </Form>
             
             </div>
@@ -89,4 +115,4 @@ const ConverRoomCreate = ({ friends, onToggleChat, usersInChat, onShow }) => {
     )
 }
 
-export default ConverRoomCreate
+export default ConverRoomAdd

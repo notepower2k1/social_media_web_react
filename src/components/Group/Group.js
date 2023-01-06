@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import UserService from "../../services/user.service";
 import GroupService from "../../services/group.service";
@@ -8,8 +8,6 @@ const Group = ({ data, user, callBack }) => {
 
     const [totalMembers, setTotalMembers] = useState(0);
     const [loading, setLoading] = useState("");
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         GroupService.readTotalMembersById(data.id)
@@ -53,7 +51,7 @@ const Group = ({ data, user, callBack }) => {
         <div className="nearly-pepls">
             <figure>
                 <Link to={`/group/${data.id}`}>
-                    <img src="images/resources/group1.jpg" alt="" />
+                    <img src="https://play-lh.googleusercontent.com/IeNJWoKYx1waOhfWF6TiuSiWBLfqLb18lmZYXSgsH1fvb8v1IYiZr5aYWe0Gxu-pVZX3" alt="" />
                 </Link>
             </figure>
             <div className="pepl-info">
@@ -67,7 +65,7 @@ const Group = ({ data, user, callBack }) => {
                     data.isJoined 
                         ? <a href="#" title="" className="add-butn bg-danger" data-ripple="" 
                             onClick={ handleLeaveGroup }
-                        >Leave Group</a>
+                        >Leave group</a>
                         : <a href="#" title="" className="add-butn" data-ripple="" 
                             onClick={ handleJoinGroup }
 
@@ -75,7 +73,7 @@ const Group = ({ data, user, callBack }) => {
                             {loading && (
                                 <span className="spinner-border spinner-border-sm"></span>
                             )}
-                            join now</a>
+                            Join now</a>
                 }
                 
                 

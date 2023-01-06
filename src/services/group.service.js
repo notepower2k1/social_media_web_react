@@ -28,8 +28,8 @@ const readGroupsUserJoined = async (userId) => {
     return await rootInstance.get(`/group/user-joined/${userId}`);
 }
 
-const readMembersProfile = async (groupId) => {
-    return await rootInstance.get(`/group/${groupId}/member-profile`);
+const readMembersProfile = async (userId, groupId) => {
+    return await rootInstance.get(`/group/${userId}/other-member-profile/${groupId}`);
 }
 
 const GroupService = {

@@ -2,7 +2,7 @@
 import React , {useState, useEffect} from 'react';
 import ReactEmoji from 'react-emoji';
 
-import ProfileService from '../../services/ProfileService';
+import ProfileService from '../../services/profile.service';
 import { getImageUrlFromFirebase } from '../../utils/firebasePort';
 import ConversationService from '../../services/conver.service';
 
@@ -104,7 +104,7 @@ function Conversation({onlineUsers, renderValue, conversation, sender}) {
     const getUserProfile = async (userID) => {
         return await ProfileService.getProfile(userID);
     }
-
+    
     return (
         <div className="">
             {

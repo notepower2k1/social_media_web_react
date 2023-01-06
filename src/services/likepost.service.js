@@ -34,8 +34,8 @@ const readUserLike = async (userId) => {
 //     return rootInstance.post("/like/like-post", {postId: postId, userId: userId});
 //   }
 
-const readPostUserLiked = async (userID) => {
-    return await rootInstance.get(`/post/post-liked/${userID}`);
+const readPostUserLiked = async (userID,postID) => {
+    return await rootInstance.get(`/post/post-liked/${userID}/${postID}`);
 }
 
 const LikePostService = {

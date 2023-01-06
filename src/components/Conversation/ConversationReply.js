@@ -16,14 +16,14 @@ function ConversationReply({increaseRenderValue, socket, renderValue, currentCon
 	const [otherMemProfiles, setOtherMemProfiles] = useState([]);
 
 	const conversationReplyTime = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
-
+	
 	const iconRef = useRef([]);
 	const scrollRef = useRef();
-
 	useEffect(()=>{
 		getMemberProfiles(currentConversation.id, user.id);
 
 		socket.on("getMessage", data => {
+			console.log(data);
 			setArrivalMessage({
 				id: lastID ,
 				reply: data.text,

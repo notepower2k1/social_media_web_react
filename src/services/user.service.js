@@ -25,7 +25,7 @@ const getByUserID = (userId) =>{
   return rootInstance.get("/user/" + userId);
 }
 
-
+//không có api trong backend ???
 const createUser = async (user) => {
   return await rootInstance.post("/user/", user);
 }
@@ -37,7 +37,7 @@ const deleteUser = async (userId) => {
 const updateUser = async (userId, user) => {
   return await rootInstance.put("/user/" + userId, user);
 }
-
+/////////////////////////////////////////////////
 
 const likePost = (postId, userId) => {
   return rootInstance.post("/user/like-post", {postId: postId, userId: userId});
@@ -63,6 +63,9 @@ const countUserByMonth = (year) => {
   return rootInstance.get(`/user/count-by-month/${year}`, {year: year});
 };
 
+const getCommentYear = () => {
+  return rootInstance.get("/user/year-comment");
+};
 
 const getAllUserName = async () => {
   return await rootInstance.get("/user/get-username");
@@ -94,7 +97,8 @@ const UserService = {
   countUserByYear,
   getMonthByUser,
   countUserByMonth,
-
+  getCommentYear,
+  
   getAllUserName,
   getAllRole,
   getAllUsers,

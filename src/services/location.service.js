@@ -22,4 +22,3 @@ const LocationService = {
 };
   
 export default LocationService;
-

@@ -44,7 +44,7 @@ const UserRoleForm = () => {
         // console.log(res.data);
         // console.log(enteredUserID, enteredRoleID);
         // alert("Create Success");
-        navigate('/user-role/read');
+        navigate('/admin/user-role/read');
       }).catch(err => {
         alert("error==="+err);
       });
@@ -95,7 +95,7 @@ const UserRoleForm = () => {
         <br></br>
         &nbsp;&nbsp;&nbsp;
         <Button className="mr-2"type='submit' onClick={(e)=>submitActionHandler(e)}>Submit</Button>
-        <Button onClick={()=> navigate('/user-role/read')}>Cancel</Button>
+        <Button onClick={()=> navigate('/admin/user-role/read')}>Cancel</Button>
 
       </Form>
 

@@ -1,15 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import {Chart as ChartJS, BarElement, CategoryScale, LinearScale} from 'chart.js';
-import {Bar, Doughnut, Pie, Line} from 'react-chartjs-2';
-import { MONTHS } from "../../../utils/spUtils";
-import StatiticsService from '../../../services/statitics.service';
+import { Bar } from 'react-chartjs-2';
+import { monthNames } from "../../../utils/spUtils";
+import StatisticsService from '../../../services/statistics.service';
+import UserService from "../../../services/user.service";
 
-function UserChart({published_years}) {
+function UserChart() {
 
     const [yearSelected , setYearSelected] = useState();
+    const [registered_years, setRegisteredYears] = useState([]);
 
+    const fetchYearRegister = async () => {
+      await UserService.getYearByUser().then(response => {
+          // console.log(response.data);
+          setRegisteredYears(response.data);
+        })
+        .catch(err => {
+          console.log(err)
+        });
+      
+    };
     const [chartState,setChartState] = useState({
-        labels: MONTHS,
+        labels: monthNames,
         datasets: [{
           label: 'Total User',
           data: [],
@@ -40,7 +51,7 @@ function UserChart({published_years}) {
       const totalUsersPerMonth = (year)=>{  
             if(year)
             {
-              StatiticsService.getTotalsUserPerMonth(year).then((res)=>{
+              StatisticsService.getTotalsUserPerMonth(year).then((res)=>{
                 let listValue = res.data
                 var value = []
                 var totalyear = 0;
@@ -51,7 +62,7 @@ function UserChart({published_years}) {
                 })
                 setTotalPerYear(totalyear)
                 setChartState({
-                labels: MONTHS,
+                labels: monthNames,
                 datasets: [{
                   label: 'Total Post',
                   data: value,
@@ -83,6 +94,7 @@ function UserChart({published_years}) {
       
     
      useEffect(()=>{
+        fetchYearRegister()
         totalUsersPerMonth(new Date().getFullYear())
 
      },[])
@@ -105,10 +117,10 @@ function UserChart({published_years}) {
     <span>Select year: </span>
 
     <select value={yearSelected} onChange={(e) => setYearSelected(e.target.value)}>
-          {published_years && published_years.map( 
-            (item) =>
+          {registered_years && registered_years.map( 
+            (item,index) =>
             
-            <option value={item} key={item.id}> {item}</option>
+            <option value={item} key={index}> {item}</option>
            )
           }
          

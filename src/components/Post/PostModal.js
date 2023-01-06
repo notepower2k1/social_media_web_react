@@ -33,13 +33,13 @@ const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
     const handleSubmit = (event) => {
         event.preventDefault();
         /* setMessage("");
-
         form.current.validateAll(); */
         let imagesUrl = handleUploadImages(images);
         imagesUrl.then(res => {
             let imagesString = res.reduce((accum, current) => {
                 return accum.concat("|" + current);
             }, "")
+            //FIX LẠI
             if(isGroupPost) {
                 if (oldData !== null) {
                     PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
@@ -202,7 +202,6 @@ const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
                         <span>Login</span>
                         </button>
                     </div>
-
                     {message && (
                         <div className="form-group">
                         <div className="alert alert-danger" role="alert">

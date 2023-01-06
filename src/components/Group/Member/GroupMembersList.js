@@ -2,15 +2,17 @@ import React, { useEffect, useState } from 'react';
 
 import GroupService from '../../../services/group.service';
 import UserService from '../../../services/user.service';
+import AuthService from '../../../services/auth.service';
 import GroupMember from './GroupMember';
 
 const GroupMembersList = ({ data }) => {
+    const user = AuthService.getCurrentUser();
 
     const [profiles, setProfiles] = useState([]);
     const [temp, setTemp] = useState(false);
-    console.log(profiles);
+
     useEffect(() => {
-        getMembersProfile(data.id)
+        getMembersProfile(user.id, data.id)
             .then(res => {
                 setProfiles(res.data)
             })
@@ -22,12 +24,8 @@ const GroupMembersList = ({ data }) => {
         }
     }, [temp])
 
-    useEffect(() => {
-        console.log(profiles);
-    }, [profiles])
-
-    const getMembersProfile = async (groupId) => {
-        return await GroupService.readMembersProfile(groupId);
+    const getMembersProfile = async (userId, groupId) => {
+        return await GroupService.readMembersProfile(userId, groupId);
     }
 
     const handleRemoveMember = (name, userId) => {
@@ -51,12 +49,13 @@ const GroupMembersList = ({ data }) => {
                             <ul className="nearby-contct">
                                 {
                                     profiles && 
-                                    profiles.map((profile) => 
-                                        <GroupMember 
-                                            key={ profile.id }
-                                            profile={ profile }
-                                            removeMember={ handleRemoveMember }
-                                        />
+                                        profiles.map((profile, index) => 
+                                            <div key={ index }>
+                                                <GroupMember 
+                                                    profile={ profile }
+                                                    removeMember={ handleRemoveMember }
+                                                />   
+                                            </div>
                                     )
                                 }
                             </ul>

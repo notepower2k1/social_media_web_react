@@ -1,4 +1,4 @@
-import ProfileService from "./ProfileService";
+import ProfileService from "./profile.service";
 import UserService from "./user.service";
 import rootInstance from "./utilsService/rootInstance";
 

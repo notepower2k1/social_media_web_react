@@ -2,25 +2,27 @@ import React, { useState, useEffect } from 'react';
 import { Link } from "react-router-dom"
 
 import AuthService from '../../services/auth.service';
-import FriendService from '../../services/friend.service';
-import ConverRoomCreate from './ConverRoom/ConverRoomCreate';
+import ConverRoomAdd from './ConverRoom/ConverRoomAdd';
+import ConverRoomDetail from './ConverRoom/ConverRoomDetail';
 
-const ConversationDetail = ({ conver, toggleChat, onlineUsers, otherProfiles, otherUser }) => {
+const ConversationDetail = ({ conver, toggleChat, onlineUsers, otherProfiles, onSetOtherMemProfiles, otherUser }) => {
     const user = AuthService.getCurrentUser();
 
-    const [friends, setFriends] = useState([]);
     const [isShowed, setIsShowed] = useState(false);
 
+    /* const roomNameRef = useRef(null);
+
+    const setRef = useCallback(node => {
+        roomNameRef.current = node
+    }, []); */
+
     useEffect(() => {
-        FriendService.getListFriend(user.id)
-            .then(res => {
-                setFriends(res.data);
-            })
-            .catch(err => {
-                console.log(err);
-            });
+        console.log(otherProfiles);
+    }, [otherProfiles]);
+    
+    useEffect(() => {
         return () => {
-            setFriends([])
+            setIsShowed(false);
         }
     }, []);
 
@@ -28,26 +30,21 @@ const ConversationDetail = ({ conver, toggleChat, onlineUsers, otherProfiles, ot
         <div>
             {
                 isShowed && 
-                <ConverRoomCreate
-                    friends={friends}
-                    usersInChat={{ userID: user.id, otherUserID: otherUser.otherUserID}}
-                    onShow={setIsShowed}
-                    onToggleChat={toggleChat}
-                />
+                    <ConverRoomAdd
+                        usersInChat={{ userID: user.id, otherUserID: otherUser.otherUserID}}
+                        onShow={setIsShowed}
+                        onToggleChat={toggleChat}
+                        conver={conver}
+                    />
             }
             {
                 otherProfiles.length >= 2
-                ?   <div className="card">
-                        <div className="card-body">
-                            <button type="button" className="btn btn-primary btn-rounded btn-lg" onClick={ toggleChat }>
-                                <i className="fa fa-arrow-left"></i>
-                            </button>
-                            <h3 className="text-center">{ conver.name }</h3>
-                            <ul className="list-group">
-                                {otherProfiles.map((profile, index) => <li key={index} className="list-group-item">{profile.firstName} {profile.lastName}</li>)}
-                            </ul>
-                        </div>
-                    </div>
+                ?   <ConverRoomDetail
+                        conver={conver}
+                        onToggleChat={toggleChat}
+                        otherProfiles={otherProfiles}
+                        onSetOtherMemProfiles={onSetOtherMemProfiles}
+                    />
                 :   otherProfiles.length === 1 && <div className="card">
                         <div className="card-body">
                             <div className="d-flex justify-content-between">

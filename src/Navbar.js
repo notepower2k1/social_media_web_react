@@ -1,17 +1,16 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState ,useEffect, useContext} from "react";
 import { Link ,useNavigate  } from "react-router-dom";
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
-import ProfileService from './services/ProfileService';
+
+import ProfileService from './services/profile.service';
 import FirebaseSerive from './services/firebase.service';
 import NotificationList from "./components/Notification/NotificationList";
-import { useSelector } from "react-redux";
+import { SocketContext } from './utils/SocketContext';
 
 function Navbar({user,currentUser,logOut}) {
 
-
-    const { socket } = useSelector(state => state.socket);
-
+    const socket = useContext(SocketContext);
 
 
     const [searchInput, setSearchInput] = useState();
@@ -46,22 +45,23 @@ function Navbar({user,currentUser,logOut}) {
   return (
 
    
-   <div className="topbar stick">
+   <div className="topbar stick"
+    style={{
+      position: "fixed",
+      top: "0px",
+      width: "100%"
+    }}
+   >
         <div className="logo">
           <Link to={"/posts"}><img src="https://scontent.fdad2-1.fna.fbcdn.net/v/t1.15752-9/317636730_608631167735920_975038834038231370_n.png?stp=cp0_dst-png&_nc_cat=101&ccb=1-7&_nc_sid=ae9488&_nc_ohc=QNDdebCd7-MAX9k2HJ2&_nc_ht=scontent.fdad2-1.fna&oh=03_AdT_hDq8H2AkDSd0Eu6QT0JszTDwqB8igQm8piFOKgY_WQ&oe=63D4FEC9" alt="" /></Link>
         </div>
         
         <div className="top-area">
           <ul className="main-menu">
-            <li>
-            { user &&  <Link to={"/profile/" + user.id}>
 
-                Home
-                </Link> }
-            </li>
             <li>
-              <Link to={"/posts"}>
-                Posts
+              <Link to={"/"}>
+                Newsfeed
               </Link>
             </li>
             <li>
@@ -91,14 +91,9 @@ function Navbar({user,currentUser,logOut}) {
               
             </li>
             <NotificationList currentUser = {currentUser} socket={socket}/>
-
+            
 				<li>
-        <button type="button" className="notification btn btn-light">
-          <Link className="text-decoration-none" to={"/conversation"} title="Messages" data-ripple=""><i className="fa fa-comment"></i>
-          </Link>
-          <span className="ml-2 badge badge-dark">0</span>
-
-        </button>
+      
 					
 				</li>
 				
@@ -112,9 +107,6 @@ function Navbar({user,currentUser,logOut}) {
                 <div className="dropdown-menu">
                 <Link to={"/profile/" + user.id} className="dropdown-item">Profile</Link>
                 <Link onClick={logOut} className="dropdown-item" >Log out</Link>
-                <Link className="dropdown-item" >
-                    Temp
-                </Link>
                 </div>
 
         </div>

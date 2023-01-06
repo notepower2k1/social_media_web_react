@@ -16,23 +16,27 @@ function PostChild({postWithUser}){
 
     return (
         <div class="central-meta item">
-            <div class="user-post">
-                <div class="friend-info">
-                    <figure>
-                        <img src={avatar} alt=""/>
-                    </figure>
-                    <div class="friend-name">
-                        <ins><Link to={"/profile/" + userProfile.user.id} title="">
-                            {userProfile.firstName + " " + userProfile.lastName}
-                        </Link></ins>
-                        <span>{post.publishedDate}</span>
-                    </div>
-                    <div class="description">
-                        <p>{post.content}</p>
-                    </div>
+        <Link to={"/detail/post/" + postWithUser.post.id}>
+        <div class="user-post">
+            <div class="friend-info">
+                <figure>
+                    <img src={avatar} alt=""/>
+                </figure>
+                <div class="friend-name">
+                    <ins><Link to={"/profile/" + userProfile.user.id} title="">
+                        {userProfile.firstName + " " + userProfile.lastName}
+                    </Link></ins>
+                    <ins>{userProfile.firstName + " " + userProfile.lastName}</ins>
+                    <span>{post.publishedDate}</span>
+                </div>
+                <div class="description">
+                    <p>{post.content}</p>
                 </div>
             </div>
         </div>
+        </Link>
+
+    </div>
     )
 }
 

@@ -41,6 +41,21 @@ Last change:  4/september/18
 
 */
 
+.length-show{
+    position: absolute;
+    font-size: 14px;
+    top: -8px;
+    right: -5px;
+    color: white;
+    font-weight: bold;
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    background-color: rgb(245, 67, 67);
+    justify-content: center;
+    display: flex;
+    align-items: center; 
+}
 
 /*=============== Fonts source Muli, Hobostd ===================*/
 
@@ -959,17 +974,18 @@ header.sticky {
     background: #fff none repeat scroll 0 0;
     border: 1px solid #e1e8ed;
     list-style: outside none none;
-    max-height: 294px;
+    max-height: 350px;
     overflow: auto;
     padding-left: 0;
     position: absolute;
     right: -50px;
     text-align: left;
     top: 42px;
-    width: 260px;
+    width: 300px;
     opacity: 0;
     visibility: hidden;
     transition: all 0.3s linear 0s;
+    border-radius: 5px;
 }
 
 .dropdowns.active {
@@ -982,7 +998,7 @@ header.sticky {
     padding-left: 0;
 }
 
-.drops-menu > li > a {
+.drops-menu > li > p {
     border-bottom: 1px solid #e1e8ed;
     display: inline-block;
     padding: 10px;
@@ -993,6 +1009,7 @@ header.sticky {
     display: inline-block;
     position: relative;
     width: 100%;
+    cursor: pointer;
 }
 
 .drops-menu > li > .tag {
@@ -1009,7 +1026,7 @@ header.sticky {
     background: whitesmoke none repeat scroll 0 0;
 }
 
-.drops-menu > li a img {
+.drops-menu > li p img {
     display: inline-block;
     max-width: 16.7%;
     vertical-align: top;
@@ -1029,16 +1046,15 @@ header.sticky {
     font-weight: 600;
     letter-spacing: 0.3px;
     margin-bottom: 0;
+    color: rgb(30, 115, 189);
     text-transform: capitalize;
 }
 
 .mesg-meta > span {
-    color: #757575;
+    color: #545454;
     display: inline-block;
-    font-size: 12px;
+    font-size: 13px;
     line-height: 15px;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
 }
@@ -1062,7 +1078,7 @@ header.sticky {
     width: 100%;
 }
 
-.dropdowns > a.more-mesg {
+.dropdowns > p.more-mesg {
     display: inline-block;
     font-size: 14px;
     padding-bottom: 5px;
@@ -1083,7 +1099,7 @@ header.sticky {
     background: #33b7a0;
 }
 
-.dropdowns.active > a {
+.dropdowns.active > p {
     background: #fafafa none repeat scroll 0 0;
     display: block;
     font-size: 13px;
@@ -1092,7 +1108,7 @@ header.sticky {
     text-align: center;
 }
 
-.dropdowns.active > a i {
+.dropdowns.active > p i {
     font-size: 11px;
     left: 8px;
     position: absolute;
@@ -1103,7 +1119,7 @@ header.sticky {
     width: 100px;
 }
 
-.dropdowns.active > a:hover {
+.dropdowns.active > p:hover {
     background: #f1f1f1 none repeat scroll 0 0;
 }
 
@@ -3421,6 +3437,18 @@ nav.breadcrumb {
     text-transform: capitalize;
 }
 
+p.add-butn {
+    color: #fff;
+    float: right;
+    font-size: 13px;
+    line-height: initial;
+    padding: 5px 10px;
+    position: absolute;
+    right: 0;
+    text-transform: capitalize;
+    top: 10px;
+    cursor: pointer;
+}
 a.add-butn {
     color: #fff;
     float: right;
@@ -3431,8 +3459,8 @@ a.add-butn {
     right: 0;
     text-transform: capitalize;
     top: 10px;
+    cursor: pointer;
 }
-
 .pepl-info > span {
     float: left;
     font-size: 13px;
@@ -3605,11 +3633,11 @@ a.add-butn {
     margin-right: 0;
 }
 
-.frnds .nav-tabs .nav-item a.active {
+.frnds .nav-tabs .nav-item p.active {
     border-bottom: 1px solid;
 }
 
-.frnds .nav-tabs .nav-item a {
+.frnds .nav-tabs .nav-item p {
     font-weight: bold;
 }
 
@@ -3625,12 +3653,13 @@ a.add-butn {
     color: #8d8d8d;
 }
 
-a.add-butn.more-action {
+p.add-butn.more-action {
     background: lightslategray none repeat scroll 0 0;
     right: 74px;
+    cursor: pointer;
 }
 
-#frends a.add-butn.more-action {
+#frends p.add-butn.more-action {
     right: 89px;
 }
 

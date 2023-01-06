@@ -52,7 +52,7 @@ const UserForm = () => {
       console.log(userID,roleID,role_ID)
       await UserRoleService.updateUserRole(userID, roleID,role_ID)
         .then((response) => {  
-          navigate('/user-role/read')
+          navigate('/admin/user-role/read')
         })
         .catch(error => {
           alert("Error Ocurred Updating User Role:"+ error);
@@ -85,7 +85,7 @@ const UserForm = () => {
         <br></br>
         &nbsp;&nbsp;&nbsp;
         <Button className="mr-2"type='submit' onClick={(e)=>submitActionHandler(e)}>Submit</Button>
-        <Button onClick={()=> navigate('/user-role/read')}>Cancel</Button>
+        <Button onClick={()=> navigate('/admin/user-role/read')}>Cancel</Button>
 
       </Form>
 

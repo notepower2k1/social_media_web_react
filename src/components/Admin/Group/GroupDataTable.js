@@ -7,7 +7,6 @@ import GroupService from "../../../services/group.service";
 const GroupDataTable = () => {
 
   const navigate = useNavigate();
-//  const baseURL = "http://localhost:8080";
   const [groups, setGroups] = useState([]);
 
   const setGroupData = async () => {
@@ -78,7 +77,7 @@ const GroupDataTable = () => {
                     groups &&
                     groups.map((group, index) => (
 
-                        <tr key={group.id}>
+                        <tr key={index}>
                         <th scope="row">{group.id}</th>
                         <td>{group.groupName}</td>
                         <td>{group.groupAbout}</td>

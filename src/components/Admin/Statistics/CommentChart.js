@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import {Chart as ChartJS, BarElement, CategoryScale, LinearScale} from 'chart.js';
-import {Bar, Doughnut, Pie, Line} from 'react-chartjs-2';
-import { MONTHS } from "../../../utils/spUtils";
-import StatiticsService from '../../../services/statitics.service';
+import { Bar } from 'react-chartjs-2';
+import { monthNames } from "../../../utils/spUtils";
+import StatisticsService from '../../../services/statistics.service';
+import UserService from '../../../services/user.service';
 
-function CommentChart({published_years}) {
+function CommentChart() {
 
     const [yearSelected , setYearSelected] = useState();
+    const [comment_years, setCommentYears] = useState([]);
 
     const [chartState,setChartState] = useState({
-        labels: MONTHS,
+        labels: monthNames,
         datasets: [{
           label: 'Total User',
           data: [],
@@ -43,7 +44,7 @@ function CommentChart({published_years}) {
             {
             var value1 = []
             var totalyear1 = 0;
-              StatiticsService.getTotalsCommentsPerMonth(year).then((res)=>{
+            StatisticsService.getTotalsCommentsPerMonth(year).then((res)=>{
                 let listValue = res.data
                
                 listValue.forEach((item)=>{
@@ -57,7 +58,7 @@ function CommentChart({published_years}) {
             
             var value2 = []
             var totalyear2 = 0;
-              StatiticsService.getTotalsReplyPerMonth(year).then((res)=>{
+            StatisticsService.getTotalsReplyPerMonth(year).then((res)=>{
                 let listValue = res.data
                
                 listValue.forEach((item)=>{
@@ -69,7 +70,7 @@ function CommentChart({published_years}) {
             })
 
             setChartState({
-                labels: MONTHS,
+                labels: monthNames,
                 datasets: [
                 {
                   label: 'Total Comment',
@@ -95,10 +96,19 @@ function CommentChart({published_years}) {
      
       }}
       
-    
+      const fetchYearComment = async () => {
+        await UserService.getCommentYear().then(response => {
+            // console.log(response.data);
+            setCommentYears(response.data);
+          })
+          .catch(err => {
+            console.log(err)
+          });
+        
+      };
      useEffect(()=>{
         totalCommentsPerMonth(new Date().getFullYear())
-
+        fetchYearComment()
      },[])
       
       useEffect(() => {
@@ -119,10 +129,10 @@ function CommentChart({published_years}) {
     <span>Select year: </span>
 
     <select value={yearSelected} onChange={(e) => setYearSelected(e.target.value)}>
-          {published_years && published_years.map( 
-            (item) =>
+          {comment_years && comment_years.map( 
+            (item,index) =>
             
-            <option value={item} key={item.id}> {item}</option>
+            <option value={item} key={index}> {item}</option>
            )
           }
          

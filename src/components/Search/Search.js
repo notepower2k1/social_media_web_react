@@ -30,11 +30,11 @@ function Search(){
                         
                         {/* user result */}
                         <div className="central-meta">
-                            <div class="frnds">
+                            <div className="frnds">
                                 <h5><b>Mọi người</b></h5>
-                                <div class="tab-content">
-                                    <div class="tab-pane active fade show " id="frends" >
-                                        <ul class="nearby-contct">
+                                <div className="tab-content">
+                                    <div className="tab-pane active fade show " id="frends" >
+                                        <ul className="nearby-contct">
                                         {listSearch.userProfiles.map((user) =>(
                                             <UserChild user={user}/>
                                         ))}
@@ -46,13 +46,13 @@ function Search(){
 
                         {/* post result */}
                         <div className="central-meta">
-                            <div class="frnds">
+                            <div className="frnds">
                                 <h5><b>Bài post</b></h5>
-                                <div class="tab-content">
-                                    <div class="tab-pane active fade show " id="frends" >
-                                        <ul class="nearby-contct">
-                                        {listSearch.posts.map((postWithUser) =>(
-                                            <PostChild postWithUser={postWithUser}/>
+                                <div className="tab-content">
+                                    <div className="tab-pane active fade show " id="frends" >
+                                        <ul className="nearby-contct">
+                                        {listSearch.posts.map((postWithUser, index) =>(
+                                            <PostChild key={index} postWithUser={postWithUser}/>
                                         ))}
                                         </ul>
                                     </div>

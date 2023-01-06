@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 
@@ -57,6 +57,8 @@ const GroupList = () => {
     }
 
     return (
+        <section>
+            <div className="gap gray-bg">
         <div className="container">
             <button type="button" className="btn btn-primary mb-4" onClick={ () => navigate("/group/create") }>Tạo nhóm</button>
 
@@ -77,6 +79,9 @@ const GroupList = () => {
                 </div>
             </div>
         </div>
+        </div>
+        </section>
+
     )
 }
 

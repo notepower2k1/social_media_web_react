@@ -1,4 +1,5 @@
-const monthNames = ["January", "February", "March", "April", "May", "June",
+
+export const monthNames = ["January", "February", "March", "April", "May", "June",
 "July", "August", "September", "October", "November", "December"
 ];
 
@@ -27,7 +28,7 @@ export const getPassedTime = (time) => {
     } else if (diff < 31536000000) {
         return monthNames[time.getMonth()] + " " + time.getDate();
     } else {
-        return monthNames[time.getMonth()] + " " + time.getDate() + ", " + time.getYear();
+        return monthNames[time.getMonth()] + " " + time.getDate() + ", " + time.getFullYear();
     }
 
 }

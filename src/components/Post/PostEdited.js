@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import ReactEmoji from 'react-emoji';
 
 import FirebaseService from '../../services/firebase.service';
-import ProfileService from '../../services/ProfileService';
 import { getPassedTime } from "../../utils/spUtils";
 const PostEdited = ({ post }) => {
 

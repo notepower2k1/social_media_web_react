@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import FriendService from "../../services/friend.service"
-import {storage} from '../../utils/firebaseConfig';
-import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
-import {Link } from "react-router-dom";
+import { storage } from '../../utils/firebaseConfig';
+import { ref, getDownloadURL } from "firebase/storage";
+import { Link } from "react-router-dom";
 
 function RequesterChild({user,userCurrentID,handleChange}){
     const [avatar,setAvatar] = useState()

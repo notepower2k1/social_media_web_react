@@ -78,23 +78,28 @@ const GroupPage = () => {
         await PostService.getPostsGroup(id)
 			.then(res => {
 				let allPosts = res.data;
-				allPosts.forEach(post => {
-					getUserProfileByUser(post.user)
-					.then(profileRes => {
-						let userProfile = profileRes.data;
-						post.userProfile = userProfile;
-                        setPosts(prev => {
-                            if (prev.every(curPostValue => curPostValue.id !== post.id)) {
-                                return [...prev, post];
-                            } else {
-                                return [...prev];
+
+                if(allPosts){
+                    allPosts.forEach(post => {
+                        getUserProfileByUser(post.user)
+                        .then(profileRes => {
+                            let userProfile = profileRes.data;
+                            post.userProfile = userProfile;
+                            setPosts(prev => {
+                                if (prev.every(curPostValue => curPostValue.id !== post.id)) {
+                                    return [...prev, post];
+                                } else {
+                                    return [...prev];
+                                }
+                            });
+                            if (state.allPosts.every(curPostValue => curPostValue.id !== post.id)) {
+                                dispatch(addPost(post));
                             }
                         });
-                        if (state.allPosts.every(curPostValue => curPostValue.id !== post.id)) {
-                            dispatch(addPost(post));
-                        }
-					});
-				})
+                    })
+                }
+
+			
             })
             .catch(e => {
                 console.log(e);
@@ -204,7 +209,7 @@ const GroupPage = () => {
                                         <div className="col-lg-2 col-sm-3">
                                             <div className="user-avatar">
                                                 <figure>
-                                                    <img src="https://w.wallha.com/ws/14/KoWeELYH.jpg" alt="" />
+                                                    <img src="https://play-lh.googleusercontent.com/IeNJWoKYx1waOhfWF6TiuSiWBLfqLb18lmZYXSgsH1fvb8v1IYiZr5aYWe0Gxu-pVZX3" alt="" />
                                                     <form className="edit-phto">
                                                         <i className="fa fa-camera-retro"></i>
                                                         <label className="fileContainer">

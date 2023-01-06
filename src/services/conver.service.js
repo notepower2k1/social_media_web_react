@@ -41,7 +41,10 @@ const getLastConversationReplyID = async ()=>{
 
 const getCountNewMessage = async (conversationID,senderID)=>{
     return await rootInstance.get(`/conversation/reply/countnewmessage/${conversationID}/${senderID}`);
+}
 
+const getTotalNewMessage = async (userID)=>{
+    return await rootInstance.get(`/conversation/reply/total-new-mess/${userID}`);
 }
 
 const updateStatus = async (conversationID,senderID)=>{
@@ -60,6 +63,33 @@ const createConversationRoom = async (membersID) => {
     return await rootInstance.post("/conversation/add-room", membersID);
 }
 
+
+//Thêm
+const readOthersFriendNotJoined = async (convID, userID) => {
+    return await rootInstance.get(`/conversation/${convID}/friends-not-joined/${userID}`);
+}
+
+const updateConversationRoom = async (conver, convID) => {
+    return await rootInstance.put("/conversation/update-room/" + convID, conver);
+}
+
+const removeConversationRoom = async (convID) => {
+    return await rootInstance.delete("/conversation/remove-room/" + convID);
+}
+
+const addUserToConverRoom = async (convID, usersID) => {
+    return await rootInstance.post(`/conversation/add-to/${convID}`, usersID);
+}
+
+const removeUserFromConverRoom = async (convID, userID) => {
+    return await rootInstance.delete(`/conversation/${userID}/remove-from/${convID}`);
+}
+//
+const getOtherMemIDs = async (convID, userID) => {
+    return await rootInstance.get(`/conversation/${convID}/other-mem-ids/${userID}`);
+
+}
+
 const ConversationService = {
     getAllConversation,
     getConversationBetweenUser,
@@ -74,6 +104,14 @@ const ConversationService = {
     readMemberProfiles,
     readOtherMembers,
     createConversationRoom,
-    createConversation
+    createConversation,
+
+    readOthersFriendNotJoined,
+    updateConversationRoom,
+    removeConversationRoom,
+    addUserToConverRoom,
+    removeUserFromConverRoom,
+    getTotalNewMessage,
+    getOtherMemIDs
 };
 export default ConversationService;

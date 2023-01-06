@@ -52,7 +52,7 @@ const UserRoleDataTable = () => {
       <nav>
         <button
           className="btn btn-primary nav-item active"
-          onClick={() => navigate("/user-role/create")}>
+          onClick={() => navigate("/admin/user-role/create")}>
           Create New User Role
         </button>
       </nav>
@@ -88,7 +88,7 @@ const UserRoleDataTable = () => {
                         <td style={{display:'inline-block'}}>
                           <button>
                               {/* useParam ở trang Edit sễ lấy 2 cái id  */}
-                              <Link to={"/user-role/edit/" + userRoles.user.id + "/" + userRoles.role.id}>
+                              <Link to={"/admin/user-role/edit/" + userRoles.user.id + "/" + userRoles.role.id}>
                                 Edit
                               </Link>
                           </button>

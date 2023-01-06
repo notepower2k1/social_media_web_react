@@ -4,7 +4,7 @@ import React ,{useState,useRef,useEffect} from 'react';
 import ReplyService from '../../services/ReplyService'
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
-import ProfileService from '../../services/ProfileService';
+import ProfileService from '../../services/profile.service';
 import FirebaseSerive from '../../services/firebase.service';
 
 
@@ -14,7 +14,7 @@ function AddReplyComponent({increaseRenderValue,comment}) {
 
     const [inputReply,setInputReply] = useState("");
     const user = AuthService.getCurrentUser();
-    const formRef = useRef([])
+    const formRef = useRef()
     const [firstName,setFirstName] = useState('');
     const [lastName,setLastName] = useState('');
     const [avatar,setAvatar] = useState(null);
@@ -39,8 +39,7 @@ function AddReplyComponent({increaseRenderValue,comment}) {
         const temp = {reply,user,comment}
         
         ReplyService.createReply(temp).then((res)=>{
-            const currentForm = formRef.current;
-            currentForm.style.display = "none"
+        
             increaseRenderValue();  
 
         
@@ -55,7 +54,6 @@ function AddReplyComponent({increaseRenderValue,comment}) {
   return (
     <div>
 
-             <div ref={formRef} className='reply-box'>
              <div className="comet-avatar">
               <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar" />
               </div>
@@ -72,7 +70,7 @@ function AddReplyComponent({increaseRenderValue,comment}) {
               <button disabled={!inputReply} className="btn btn-primary float-end" onClick={(e) => saveReply(e)}>Bình luận</button>
 
               </div>
-                  </div>
+                 
     </div>
   )
 }

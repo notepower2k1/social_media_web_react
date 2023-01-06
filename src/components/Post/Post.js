@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect ,useRef } from "react";
+import React, { useState, useEffect ,useRef ,useContext} from "react";
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch  } from "react-redux";
 import ReactEmoji from 'react-emoji';
 
 import PostHistory from "./PostHistory";
@@ -11,18 +11,25 @@ import CommentsList from '../Comment/CommentsList';
 import FirebaseService from "../../services/firebase.service";
 import LikePostService from "../../services/likepost.service";
 import UserService from "../../services/user.service";
-import ProfileService from "../../services/ProfileService";
+import ProfileService from "../../services/profile.service";
 import { removePost } from "../../redux/actions/PostActions";
 import { getPassedTime } from "../../utils/spUtils";
+import NotificationService from "../../services/notify.service";
+import { SocketContext } from '../../utils/SocketContext';
 
 const Post = ({ data, callBack, selected, onShowModal }) => {
     const currentUser = AuthService.getCurrentUser();
     const formRef = useRef([]);
 
+	const socket = useContext(SocketContext);
+
     const [images, setImages] = useState([]);
     const [avatar,setAvatar] = useState(null);
     const [isShowed, setIsShowed] = useState(false);
     const [totalLikes, setTotalLikes] = useState(0);
+
+    const [isLiked , setIsLiked] = useState(true);
+    const [postsLiked, setPostLiked] = useState([]);
 
     const dispatch = useDispatch();
 
@@ -42,11 +49,21 @@ const Post = ({ data, callBack, selected, onShowModal }) => {
                 setAvatar(response)
             })
         })
+
+
+      
+            getPostsCurrentUserLiked(currentUser,data)
+        
         return () => {
             setImages([]);
         };
     }, []);
     
+    useEffect(()=>{
+        getPostsCurrentUserLiked(currentUser,data)
+        readTotalLikes()
+    },[isLiked])
+
     const getImageFromFirebase = async (image) => {
         FirebaseService.getImageUrlFromFirebase(image)
             .then((url) => {
@@ -82,7 +99,19 @@ const Post = ({ data, callBack, selected, onShowModal }) => {
     } 
 
   
-   
+    const getPostsCurrentUserLiked = async (user,post) => {
+
+       
+            await LikePostService.readPostUserLiked(user.id,post.id)
+            .then(res => {
+                setPostLiked(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+        
+      
+    }
   
 
     
@@ -109,25 +138,31 @@ const Post = ({ data, callBack, selected, onShowModal }) => {
         await UserService.likePost(data.id, currentUser.id)
               .then((res) => {
                   // console.log(res.data);
-                  readTotalLikes();
-  
+                  setIsLiked(prev=>!prev)
+                  NotificationService.createNotification(currentUser.id,data.user.id,`/detail/post/${res.data.post.id}`,2)
+                  .then(noty => {
+                    socket.emit("sendNotification",noty.data)
+                  }) 
               })
               .catch((err) => {
                   console.log(err);
               }) 
-              
+
+              console.log(data.id, currentUser.id);
       }
       // Cần thêm @Modifying và @Transactional bên Repository mới Delete được
       const handleDisLikePost = async (event) => {
-          // console.log(data.id, currentUser.id)
+        // console.log(data.id, currentUser.id)
         await UserService.dislikePost(data.id, currentUser.id)
-              .then((res) => {
-                  // console.log(res.data);
-                  readTotalLikes();
-              })
-              .catch((err) => {
-                  console.log(err);
-              })
+                .then((res) => {
+                    // console.log(res.data);
+                    setIsLiked(prev=>!prev)
+                })
+                .catch((err) => {
+                    console.log(err);
+                }) 
+
+             
       }
   
       // Function để gọi lại cho tiện
@@ -220,16 +255,22 @@ const Post = ({ data, callBack, selected, onShowModal }) => {
                     <p>{totalLikes}</p>
 
                     <div className="feature-box d-flex ">
+                             
+                           
+                             
                         {
-                            data.isLiked 
-                                ? 
-                                    <button className="btn btn-primary w-100"   onClick={ handleDisLikePost }>
-                                    <i className="fa fa-thumbs-down"> Dislike</i>
-                                    </button>
-                                :  
-                                    <button className="btn btn-primary w-100"   onClick={ handleLikePost }>
-                                    <i className="fa fa-thumbs-up"> Like</i>
-                                    </button>                           
+                            postsLiked.length === 0?
+                            <button className="btn btn-primary w-100"   onClick={ handleLikePost }>
+                            <i className="fa fa-thumbs-up"> Like</i>
+                            </button> 
+                            :
+                            <button className="btn btn-primary w-100"   onClick={ handleDisLikePost }>
+                            <i className="fa fa-thumbs-down"> Dislike</i>
+                            </button>
+                           
+                            
+                             
+                                                    
                         }
 
                         <button  

@@ -1,5 +1,5 @@
 import React ,{useState ,useEffect,useRef} from 'react'
-import ProfileService from '../../services/ProfileService';
+import ProfileService from '../../services/profile.service';
 import {useParams} from 'react-router-dom';
 import Modal from 'react-bootstrap/Modal';
 import TextareaAutosize from 'react-textarea-autosize';
@@ -9,10 +9,9 @@ import {storage} from '../../utils/firebaseConfig';
 import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
 import AuthService from "../../services/auth.service";
 import ButtonFriend from '../Friend/ButtonFriend';
-import { Routes, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Post from "../Post/Post"
 import UserService from "../../services/user.service";
-import LikePostService from "../../services/likepost.service";
 import { useSelector, useDispatch } from "react-redux";
 import { addPost } from "../../redux/actions/PostActions";
 import FriendService from '../../services/friend.service';
@@ -47,8 +46,8 @@ function ProfileComponent() {
     const [uploadBackground,setUploadBackground] = useState(null);
 
     const [posts,setPosts] = useState([]);
+    const [reload, setReload] = useState(false);
 
-    const [postsLiked, setPostLiked] = useState([]);
 
 
     const [renderValue,setRenderValue] = useState(0)
@@ -90,6 +89,8 @@ function ProfileComponent() {
 
         checkCurrentUserProfile()
         checkCurrentUserProfile()
+
+        getAllPosts()
     },[userID])
 
    const checkCurrentUserProfile = () => {
@@ -194,49 +195,26 @@ function ProfileComponent() {
    
     useEffect(() => {
         getAllPosts();
-        getPostsCurrentUserLiked(currentUser.id);
 
         return () => {
             setPosts([]);
         }
-    }, [renderValue,state]);
+    }, [reload,state]);
 
-    const getPostsCurrentUserLiked = async (userID) => {
-        await LikePostService.readPostUserLiked(userID)
-            .then(res => {
-                setPostLiked(res.data);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }
+   
 
 
     const getAllPosts = async () => {
         setLoading(true);
         setIsGroupPost(false);
-        await PostService.getPostByUserID(currentUser.id)
+        await PostService.getPostByUserID(userID)
 			.then(res => {
-				let allPosts = res.data;
-
-                
-				allPosts.forEach(post => {
-
-                    if (postsLiked.some(postLiked => postLiked.post.id === post.id)) {
-                        post.isLiked = true;
-                    } 
-                    else 
-                    {
-                        post.isLiked = false;
-                    }
-                    
-					getUserProfileByUser(post.user)
-					.then(profileRes => {
-						let userProfile = profileRes.data;
-						post.userProfile = userProfile;
-
-                    
-
+				let allPosts = res.data;              
+				            allPosts.forEach(post => {       
+                      getUserProfileByUser(post.user)
+                      .then(profileRes => {
+                        let userProfile = profileRes.data;
+                        post.userProfile = userProfile;
                         setPosts(prev => {
                             if (prev.every(curPostValue => curPostValue.id !== post.id)) {
                                 return [...prev, post];
@@ -294,26 +272,37 @@ function ProfileComponent() {
               userID = {userID} 
           />}
 			</div>
+      {currentUser.id == userID?
 			<form className="edit-phto">
 				<i className="fa fa-camera-retro"></i>
-				<label className="fileContainer">
-					Edit Cover Photo
-				<input type="file" onClick={(e) => handleShow(e)}/>
-				</label>
+       
+        <label className="fileContainer">
+        Edit Cover Photo
+      <input type="file" onClick={(e) => handleShow(e)}/>
+      </label>
+      
+       
+			
 			</form>
+         : <></>}
 			<div className="container-fluid">
 				<div className="row merged">
 					<div className="col-lg-2 col-sm-3">
 						<div className="user-avatar">
 							<figure>
 								<img src={avatar} alt="" width="155px" height="152px"/>
-								<form className="edit-phto">
-									<i className="fa fa-camera-retro"></i>
-									<label className="fileContainer">
-										Edit Display Photo
-										<input type="file" onClick={(e) => handleShow(e)}/>
-									</label>
-								</form>
+
+                {currentUser.id == userID 
+                ?<form className="edit-phto">
+                <i className="fa fa-camera-retro"></i>
+                <label className="fileContainer">
+                  Edit Display Photo
+                  <input type="file" onClick={(e) => handleShow(e)}/>
+                </label>
+              </form>
+              :<div></div>
+              }
+								
 							</figure>
 						</div>
 					</div>
@@ -364,13 +353,14 @@ function ProfileComponent() {
                             /> : '' }
                                 {
                                     posts === undefined || posts.length === 0  || loading
-                                    ?  <Loading />
+                                    ?  <div></div>
                                     : posts.map((post, index) => (
                                         <div className="central-meta item" key={index}>
                                             <Post data={post}  handleRender={ handleRender }
-                                selected={ setSelectedPost }
-                                onShowModal={ showModal }
-                                />
+                                              selected={ setSelectedPost }
+                                              onShowModal={ showModal }
+                                              callBack={ setReload }
+                                            />
                                             </div>
                                         
                                        

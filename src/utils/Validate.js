@@ -8,7 +8,7 @@ export const required = (value) => {
     }
 };
 
-/* export const validEmail = (value) => {
+export const validEmail = (value) => {
     if (!isEmail(value)) {
         return (
             <div className="alert alert-danger" role="alert">
@@ -16,7 +16,7 @@ export const required = (value) => {
             </div>
         );
     }
-}; */
+};
 
 export const vusername = (value) => {
     if (value.length < 3 || value.length > 20) {
@@ -36,4 +36,12 @@ export const vpassword = (value) => {
             </div>
         );
     }
+};
+
+const isEmail = (email) => {
+    return String(email)
+        .toLowerCase()
+        .match(
+            /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
 };

@@ -1,5 +1,5 @@
 import React ,{useState,useEffect,useRef} from 'react';
-import ProfileService from '../../services/ProfileService';
+import ProfileService from '../../services/profile.service';
 import FirebaseSerive from '../../services/firebase.service';
 import AuthService from '../../services/auth.service'
 import ReplyService from '../../services/ReplyService'
@@ -75,8 +75,8 @@ function Reply({increaseRenderValue,index,data}) {
   
     var reply = inputUpdateReply;
     var comment = data.comment
-
-    const temp = {reply,currentuser,comment}
+    var user = data.user
+    const temp = {reply,user,comment}
 
     
     ReplyService.updateReply(id,temp).then((res)=>{

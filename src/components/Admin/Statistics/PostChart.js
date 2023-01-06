@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import {Chart as ChartJS, BarElement, CategoryScale, LinearScale} from 'chart.js';
-import {Bar, Doughnut, Pie, Line} from 'react-chartjs-2';
-import { MONTHS } from "../../../utils/spUtils";
-import StatiticsService from '../../../services/statitics.service';
+import { Bar } from 'react-chartjs-2';
+import { monthNames } from "../../../utils/spUtils";
+import StatisticsService from '../../../services/statistics.service';
+import PostService from "../../../services/post.service";
 
-function PostChart({published_years}) {
+function PostChart() {
 
     const [yearSelected , setYearSelected] = useState();
+    const [published_years, setPublishedYears] = useState([]);
 
     const [chartState,setChartState] = useState({
-        labels: MONTHS,
+        labels: monthNames,
         datasets: [{
           label: 'Total Post',
           data: [],
@@ -35,12 +36,23 @@ function PostChart({published_years}) {
         }]
       })
         
+      const fetchYearPublished = async () => {
+        await PostService.getYearByPost().then(response => {
+            // console.log(response.data);
+            setPublishedYears(response.data);
+          })
+          .catch(err => {
+            console.log(err)
+          });
+        
+      };
+
       const [TotalPostPerYear , setTotalPostPerYear] = useState(0);
     
       const totalPostsPerMonth = (year)=>{  
             if(year)
             {
-              StatiticsService.getTotalsPostPerMonth(year).then((res)=>{
+              StatisticsService.getTotalsPostsPerMonth(year).then((res)=>{
                 let listValue = res.data
                 var value = []
                 var totalyear = 0;
@@ -51,7 +63,7 @@ function PostChart({published_years}) {
                 })
                 setTotalPostPerYear(totalyear)
                 setChartState({
-                labels: MONTHS,
+                labels: monthNames,
                 datasets: [{
                   label: 'Total Post',
                   data: value,
@@ -84,7 +96,7 @@ function PostChart({published_years}) {
     
      useEffect(()=>{
         totalPostsPerMonth(new Date().getFullYear())
-
+        fetchYearPublished()
      },[])
       
       useEffect(() => {
@@ -107,9 +119,9 @@ function PostChart({published_years}) {
 
     <select value={yearSelected} onChange={(e) => setYearSelected(e.target.value)}>
           {published_years && published_years.map( 
-            (item) =>
+            (item,index) =>
             
-            <option value={item} key={item.id}> {item}</option>
+            <option value={item} key={index}> {item}</option>
            )
           }
          
@@ -118,7 +130,9 @@ function PostChart({published_years}) {
     </div>
  
     <div className="card-body">
-      <div className="chart"><div className="chartjs-size-monitor"><div className="chartjs-size-monitor-expand"><div className /></div><div className="chartjs-size-monitor-shrink"><div className /></div></div>
+      <div className="chart"><div className="chartjs-size-monitor">
+        <div className="chartjs-size-monitor-expand"><div className /></div>
+        <div className="chartjs-size-monitor-shrink"><div className /></div></div>
         <ul className='col-12'>
               {/* Đổi thành BarChart, LineChart, PieChart, DoughnutChart tuỳ ý
               {/* Thêm thẻ ul để hiển thị nhiều Chart */}
