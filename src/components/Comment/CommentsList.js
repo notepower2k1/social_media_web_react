@@ -1,4 +1,4 @@
-import React ,{useState ,useEffect,useRef} from 'react'
+import React ,{useState ,useEffect,useRef,useContext} from 'react'
 import CommentService from '../../services/CommentService'
 import ReplyList from '../Reply/ReplyLists';
 import AddReplyComponent from '../Reply/AddReplyComponent';
@@ -7,11 +7,12 @@ import Comment from './Comment';
 import AuthService from '../../services/auth.service'
 import { useSelector } from 'react-redux';
 import NotificationService from '../../services/notify.service';
+import { SocketContext } from '../../utils/SocketContext';
 
 
 function CommentsList({post}) {
 
-  const { socket } = useSelector(state => state.socket);
+  const socket = useContext(SocketContext);
 
   const [listComments,setListComments] = useState([]);
 

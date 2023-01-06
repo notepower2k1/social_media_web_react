@@ -1,4 +1,4 @@
-import React ,{useState,useRef,useEffect} from 'react';
+import React ,{useState,useRef,useEffect,useContext} from 'react';
 
 // import Button from '@atlaskit/button';
 import ReplyService from '../../services/ReplyService'
@@ -6,11 +6,14 @@ import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
 import ProfileService from '../../services/profile.service';
 import FirebaseSerive from '../../services/firebase.service';
+import { SocketContext } from '../../utils/SocketContext';
+import NotificationService from '../../services/notify.service';
 
 
 
 
 function AddReplyComponent({increaseRenderValue,comment}) {
+    const socket = useContext(SocketContext);
 
     const [inputReply,setInputReply] = useState("");
     const user = AuthService.getCurrentUser();
@@ -38,11 +41,14 @@ function AddReplyComponent({increaseRenderValue,comment}) {
 
         const temp = {reply,user,comment}
         
+        console.log(user.id,comment.post.user.id)
         ReplyService.createReply(temp).then((res)=>{
         
             increaseRenderValue();  
 
-        
+            NotificationService.createNotification(user.id,comment.post.user.id,`/detail/post/${comment.post.id}`,3).then(noty => {
+              socket.emit("sendNotification",noty.data)
+            })
 
         }).catch((err)=>{
             console.log(err)

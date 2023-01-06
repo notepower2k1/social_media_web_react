@@ -19,6 +19,8 @@ function Search(){
 
     console.log(listSearch);
     return (
+        <section>
+        <div className="gap gray-bg">
         <div className="container">
             <div className="container h-100">
                 <div className="row d-flex justify-content-center align-items-center h-100">
@@ -70,6 +72,8 @@ function Search(){
                 </div>
             </div>
         
+            </div>
+            </section>
         
     )
 }

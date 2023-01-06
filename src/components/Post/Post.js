@@ -18,6 +18,7 @@ import NotificationService from "../../services/notify.service";
 import { SocketContext } from '../../utils/SocketContext';
 
 const Post = ({ data, callBack, selected, onShowModal }) => {
+    
     const currentUser = AuthService.getCurrentUser();
     const formRef = useRef([]);
 
@@ -252,7 +253,7 @@ const Post = ({ data, callBack, selected, onShowModal }) => {
                     </a>
                 </div>	
                 <div className="we-video-info">
-                    <p>{totalLikes}</p>
+                    <p><i className="fa fa-thumbs-up"></i> {totalLikes}</p>
 
                     <div className="feature-box d-flex ">
                              

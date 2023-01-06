@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import {storage} from '../../utils/firebaseConfig';
 import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
 import {Link } from "react-router-dom";
+import { getPassedTime } from "../../utils/spUtils";
 
 function PostChild({postWithUser}){
 
@@ -23,11 +24,9 @@ function PostChild({postWithUser}){
                     <img src={avatar} alt=""/>
                 </figure>
                 <div class="friend-name">
-                    <ins><Link to={"/profile/" + userProfile.user.id} title="">
-                        {userProfile.firstName + " " + userProfile.lastName}
-                    </Link></ins>
+                   
                     <ins>{userProfile.firstName + " " + userProfile.lastName}</ins>
-                    <span>{post.publishedDate}</span>
+                    <span>{getPassedTime(new Date(post.publishedDate))}</span>
                 </div>
                 <div class="description">
                     <p>{post.content}</p>

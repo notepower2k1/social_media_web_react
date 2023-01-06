@@ -54,7 +54,7 @@ const GroupDataTable = () => {
 
 
       <br></br>
-      <div className="col-md-6">
+      <div className="col-md-12">
         <h4>Groups List</h4>
 
         <div className="container">

@@ -13,6 +13,7 @@ function SendMessage({socket, increaseRenderValue, currentConversation, room}) {
 	const sendMessage = (event) => {
 		
 		if (event.key === 'Enter') {
+			event.preventDefault();
 			if(!messageInput){
 				alert("please fill in field!!")
 			}

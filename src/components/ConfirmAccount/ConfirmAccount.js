@@ -32,7 +32,7 @@ const ConfirmAccount = () => {
                 setMessage(res.data.message);
                 setSuccessful(true);
                 setTimeout(() => {
-                    navigate("/login");
+                    navigate("/auth");
                 }, 5000);
             })
             .catch((err) => {
