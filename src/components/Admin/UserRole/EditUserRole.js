@@ -60,37 +60,41 @@ const UserForm = () => {
   
     };
   
-    //form m nhin la vl, copy tren mangbiet
+    
       return(
+        // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+      <div className="content-wrapper">
         <Alert variant='primary'>
-        <Container>
-        <Form id="data" style={{'text-align':'center'}}>
-        <Form.Group>
-            <Form.Label className='mr-1'>Username</Form.Label>
-            <input type="text" name="user_ID" value={user_name} placeholder="Enter UserID" disabled/>
-        </Form.Group>
-        <br></br>
-        <Form.Group >
-        <Form.Label className='mr-3'>Role</Form.Label>
-        <select value={role_ID} onChange={(e) => setRoleID(e.target.value)}>
-                {roleList && roleList.map( 
-                  (item) =>
-                  
-                  <option value={item.id}> {item.name}</option>
-                 )
-                }
-               
-        </select>
-        </Form.Group>
-        <br></br>
-        &nbsp;&nbsp;&nbsp;
-        <Button className="mr-2"type='submit' onClick={(e)=>submitActionHandler(e)}>Submit</Button>
-        <Button onClick={()=> navigate('/admin/user-role/read')}>Cancel</Button>
+              <Container>
+              <Form id="data" style={{'text-align':'center'}}>
+              <Form.Group>
+                  <Form.Label className='mr-1'>Username</Form.Label>
+                  <input type="text" name="user_ID" value={user_name} placeholder="Enter UserID" disabled/>
+              </Form.Group>
+              <br></br>
+              <Form.Group >
+              <Form.Label className='mr-3'>Role</Form.Label>
+              <select value={role_ID} onChange={(e) => setRoleID(e.target.value)}>
+                      {roleList && roleList.map( 
+                        (item) =>
+                        
+                        <option value={item.id}> {item.name}</option>
+                      )
+                      }
+                    
+              </select>
+              </Form.Group>
+              <br></br>
+              &nbsp;&nbsp;&nbsp;
+              <Button className="mr-2"type='submit' onClick={(e)=>submitActionHandler(e)}>Submit</Button>
+              <Button onClick={()=> navigate('/admin/user-role/read')}>Cancel</Button>
 
-      </Form>
+            </Form>
 
-      </Container>
-      </Alert>
+            </Container>
+        </Alert>
+    </div>
+        
 
       );
   }

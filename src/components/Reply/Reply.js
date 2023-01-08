@@ -7,6 +7,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import Form from 'react-bootstrap/Form';
 import styled from "styled-components";
 import AddReplyComponent from './AddReplyComponent';
+import { getPassedTime } from "../../utils/spUtils";
 
 
 const ReplyForm = styled(Form)`
@@ -27,16 +28,7 @@ function Reply({increaseRenderValue,index,data}) {
     const formRef = useRef([]);
     const inputRef = useRef([]);
 
-    const convertTime = (date) =>{
-    
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-  
-      const dateValue  = new Date(date);
-      
-      let time = date.match(/\d\d:\d\d/);
-  
-      return  time + " / " + dateValue.toLocaleDateString("en-US", options);
-    }
+   
     useEffect(()=>{
 
       ProfileService.getProfile(data.user.id).then((response) => {
@@ -50,26 +42,7 @@ function Reply({increaseRenderValue,index,data}) {
 
   },[])
 
-  const saveReply = (e,index)=>{
-
-    var reply = inputReply;
-    var comment = data.comment
-
-    const temp = {reply,currentuser,comment}
-
-    
-    ReplyService.createReply(temp).then((res)=>{
-      
-        increaseRenderValue()
-    }).catch((err)=>{
-        console.log(err)
-    });
-    
-    setInputReply("")
-    const currentForm = formRef.current[index];
-    currentForm.style.display = "none";
-  }
-
+ 
 
   const updateComment = (inputUpdateReply,id)=>{
   
@@ -156,7 +129,7 @@ function Reply({increaseRenderValue,index,data}) {
   <div className="we-comment">
     <div className="coment-head">
       <h5>{firstName} {lastName}</h5>
-      <span>{convertTime(data.dateReply)}</span>
+      <span>{getPassedTime(new Date(data.dateReply))}</span>
      
     </div>
     <TextareaAutosize

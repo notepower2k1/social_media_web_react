@@ -118,7 +118,7 @@ function CommentChart() {
 
 
   return (
-    <div className="card card-success mt-5">
+       <div className="card card-success mt-5">
     <div className="card-header">
       <h3 className="card-title">Comments & Reply In {!yearSelected?new Date().getFullYear():yearSelected}</h3>
       <span className="float-right"> Total: {TotalPerYear}</span>
@@ -184,6 +184,7 @@ function CommentChart() {
     </div>
     {/* /.card-body */}
   </div>
+   
   )
 }
 

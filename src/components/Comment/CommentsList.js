@@ -38,15 +38,16 @@ function CommentsList({post}) {
 
   const getAllComments =()=>{
     CommentService.getComments(post.id).then((response) => {
-      setListComments(response.data);       
+      setListComments(response.data);    
+      
     });
   }
 
   const saveComment = (e)=>{
     e.preventDefault();
     var content = inputComment;
-
-    const temp = {content,user,post}
+  
+    const temp = {content,user,post,}
 
     CommentService.createComment(temp).then((res)=>{
       increaseRenderValue();

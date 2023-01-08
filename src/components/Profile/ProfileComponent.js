@@ -360,6 +360,7 @@ function ProfileComponent() {
                                               selected={ setSelectedPost }
                                               onShowModal={ showModal }
                                               callBack={ setReload }
+                                              nameProfile={firstName + " " + lastName}
                                             />
                                             </div>
                                         
@@ -377,8 +378,10 @@ function ProfileComponent() {
 									<div className="widget friend-list stick-widget">
 										<h4 className="widget-title">Friends</h4>
 										<ul id="people-list" className="friendz-list">
-                    {listFriend.map((user) => (
-                          <CardUser key={user.id} user = {user}/>
+                    {listFriend.map((user,index) => (
+                      <div key={index}>
+                          <CardUser  user = {user}/>
+                          </div>
                         ))}	
 
 										</ul>

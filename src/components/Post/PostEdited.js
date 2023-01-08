@@ -3,7 +3,7 @@ import ReactEmoji from 'react-emoji';
 
 import FirebaseService from '../../services/firebase.service';
 import { getPassedTime } from "../../utils/spUtils";
-const PostEdited = ({ post }) => {
+const PostEdited = ({ post, nameProfile }) => {
 
     const [images, setImages] = useState([]);
 
@@ -39,7 +39,7 @@ const PostEdited = ({ post }) => {
                         className="rounded-circle"
                         height="50"
                     />
-                    <div>Tên ng dùng</div>
+                    <div>{ nameProfile }</div>
                 </div>
                 <div className="p-2">
                     { ReactEmoji.emojify(post.content) }

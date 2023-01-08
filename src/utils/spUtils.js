@@ -26,7 +26,7 @@ export const getPassedTime = (time) => {
         let dayĐiff = new Date(diff).getDate();
         return dayĐiff + (dayĐiff > 1 ? " days" : " day");
     } else if (diff < 31536000000) {
-        return monthNames[time.getMonth()] + " " + time.getDate();
+        return monthNames[time.getMonth()] + " " + time.getDate() + ", " + time.getFullYear();
     } else {
         return monthNames[time.getMonth()] + " " + time.getDate() + ", " + time.getFullYear();
     }

@@ -17,7 +17,7 @@ import { getPassedTime } from "../../utils/spUtils";
 import NotificationService from "../../services/notify.service";
 import { SocketContext } from '../../utils/SocketContext';
 
-const Post = ({ data, callBack, selected, onShowModal }) => {
+const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
     
     const currentUser = AuthService.getCurrentUser();
     const formRef = useRef([]);
@@ -184,6 +184,7 @@ const Post = ({ data, callBack, selected, onShowModal }) => {
                 ?   <PostHistory 
                         handleClose={ handleHideEditHistory } 
                         postId={ data.id }
+                        nameProfile={nameProfile}
                     /> : '' 
             }
             <div className="dropdown float-right">

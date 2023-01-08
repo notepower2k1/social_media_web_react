@@ -22,7 +22,10 @@ function NotificationList({currentUser,socket}){
     useEffect(() => {
         NotificationService.getByIdRecipient(currentUser.id).then(res => setListNoti(res.data));
         NotificationService.getLengthNewNotification(currentUser.id).then(res => setLength(res));
-       
+        ConversationService.getTotalNewMessage(currentUser.id)
+        .then(res => {
+            setNumberOfNewMessages(res.data);
+        });
     },[change])
 
     useEffect(()=>{

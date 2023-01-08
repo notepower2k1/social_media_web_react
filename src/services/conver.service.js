@@ -59,10 +59,13 @@ const readOtherMembers = async (convID, userID) => {
     return await rootInstance.get(`/conversation/${convID}/other-mems/${userID}`);
 }
 
-const createConversationRoom = async (membersID) => {
-    return await rootInstance.post("/conversation/add-room", membersID);
+const createConversationRoomForTwo = async (membersID) => {
+    return await rootInstance.post("/conversation/add-room-two", membersID);
 }
 
+const createConversationRoom = async (membersID) => {
+    return await rootInstance.post("/conversation/add-room-more", membersID);
+}
 
 //Thêm
 const readOthersFriendNotJoined = async (convID, userID) => {
@@ -104,6 +107,7 @@ const ConversationService = {
     readMemberProfiles,
     readOtherMembers,
     createConversationRoom,
+    createConversationRoomForTwo,
     createConversation,
 
     readOthersFriendNotJoined,

@@ -40,8 +40,6 @@ function AddReplyComponent({increaseRenderValue,comment}) {
         var reply = inputReply;
 
         const temp = {reply,user,comment}
-        
-        console.log(user.id,comment.post.user.id)
         ReplyService.createReply(temp).then((res)=>{
         
             increaseRenderValue();  
@@ -57,6 +55,17 @@ function AddReplyComponent({increaseRenderValue,comment}) {
 
         setInputReply("")
       }
+
+      const handleKeyDown = async  (event) => {
+        if (event.key === 'Enter') {
+            if(!inputReply){
+                alert("please fill in field!!")
+            }
+            else{
+              saveReply(event)
+            }
+          }
+    }
   return (
     <div>
 
@@ -70,10 +79,12 @@ function AddReplyComponent({increaseRenderValue,comment}) {
                       name="inputComment" 
                       placeholder="Viết phản hồi công khai..."     
                       value = {inputReply}
-                      onChange= {(e)=> setInputReply(e.target.value)} 
+                      onChange= {(e)=> setInputReply(e.target.value)}
+                      onKeyDown = {(e)=> handleKeyDown(e)
+                      
+                      } 
               >
               </TextareaAutosize>  
-              <button disabled={!inputReply} className="btn btn-primary float-end" onClick={(e) => saveReply(e)}>Bình luận</button>
 
               </div>
                  

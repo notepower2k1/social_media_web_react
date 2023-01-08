@@ -53,54 +53,46 @@ const UserRoleForm = () => {
 
 
     return(
-      <Alert variant='primary'>
-      <Container>
-      <Form id="data" style={{'text-align':'center'}}>
-        {/* <Form.Group controlId="form.UserID">
-            <Form.Label>User ID</Form.Label>
-            <Form.Control type="number" value={userID} onChange={userIDChangeHandler} placeholder="Enter User ID" required disabled/>
-        </Form.Group> */}
-        {/* <Form.Group>
-            <Form.Label>Username</Form.Label>
-            <Form.Control type="text" name="user_ID" value={enteredUserID} placeholder="Enter UserID" disabled/>
-        </Form.Group>
-        <Form.Group > */}
-   {/*          <Form.Label>Role</Form.Label>
-            <Form.Control type="text" name="role_ID" value={role_ID} onChange={roleIDChangeHandler} placeholder="Enter RoleID" required/>
-             */}
-      <Form.Group>
-      <Form.Label className='mr-2'>Username</Form.Label>
-       <select value={enteredUserID} onChange={(e) => setUserID(e.target.value)}>
-                {userList && userList.map( 
-                  (item) =>
-                  
-                  <option value={item.id}> {item.username}</option>
-                 )
-                }
-               
-        </select>
-        <br></br><br></br>
-        <Form.Label className='mr-2'>Role</Form.Label>
-        <select value={enteredRoleID} onChange={(e) => setRoleID(e.target.value)}>
-                {roleList && roleList.map( 
-                  (item) =>
-                  
-                  <option value={item.id}> {item.name}</option>
-                 )
-                }
-               
-        </select>
-       
-        </Form.Group>
-        <br></br>
-        &nbsp;&nbsp;&nbsp;
-        <Button className="mr-2"type='submit' onClick={(e)=>submitActionHandler(e)}>Submit</Button>
-        <Button onClick={()=> navigate('/admin/user-role/read')}>Cancel</Button>
+        // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+        <div className="content-wrapper">
+          <Alert variant='primary'>
+                <Container>
+                <Form id="data" style={{'text-align':'center'}}>
+                <Form.Group>
+                <Form.Label className='mr-2'>Username</Form.Label>
+                <select value={enteredUserID} onChange={(e) => setUserID(e.target.value)}>
+                          {userList && userList.map( 
+                            (item) =>
+                            
+                            <option value={item.id}> {item.username}</option>
+                          )
+                          }
+                        
+                  </select>
+                  <br></br><br></br>
+                  <Form.Label className='mr-2'>Role</Form.Label>
+                  <select value={enteredRoleID} onChange={(e) => setRoleID(e.target.value)}>
+                          {roleList && roleList.map( 
+                            (item) =>
+                            
+                            <option value={item.id}> {item.name}</option>
+                          )
+                          }
+                        
+                  </select>
+                
+                  </Form.Group>
+                  <br></br>
+                  &nbsp;&nbsp;&nbsp;
+                  <Button className="mr-2"type='submit' onClick={(e)=>submitActionHandler(e)}>Submit</Button>
+                  <Button onClick={()=> navigate('/admin/user-role/read')}>Cancel</Button>
 
-      </Form>
+                </Form>
 
-    </Container>
-    </Alert>
+              </Container>
+            </Alert>
+        </div>
+      
 
     );
 }

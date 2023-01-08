@@ -19,10 +19,9 @@ function SendMessage({socket, increaseRenderValue, currentConversation, room}) {
 			}
 			else{
 				var reply = messageInput;
-				var conversationReplyTime = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 				var conversation = currentConversation;
 				const status = 0
-				var ConversationReply = {reply, conversationReplyTime, status, user, conversation}
+				var ConversationReply = {reply, status, user, conversation}
 		
 				ConversationService.createConversationReply(ConversationReply)
 					.then(res => {

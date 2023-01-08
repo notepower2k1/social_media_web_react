@@ -28,7 +28,6 @@ import AddGroup from './components/Admin/Group/AddGroup';
 import EditGroup from './components/Admin/Group/EditGroup';
 import GroupDataTable from './components/Admin/Group/GroupDataTable';
 import Chart from "./components/Admin/Statistics/Chart";
-import CountRow from './components/Admin/Statistics/CountRow';
 
 import RequesterList from "./components/Friend/ListRequester";
 
@@ -117,7 +116,12 @@ function App() {
 			<div>
 				<Routes>
 					<Route element={<AppLayout />} >
+
+					
+						
 						{
+
+
 							['/', '/posts'].map((path, index) => <Route key={index} path={path} element={
 								<PrivateRoute>
 									<PostList />
@@ -178,8 +182,15 @@ function App() {
 					</Route>
 
 					<Route element={<AuthLayout />} >
-					<Route path="/auth" element={<Auth />} />
+				
+					{currentUser?
+					
+						<Route path="/auth" element={<PostList />} />
+						:<Route path="/auth" element={<Auth />} />
+					}
+					
 
+				
 					</Route>
 
 					<Route element={<AdminLayout />} >
@@ -193,7 +204,6 @@ function App() {
 
 
 						<Route path="/admin/chart" element={<Chart/>}/>
-						<Route path="/admin/countRow" element={<CountRow/>}/>    
 					</Route>  
 
 

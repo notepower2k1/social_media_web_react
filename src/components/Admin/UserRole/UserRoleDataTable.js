@@ -46,72 +46,76 @@ const UserRoleDataTable = () => {
  
 
   return (
-    <div class="card-body" style={{textAlign:'center'}}>
-      <br>
-      </br>
-      <nav>
-        <button
-          className="btn btn-primary nav-item active"
-          onClick={() => navigate("/admin/user-role/create")}>
-          Create New User Role
-        </button>
-      </nav>
+    // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+    <div className="content-wrapper">
+      <div class="card-body" style={{textAlign:'center'}}>
+        <br>
+        </br>
+        <nav>
+          <button
+            className="btn btn-primary nav-item active"
+            onClick={() => navigate("/admin/user-role/create")}>
+            Create New User Role
+          </button>
+        </nav>
 
 
-      <br></br>
-      <div className="col-12">
-        <h4 style={{textAlign:'center'}}>User Role List</h4>
+        <br></br>
+        <div className="col-12">
+          <h4 style={{textAlign:'center'}}>User Role List</h4>
 
-        <div class="container">
-          <div class="row">
-            <div class="col-12">
-              <table class="table table-bordered table-striped">
-                <thead>
-                  <tr>
-                    {/* <th>ID</th> */}
-                    <th>User</th>
-                    <th>Role</th>
-                    <th scope="col">Action</th>
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <table class="table table-bordered table-striped">
+                  <thead>
+                    <tr>
+                      {/* <th>ID</th> */}
+                      <th>User</th>
+                      <th>Role</th>
+                      <th scope="col">Action</th>
 
-                  </tr>
-                </thead>
-                <tbody>
+                    </tr>
+                  </thead>
+                  <tbody>
 
-                  {
-                    userRole &&
-                    userRole.map((userRoles, index) => (
+                    {
+                      userRole &&
+                      userRole.map((userRoles, index) => (
 
-                      <tr>
-                        {/* <th scope="row">{index}</th> */}
-                        <td>{userRoles.user.username}</td>
-                        <td>{userRoles.role.name}</td>
-                        <td style={{display:'inline-block'}}>
-                          <button>
-                              {/* useParam ở trang Edit sễ lấy 2 cái id  */}
-                              <Link to={"/admin/user-role/edit/" + userRoles.user.id + "/" + userRoles.role.id}>
-                                Edit
-                              </Link>
-                          </button>
-                          
-                          <button
-                            onClick={() => removeUserRole(userRoles.user.id, userRoles.role.id)} className="button"
-                          > Delete
-                          </button>
+                        <tr>
+                          {/* <th scope="row">{index}</th> */}
+                          <td>{userRoles.user.username}</td>
+                          <td>{userRoles.role.name}</td>
+                          <td style={{display:'inline-block'}}>
+                            <button>
+                                {/* useParam ở trang Edit sễ lấy 2 cái id  */}
+                                <Link to={"/admin/user-role/edit/" + userRoles.user.id + "/" + userRoles.role.id}>
+                                  Edit
+                                </Link>
+                            </button>
+                            
+                            <button
+                              onClick={() => removeUserRole(userRoles.user.id, userRoles.role.id)} className="button"
+                            > Delete
+                            </button>
 
-                        </td>
-                      </tr>
+                          </td>
+                        </tr>
 
-                    ))
-                  }
+                      ))
+                    }
 
-                </tbody>
-              </table>
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
     </div>
+    </div>
+    
 
   );
 }

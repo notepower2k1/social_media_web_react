@@ -11,7 +11,7 @@ const postHistorySection={
     position:'relative'
 };
 
-const PostHistory = ({ postId, handleClose }) => {
+const PostHistory = ({ postId, handleClose, nameProfile }) => {
 
     const [posts, setPosts] = useState([]);
 
@@ -54,6 +54,7 @@ const PostHistory = ({ postId, handleClose }) => {
                             : posts.map((post) => <PostEdited 
                                         key={ post.id }
                                         post={ post }
+                                        nameProfile={nameProfile}
                                     /> )
                     }
                 </section>

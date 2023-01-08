@@ -5,6 +5,7 @@ import "../../../App.css";
 import UserService from "../../../services/user.service";
 import PostService from "../../../services/post.service";
 import GroupService from "../../../services/group.service";
+import LocationService from "../../../services/location.service";
 // Import hết luôn tránh bị lỗi lúc chuyển Chart
 import "chart.js/auto";
 import PostChart from './PostChart';
@@ -28,16 +29,7 @@ const Chart = () => {
    
     const [groups, setGroups] = useState([]);
 
-
-
-
-  
-
-   
-
- 
-
-  
+    const [locations, setLocations] = useState([]);
 
     const fetchUser = async () => {
       await UserService.getAllUsers().then(response => {
@@ -72,12 +64,23 @@ const Chart = () => {
         });
       
     };
+
+    const fetchLocation = async () => {
+      await LocationService.getAllProvinces().then(response => {
+          // console.log(response.data)
+          setLocations(response.data);
+        })
+        .catch(err => {
+          console.log(err)
+        });
+      
+    };
   
     useEffect(() => {
       fetchUser()
       fetchPost()
       fetchGroup()
-
+      fetchLocation()
 
 
     }, []);
@@ -87,9 +90,9 @@ const Chart = () => {
 
 
   return (
-    <div className="">
-      
-      <section className="content">
+   // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+   <div className="content-wrapper">
+      <div>
         <div className="container-fluid">
                {/* Small boxes (Stat box) */}
         <div className="row">
@@ -129,9 +132,9 @@ const Chart = () => {
           <div className="col-lg-3 col-6">
           <div className="small-box bg-danger">
               <div className="inner">
-                <h3 style={{color: 'white'}}>65</h3>
+                <h3 style={{color: 'white'}}>{locations.length}</h3>
 
-                <p style={{color: 'white'}}>Chua nghi ra</p>
+                <p style={{color: 'white'}}>Total Province</p>
               </div>
              
             </div>
@@ -148,9 +151,11 @@ const Chart = () => {
       </div>
       
       
-      </section>
+      </div>
     
     </div>
+
+    
   )
 }
 

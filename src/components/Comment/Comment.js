@@ -4,6 +4,7 @@ import AuthService from '../../services/auth.service'
 import CommentService from '../../services/CommentService'
 import ProfileService from '../../services/profile.service';
 import FirebaseSerive from '../../services/firebase.service';
+import { getPassedTime } from "../../utils/spUtils";
 
 function Comment({index,formRef,increaseRenderValue,data}) {
 
@@ -16,16 +17,6 @@ function Comment({index,formRef,increaseRenderValue,data}) {
     const [lastName,setLastName] = useState('');
     const [avatar,setAvatar] = useState(null);
 
-    const convertTime = (date) =>{
-    
-      const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' ,timeZone:'Asia/Ho_Chi_Minh'};
-  
-      const dateValue  = new Date(date);
-      
-      let time = date.match(/\d\d:\d\d/);
-  
-      return  time + " / " + dateValue.toLocaleDateString("en-US", options);
-    }
     useEffect(()=>{
 
         ProfileService.getProfile(data.user.id).then((response) => {
@@ -132,7 +123,7 @@ function Comment({index,formRef,increaseRenderValue,data}) {
   <div className="we-comment">
 														<div className="coment-head">
 															<h5>{firstName} {lastName}</h5>
-															<span>{convertTime(data.commentDate)}</span>
+															<span>{getPassedTime(new Date(data.commentDate))}</span>
                             
                              
 														</div>

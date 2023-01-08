@@ -41,7 +41,9 @@ const GroupDataTable = () => {
   }
 
   return (
-    <div className="card-body">
+      // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+    <div className="content-wrapper">
+<div className="card-body" style={{textAlign:'center'}}>
       <br>
       </br>
       <nav>
@@ -54,8 +56,8 @@ const GroupDataTable = () => {
 
 
       <br></br>
-      <div className="col-md-12">
-        <h4>Groups List</h4>
+      <div className="col-12">
+        <h4 style={{textAlign: 'center'}}>Groups List</h4>
 
         <div className="container">
           <div className="row">
@@ -108,6 +110,8 @@ const GroupDataTable = () => {
       </div>
 
     </div>
+    </div>
+    
 
   );
 }

@@ -106,7 +106,7 @@ function PostChart() {
 
 
   return (
-    <div className="card card-success mt-5">
+<div className="card card-success mt-5">
     <div className="card-header">
       <h3 className="card-title">Posts published In {!yearSelected?new Date().getFullYear():yearSelected}</h3>
       <span className="float-right"> Total: {TotalPostPerYear}</span>
@@ -174,7 +174,8 @@ function PostChart() {
       </div>
     </div>
     {/* /.card-body */}
-  </div>
+    </div>
+    
   )
 }
 

@@ -58,13 +58,11 @@ const GroupForm = () => {
 
   }
     return(
-      <Alert variant='primary'>
+      // Thêm className = "content-wrapper" vào tránh Navbar che chữ
+    <div className="content-wrapper">
+            <Alert variant='primary'>
       <Container>
       <Form onSubmit={submitActionHandler}>
-        {/* <Form.Group controlId="form.GroupID">
-            <Form.Label>Group ID</Form.Label>
-            <Form.Control type="number" value={enteredGroupID} onChange={groupIDChangeHandler} placeholder="Enter Group ID" required/>
-        </Form.Group> */}
          <Form.Group  controlId="form.GroupName">
             <Form.Label>Group Name</Form.Label>
             <Form.Control type="text" value={enteredGroupName} onChange={groupNameChangeHandler} placeholder="Enter Group Name" required/>
@@ -85,6 +83,8 @@ const GroupForm = () => {
 
     </Container>
     </Alert>
+    </div>
+
 
     );
 }

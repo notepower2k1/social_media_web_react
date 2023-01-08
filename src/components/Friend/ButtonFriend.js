@@ -53,7 +53,7 @@ function ButtonFriend(props){
 			.then(res => {
 				setChange(!change)
 			})
-		ConversationService.createConversationRoom({ membersID: [currentUser.id,props.userID] })
+		ConversationService.createConversationRoomForTwo({ membersID: [currentUser.id,props.userID] })
 			.then(res => {
 				console.log(res.data);
 			})
