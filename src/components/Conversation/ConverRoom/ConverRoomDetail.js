@@ -176,7 +176,10 @@ const ConverRoomDetail = ({ conver, onToggleChat, otherProfiles, onSetOtherMemPr
                             otherProfiles && otherProfiles.map((profile, index) => 
                                 <li key={index} className="list-group-item">
                                     <div className="d-flex justify-content-between">
-                                        <div>{profile.firstName} {profile.lastName}</div>
+                                        <div>
+                                            <div>{profile.firstName} {profile.lastName}</div>
+                                            <div className="font-italic font-weight-light">@{profile.user.username}</div>
+                                        </div>
                                         <button 
                                             type="button" 
                                             className="btn btn-danger"
