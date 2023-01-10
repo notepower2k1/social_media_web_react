@@ -31,7 +31,7 @@ function ListConversation() {
     const [otherUserID, setOtherUserID] = useState(0);
     const [otherUserProfID, setOtherUserProfID] = useState(0);
 	const [otherMemProfiles, setOtherMemProfiles] = useState([]);
-
+	
     const increaseRenderValue = ()=> {
       	setRenderValue(c => c + 1)
     }
@@ -175,7 +175,6 @@ function ListConversation() {
 									increaseRenderValue={increaseRenderValue} 
 									renderValue={renderValue} 
 									currentConversation={currConver}
-									otherProfiles={otherMemProfiles}
 								/>
 							}
 						</div>

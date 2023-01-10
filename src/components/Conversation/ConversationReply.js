@@ -5,7 +5,7 @@ import AuthService from '../../services/auth.service'
 import ConversationService from '../../services/conver.service';
 import ReactEmoji from 'react-emoji';
 
-function ConversationReply({increaseRenderValue, socket, renderValue, currentConversation, otherProfiles}) {
+function ConversationReply({increaseRenderValue, socket, renderValue, currentConversation}) {
 
 	const user = AuthService.getCurrentUser();
 
@@ -29,7 +29,7 @@ function ConversationReply({increaseRenderValue, socket, renderValue, currentCon
 				conversationReplyTime: conversationReplyTime,
 				status: 0,
 				deleleStatus: 0,
-				user: {id:data.senderID},
+				user: data.sender,
 				conversation: currentConversation,
 			})
 		});
@@ -169,11 +169,8 @@ function ConversationReply({increaseRenderValue, socket, renderValue, currentCon
 												style={{ width: "fit-content", color: "#A3A3A3", fontSize: "12px"}}
 												
 												>
-													{ 
-															otherProfiles && otherProfiles.length === 1
-															? otherProfiles[0]["firstName"] + " " + otherProfiles[0]["lastName"]
-															: otherProfiles.find(profile => profile.user.id === conversationReply.user.id)["firstName"] 
-															+ " " + otherProfiles.find(profile => profile.user.id === conversationReply.user.id)["lastName"]
+													{
+														conversationReply.user.username
 													}
 												</p>
 												{	

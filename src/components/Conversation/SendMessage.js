@@ -33,7 +33,7 @@ function SendMessage({socket, increaseRenderValue, currentConversation, room}) {
 				ConversationService.readOthersUserID(currentConversation.id, user.id)
 					.then(res => {
 						socket.emit("sendMessage",{
-							senderID: user.id,
+							sender: user,
 							text: messageInput,
 							room: room
 						})
