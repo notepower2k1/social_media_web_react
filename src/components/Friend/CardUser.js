@@ -9,6 +9,7 @@ function CardUser({user}) {
         FirebaseService.getAvatarFromFirebase(user.avatar).then((response) => {
             setAvatar(response)
         })
+
     },[])
 
     return (
@@ -18,7 +19,7 @@ function CardUser({user}) {
         <span className="status f-online"></span>
     </figure>
     <div className="friendz-meta">
-        <Link to={"/profile/" + user.user.id} >{user.firstName + " " + user.lastName}</Link>
+        <Link to={"/profile/" + user.id} >{user.firstName + " " + user.lastName}</Link>
     </div>
     </>
     )

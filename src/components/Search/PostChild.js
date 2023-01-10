@@ -16,19 +16,19 @@ function PostChild({postWithUser}){
     },[postWithUser])
 
     return (
-        <div class="central-meta item">
+        <div className="central-meta item">
         <Link to={"/detail/post/" + postWithUser.post.id}>
-        <div class="user-post">
-            <div class="friend-info">
+        <div className="user-post">
+            <div className="friend-info">
                 <figure>
                     <img src={avatar} alt=""/>
                 </figure>
-                <div class="friend-name">
+                <div className="friend-name">
                    
                     <ins>{userProfile.firstName + " " + userProfile.lastName}</ins>
                     <span>{getPassedTime(new Date(post.publishedDate))}</span>
                 </div>
-                <div class="description">
+                <div className="description">
                     <p>{post.content}</p>
                 </div>
             </div>

@@ -24,19 +24,19 @@ function RequesterChild({user,userCurrentID,handleChange}){
         <li>
             <div class="nearly-pepls">
                 <figure>
-                    <Link to={"/profile/" + user.user.id}>
+                    <Link to={"/profile/" + user.userID}>
                         <img src={avatar} />
                     </Link>
                 </figure>
                 <div class="pepl-info">
                     <h4>
-                        <Link to={"/profile/" + user.user.id}>
+                        <Link to={"/profile/" + user.userID}>
                             {user.firstName + " " + user.lastName}
                         </Link>
                     </h4>
-                    <p  onClick={() => handleRemoveRequest(user.user.id)} class="add-butn more-action">
+                    <p  onClick={() => handleRemoveRequest(user.userID)} class="add-butn more-action">
                         Delete Request</p>
-                    <p  onClick={() => handleAcceptRequest(user.user.id)} class="add-butn" >Confirm</p>
+                    <p  onClick={() => handleAcceptRequest(user.userID)} class="add-butn" >Confirm</p>
                 </div>
             </div>
         </li>	

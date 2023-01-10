@@ -39,7 +39,6 @@ function ProfileComponent() {
     const [background,setBackground] = useState(null)
     const [about,setAbout] = useState("")
     const [locationID,setLocationID] = useState(0)
-    const [userName,setUserName] = useState("")
     const {userID} = useParams();
 
     const [uploadAvatar,setUploadAvatar] = useState(null);
@@ -81,16 +80,15 @@ function ProfileComponent() {
             setDob(response.data.dateOfBirth);
             setLocationID(response.data.locationID);
             getImageFromFirebase(response.data.avatar,response.data.background)
-            setUserName(response.data.user.username)
             setStateSwitch(0)
             setPosts([])
         })
         FriendService.getListFriend(userID).then(res => setListFriend(res.data))
 
         checkCurrentUserProfile()
-        checkCurrentUserProfile()
 
         getAllPosts()
+
     },[userID])
 
    const checkCurrentUserProfile = () => {
@@ -270,7 +268,7 @@ function ProfileComponent() {
 			<div className="add-btn">
       {!isCurrentProfile && <ButtonFriend 
               userID = {userID} 
-          />}
+          />} 
 			</div>
       {currentUser.id == userID?
 			<form className="edit-phto">

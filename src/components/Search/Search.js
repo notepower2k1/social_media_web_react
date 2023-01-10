@@ -17,7 +17,6 @@ function Search(){
             .then(response => setlistSearch(response.data))
     },[keyword])
 
-    console.log(listSearch);
     return (
         <section>
         <div className="gap gray-bg">
@@ -37,8 +36,8 @@ function Search(){
                                 <div className="tab-content">
                                     <div className="tab-pane active fade show " id="frends" >
                                         <ul className="nearby-contct">
-                                        {listSearch.userProfiles.map((user) =>(
-                                            <UserChild user={user}/>
+                                        {listSearch.userProfiles.map((user,index) =>(
+                                            <UserChild  key={index} user={user}/>
                                         ))}
                                         </ul>
                                     </div>

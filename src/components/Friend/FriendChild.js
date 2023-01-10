@@ -17,19 +17,19 @@ function FriendChild({user,userCurrentID,handleChange}) {
     }
     return (
         <li>
-            <div class="nearly-pepls">
+            <div className="nearly-pepls">
                 <figure>
-                    <Link to={"/profile/" + user.user.id}>
+                    <Link to={"/profile/" + user.userID}>
                         <img src={avatar} />
                     </Link>
                 </figure>
-                <div class="pepl-info">
+                <div className="pepl-info">
                     <h4>
-                        <Link to={"/profile/" + user.user.id}>
+                        <Link to={"/profile/" + user.userID}>
                             {user.firstName + " " + user.lastName}
                         </Link>
                     </h4>
-                    <p onClick={() => handleRemoveFriendShip(user.user.id)} class="add-butn more-action" data-ripple="">Unfriend</p>
+                    <p onClick={() => handleRemoveFriendShip(user.userID)} className="add-butn more-action" data-ripple="">Unfriend</p>
                 </div>
             </div>
         </li>)

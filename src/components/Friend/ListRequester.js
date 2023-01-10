@@ -30,11 +30,11 @@ function ListRequester(){
                         <FriendChild user={user}/>
                         <button 
                             className="btn btn-info"
-                            onClick={() => handleAcceptRequest(user.user.id)}
+                            onClick={() => handleAcceptRequest(user.userID)}
                         >Xác nhận</button>
                         <button 
                             className="btn btn-secondary"
-                            onClick={() => handleRemoveRequest(user.user.id)}
+                            onClick={() => handleRemoveRequest(user.userID)}
                         >Xóa lời mời</button>
                     </Col>
                 ))}

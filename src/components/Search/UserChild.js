@@ -15,13 +15,13 @@ function UserChild({user}) {
         <li>
             <div className="nearly-pepls">
                 <figure>
-                    <Link to={"/profile/" + user.user.id}>
+                    <Link to={"/profile/" + user.userID}>
                         <img src={avatar} />
                     </Link>
                 </figure>
                 <div className="pepl-info">
                     <h4>
-                        <Link to={"/profile/" + user.user.id}>
+                        <Link to={"/profile/" + user.userID}>
                             {user.firstName + " " + user.lastName}
                         </Link>
                     </h4>
