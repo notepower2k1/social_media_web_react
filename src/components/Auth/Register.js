@@ -32,9 +32,11 @@ const Register = ({onSetIsRegistered}) => {
     const [districtsList,setDistrictsList] = useState([]);
     const [wardsList,setWardLists] = useState([]);
 
-    /* const [provinceLabel,setProvinceLabel] = useState(true);
-    const [districtLabel,setDistrictLabel] = useState(true);
-    const [wardLabel,setWardLabel] = useState(true); */
+   
+
+    const [isSelectedProvince,setSelectedProvince] = useState(false);
+    const [isSelectedDistrict,setSelectedDistrict] = useState(false);
+    const [isSelectedWard,setSelectedWard] = useState(false);
 
     useEffect(() => {
         getAllProvinces();
@@ -74,16 +76,25 @@ const Register = ({onSetIsRegistered}) => {
     };
 
     const handleSelectProvinces = (e) => {
+        if(!isSelectedProvince){
+            setSelectedProvince(true)
+        }
         setProvinceSelected(e.target.value)
         getDistricts(e.target.value)
     }
 
     const handleSelectDistrict = (e) => {
+        if(!isSelectedDistrict){
+            setSelectedDistrict(true)
+        }
         setDistrictSelected(e.target.value)
         getWards(e.target.value)
     }
 
     const handleSelectWards = (e) => {
+        if(!isSelectedWard){
+            setSelectedWard(true)
+        }
         setWardSelected(e.target.value)
        
     }
@@ -206,10 +217,13 @@ const Register = ({onSetIsRegistered}) => {
                 <div className="form-group">	
                     <select name="province" 
                         value={provinceSelected} 
-                        onChange={(e) => handleSelectProvinces(e)}
-                        placeholder="Select your province"
+                        onChange={(e) => setProvinceSelected(e.target.value)}
+                        onClick={(e) => handleSelectProvinces(e)}
+
                     >
-                        {
+                        {  !isSelectedProvince
+                            ?<option>Select your province</option>
+                            :
                             provincesList && provincesList.map((item) =>
                                 <option value={item.code} key={item.code}> {item.fullName}</option>
                             )
@@ -222,10 +236,12 @@ const Register = ({onSetIsRegistered}) => {
                     <div className="form-group">
                         <select name="district" 
                             value={districtSelected} 
-                            onChange={(e) => handleSelectDistrict(e)}
-                            placeholder="Select your district"
+                            onChange={(e) => setDistrictSelected(e.target.value)}
+                            onClick={(e) => handleSelectDistrict(e)}
                         >
-                        {
+                        {   !isSelectedDistrict
+                            ?<option>Select your district</option>
+                            :
                             districtsList && districtsList.map((item) =>
                                 <option value={item.code} key={item.code}> {item.fullName}</option>
                             )
@@ -235,7 +251,6 @@ const Register = ({onSetIsRegistered}) => {
                     :
                     <div className="form-group">
                         <select name="district" disabled={true}
-                            placeholder="Select your district"
                         >
                         </select>
                    </div>
@@ -247,10 +262,13 @@ const Register = ({onSetIsRegistered}) => {
                     <div className="form-group">
                         <select name="ward" 
                             value={wardSelected} 
-                            onChange={(e) => handleSelectWards(e)}
-                            placeholder="Select your ward"
+                            onChange={(e) => setWardSelected(e.target.value)}
+                            onClick={(e) => handleSelectWards(e)}
                         >
                         {
+                            !isSelectedWard
+                            ?<option>Select your ward</option>
+                            :
                             wardsList && wardsList.map((item) =>
                                 <option value={item.code} key={item.code}> {item.fullName}</option>
                             ) 

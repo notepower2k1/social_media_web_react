@@ -39,17 +39,11 @@ const GroupForm = () => {
       setGroupAbout(event.target.value);
     };
 
-    const createdDateChangeHandler = (event) => {
-      setCreatedDate(event.target.value);
-    };
 
     const submitActionHandler = (event) => {
       event.preventDefault();
 
-      GroupService.updateGroup({
-          groupName,
-          groupAbout,
-          }, groupID)
+      GroupService.updateGroup({groupName: groupName, groupAbout: groupAbout},groupID)
         .then((response) => {
           alert("Group "+ groupID +" updated!");
           navigate('/admin/group/read')
@@ -82,7 +76,7 @@ const GroupForm = () => {
         </Form.Group>
         <Form.Group  controlId="form.CreatedDate">
             <Form.Label>Created Date</Form.Label>
-            <Form.Control type="date" value={createdDate} onChange={createdDateChangeHandler} placeholder="Enter Created Date" required/>
+            <Form.Control type="date" value={createdDate} disabled/>
         </Form.Group>
         <br></br>
         <Button type='submit'>Update Group</Button>

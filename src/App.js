@@ -51,6 +51,7 @@ function App() {
 		
 		if (user) {
 			setCurrentUser(user);
+
 		}
 
 		Event.on("logout", () => {
@@ -73,7 +74,7 @@ function App() {
 			<main className={"main--container"}>
 				<div className={"main--content"}>
 					<div className="theme-layout" style={{height: "100vh"}}>
-						{ currentUser &&  <Navbar user={user} currentUser={currentUser} logOut={logOut}/>}
+						{ currentUser &&  <Navbar  currentUser={currentUser} logOut={logOut}/>}
 						<div className="mt-5">
 							<Outlet/>
 						</div>
@@ -84,7 +85,8 @@ function App() {
 	);
 	
 	  const AdminLayout = () => (
-		<>
+		
+		
 			<main className={"admin--container"}>
 				<div className={"admin--content"}>
 					<div className="wrapper">
@@ -93,7 +95,8 @@ function App() {
 					</div>
 				</div>
 			</main>
-		</>
+			
+		
 	  );
   
 
@@ -193,24 +196,69 @@ function App() {
 				
 					</Route>
 
-					<Route element={<AdminLayout />} >
-						<Route path="/admin/user-role/read" element={<UserRoleDataTable/>}/>
-						<Route path="/admin/user-role/create" element={<AddUserRole/>}/>W
-						<Route path="/admin/user-role/edit/:userID/:roleID" element={<EditUserRole/>}/>
+					{
+						currentUser && currentUser.roles.includes("ROLE_ADMIN")
+						?	<Route element={<AdminLayout />} >
 
-						<Route path="/admin/group/read" element={<GroupDataTable/>}/>
-						<Route path="/admin/group/create" element={<AddGroup/>}/>
-						<Route path="/admin/group/edit/:id" element={<EditGroup/>}/>
+						
+						
+						<Route path="/admin/user-role/read" element={
+						<PrivateRoute>
+							<UserRoleDataTable/>
+						</PrivateRoute>
+						}/>
+	
+						<Route path="/admin/user-role/create" element={
+						<PrivateRoute>
+							<AddUserRole/>
+						</PrivateRoute>
+	
+						}/>
+						<Route path="/admin/user-role/edit/:userID/:roleID" element={
+						<PrivateRoute>
+							<EditUserRole/>
+						</PrivateRoute>
+						}/>
+	
+						<Route path="/admin/group/read" element={
+						<PrivateRoute>
+							<GroupDataTable/>
+						</PrivateRoute>
+						}/>
+						<Route path="/admin/group/create" element={
+						<PrivateRoute>
+							<AddGroup/>
+						</PrivateRoute>
+	
+						}/>
+						<Route path="/admin/group/edit/:id" element={
+						<PrivateRoute>
+							<EditGroup/>
+						</PrivateRoute>
+						}/>
+	
+	
+						<Route path="/admin/chart" element={
+						<PrivateRoute>
+							<Chart/>
+						</PrivateRoute>
+						}/>
+					
+					
+						</Route>  
+						:<></>
 
-
-						<Route path="/admin/chart" element={<Chart/>}/>
-					</Route>  
+					}
+				
+				
+				
+				
 
 
 					<Route path="*" element={<NotFoundPage />} >
-						</Route>
+					</Route>
 				</Routes>
-
+			
 				<AuthVerify logOut={logOut}/>
 			</div>
 		</SocketProvider>

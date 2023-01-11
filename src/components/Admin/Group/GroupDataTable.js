@@ -31,13 +31,18 @@ const GroupDataTable = () => {
 
   const removeGroup = async (id) => {
 
-    await GroupService.deleteGroup(id).then((response) => {
-      alert("User record " + id + " deleted!");
-      setGroupData();
-
-    }).catch(error => {
-      alert("Error Ocurred in removeGroup:" + error);
-    });
+    if(window.confirm("Delete item ?")){
+      await GroupService.deleteGroup(id).then((response) => {
+        alert("User record " + id + " deleted!");
+        setGroupData();
+  
+      }).catch(error => {
+        alert("Error Ocurred in removeGroup:" + error);
+      });
+    }
+    else{
+      
+    }
   }
 
   return (
@@ -84,16 +89,18 @@ const GroupDataTable = () => {
                         <td>{group.groupName}</td>
                         <td>{group.groupAbout}</td>
                         <td>{group.createdDate}</td>
-                        <td style={{display:'inline-block'}}>
-                          <button>
-                              <Link to={"/admin/group/edit/" + group.id}>
-                                Edit
-                              </Link>
+                        <td>
+                          <button  className='btn btn-primary w-100' onClick={()=> navigate("/admin/group/edit/" + group.id)}>
+                             
+                          <i className="fa fa-edit"></i>
+
                           </button>
-                          
-                          <button
-                            onClick={() => removeGroup(group.id)} className="button"
-                          > Delete
+                        </td>
+                        <td>
+                          <button className='btn btn-primary w-100'
+                            onClick={() => removeGroup(group.id)}
+                          > <i className="fa fa-trash"></i>
+
                           </button>
 
                         </td>

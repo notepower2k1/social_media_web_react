@@ -4,7 +4,6 @@ import React ,{useState,useRef,useEffect,useContext} from 'react';
 import ReplyService from '../../services/ReplyService'
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
-import ProfileService from '../../services/profile.service';
 import FirebaseSerive from '../../services/firebase.service';
 import { SocketContext } from '../../utils/SocketContext';
 import NotificationService from '../../services/notify.service';
@@ -25,14 +24,13 @@ function AddReplyComponent({increaseRenderValue,comment}) {
 
     useEffect(()=>{
 
-      ProfileService.getProfile(user.id).then((response) => {
-          setFirstName(response.data.firstName);
-          setLastName(response.data.lastName);
-          FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
+          setFirstName(comment.user.profile.firstName);
+          setLastName(comment.user.profile.lastName);
+          FirebaseSerive.getAvatarFromFirebase(comment.user.profile.avatar).then((response) => {
               setAvatar(response)
           })
           
-      })
+      
 
   },[])
     const saveReply = (e)=>{

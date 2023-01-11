@@ -13,10 +13,10 @@ const UserForm = () => {
   const {roleID} = useParams();
 
   const [user_name, setUserName] = useState([]);
-  const [user_ID, setUserID] = useState(0);
   const [role_ID, setRoleID] = useState(0);
 
   const [roleList, setRoleList] = useState([]);
+  const [isSelectedRole, setSelectedRole] = useState(false);
 
 
 
@@ -33,7 +33,6 @@ const UserForm = () => {
       UserRoleService.getUserRoleByID(userID, roleID).then((response) => {
       // Truyền List nên phải userRole[0]
       setUserName(response.data.user.username);
-      setUserID(response.data.user.id)
       setRoleID(response.data.role.id);  
     }).catch(error => {
      alert("Error Ocurred getting user detail:"+ error);
@@ -43,9 +42,7 @@ const UserForm = () => {
     
   
 
-    const roleIDChangeHandler = (event) => {
-      setRoleID(event.target.value);
-    };
+   
 
     const submitActionHandler = async (event) => {
       event.preventDefault();
@@ -60,13 +57,20 @@ const UserForm = () => {
   
     };
   
+    const handleSelecRole = (e) => {
+      if(!isSelectedRole){
+        setSelectedRole(true)
+      }
+  
+      setRoleID(e.target.value)
+    }
     
       return(
         // Thêm className = "content-wrapper" vào tránh Navbar che chữ
       <div className="content-wrapper">
         <Alert variant='primary'>
               <Container>
-              <Form id="data" style={{'text-align':'center'}}>
+              <Form id="data" style={{textAlign:'center'}}>
               <Form.Group>
                   <Form.Label className='mr-1'>Username</Form.Label>
                   <input type="text" name="user_ID" value={user_name} placeholder="Enter UserID" disabled/>
@@ -74,11 +78,15 @@ const UserForm = () => {
               <br></br>
               <Form.Group >
               <Form.Label className='mr-3'>Role</Form.Label>
-              <select value={role_ID} onChange={(e) => setRoleID(e.target.value)}>
-                      {roleList && roleList.map( 
-                        (item) =>
+              <select value={role_ID} 
+              onClick={(e) => handleSelecRole(e)}
+              onChange={(e) => setRoleID(e.target.value)}>
+                      {!isSelectedRole
+                          ?<option>Select role</option>
+                          :roleList && roleList.map( 
+                        (item,index) =>
                         
-                        <option value={item.id}> {item.name}</option>
+                        <option key={index} value={item.id}> {item.name}</option>
                       )
                       }
                     
