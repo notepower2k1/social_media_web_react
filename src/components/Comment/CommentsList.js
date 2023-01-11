@@ -5,7 +5,6 @@ import AddReplyComponent from '../Reply/AddReplyComponent';
 import TextareaAutosize from 'react-textarea-autosize';
 import Comment from './Comment';
 import AuthService from '../../services/auth.service'
-import { useSelector } from 'react-redux';
 import NotificationService from '../../services/notify.service';
 import { SocketContext } from '../../utils/SocketContext';
 

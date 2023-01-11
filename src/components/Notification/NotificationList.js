@@ -81,7 +81,7 @@ function NotificationList({currentUser,socket}){
         </li>
         <li style={{marginTop:"10px"}}>
         <Link className="notification" to={"/conversation"} style={{fontSize:"22px"}} onClick={() => setNumberOfNewMessages(0)}>
-            <i className="ti-comment" ></i>{numberOfNewMessages > 0 && <span className="length-show">{numberOfNewMessages}</span>}
+            <i className="ti-comment" ></i>{numberOfNewMessages > 0 && <span className="length-show" style={{color:"white"}}>{numberOfNewMessages}</span>}
         </Link>
       </li>
       </>

@@ -2,7 +2,6 @@ import React ,{useState ,useEffect,useRef} from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
 import CommentService from '../../services/CommentService'
-import ProfileService from '../../services/profile.service';
 import FirebaseSerive from '../../services/firebase.service';
 import { getPassedTime } from "../../utils/spUtils";
 
@@ -19,14 +18,14 @@ function Comment({index,formRef,increaseRenderValue,data}) {
 
     useEffect(()=>{
 
-        ProfileService.getProfile(data.user.id).then((response) => {
-            setFirstName(response.data.firstName);
-            setLastName(response.data.lastName);
-            FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
+       
+            setFirstName(data.user.profile.firstName);
+            setLastName(data.user.profile.lastName);
+            FirebaseSerive.getAvatarFromFirebase(data.user.profile.avatar).then((response) => {
                 setAvatar(response)
             })
             
-        })
+        
 
     },[])
 
@@ -81,13 +80,19 @@ function Comment({index,formRef,increaseRenderValue,data}) {
       }
     
       const deleteComment = ((id) =>{
-        CommentService.deleteComments(id).then((res)=>{
-          alert("Delete Sucess!")
-          increaseRenderValue();
-    
-      }).catch((err)=>{
-          console.log(err)
-      })
+
+        if(window.confirm("Delete item ?")){
+          CommentService.deleteComments(id).then((res)=>{
+            alert("Delete Sucess!")
+            increaseRenderValue();
+      
+        }).catch((err)=>{
+            console.log(err)
+        })
+        }
+        else{
+
+        }
       });
     
     

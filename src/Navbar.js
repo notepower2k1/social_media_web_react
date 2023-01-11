@@ -8,7 +8,7 @@ import FirebaseSerive from './services/firebase.service';
 import NotificationList from "./components/Notification/NotificationList";
 import { SocketContext } from './utils/SocketContext';
 
-function Navbar({user,currentUser,logOut}) {
+function Navbar({currentUser,logOut}) {
 
     const socket = useContext(SocketContext);
 
@@ -20,7 +20,7 @@ function Navbar({user,currentUser,logOut}) {
 
     useEffect(()=>{
         socket.emit("addUser",currentUser.id);
-        ProfileService.getProfile(user.id).then((response) => {
+        ProfileService.getProfile(currentUser.id).then((response) => {
             FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
                 setAvatar(response)
             })
@@ -105,8 +105,13 @@ function Navbar({user,currentUser,logOut}) {
                 <span className="status f-online"></span>
                 </div>
                 <div className="dropdown-menu">
-                <Link to={"/profile/" + user.id} className="dropdown-item">Profile</Link>
+                <Link to={"/profile/" + currentUser.id} className="dropdown-item">Profile</Link>
                 <Link onClick={logOut} className="dropdown-item" >Log out</Link>
+
+                {currentUser && currentUser.roles.includes("ROLE_ADMIN") 
+                ?<Link to={"/admin/chart"} className="dropdown-item" >Admin page</Link>
+                :<></>
+                }
                 </div>
 
         </div>

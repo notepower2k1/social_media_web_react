@@ -1,5 +1,4 @@
 import React ,{useState,useEffect,useRef} from 'react';
-import ProfileService from '../../services/profile.service';
 import FirebaseSerive from '../../services/firebase.service';
 import AuthService from '../../services/auth.service'
 import ReplyService from '../../services/ReplyService'
@@ -31,14 +30,14 @@ function Reply({increaseRenderValue,index,data}) {
    
     useEffect(()=>{
 
-      ProfileService.getProfile(data.user.id).then((response) => {
-          setFirstName(response.data.firstName);
-          setLastName(response.data.lastName);
-          FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
+    
+          setFirstName(data.user.profile.firstName);
+          setLastName(data.user.profile.lastName);
+          FirebaseSerive.getAvatarFromFirebase(data.user.profile.avatar).then((response) => {
               setAvatar(response)
           })
           
-      })
+      
 
   },[])
 

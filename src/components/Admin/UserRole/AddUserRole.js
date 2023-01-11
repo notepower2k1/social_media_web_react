@@ -13,8 +13,9 @@ const UserRoleForm = () => {
   const [userList, setUserList] = useState([]);
   const [roleList, setRoleList] = useState([]);
 
+  const [isSelectedUserName, setSelectedUserName] = useState(false);
+  const [isSelectedRole, setSelectedRole] = useState(false);
 
-  
   useEffect(() => {
 
     UserRoleService.getAllRole().then((res)=>{
@@ -36,9 +37,8 @@ const UserRoleForm = () => {
 
 
   const submitActionHandler = async (event) => {
-
-    console.log(enteredUserID,enteredRoleID)
     event.preventDefault();
+
     await UserRoleService.createUserRole(enteredUserID, enteredRoleID)
       .then((res) => {
         // console.log(res.data);
@@ -47,35 +47,64 @@ const UserRoleForm = () => {
         navigate('/admin/user-role/read');
       }).catch(err => {
         alert("error==="+err);
-      });
+      }); 
 
+      
   };
 
+  const handleSelectUser = (e) => {
+    if(!isSelectedUserName){
+      setSelectedUserName(true)
+    }
 
+    setUserID(e.target.value)
+  }
+
+  const handleSelecRole = (e) => {
+    if(!isSelectedRole){
+      setSelectedRole(true)
+    }
+
+    setRoleID(e.target.value)
+  }
     return(
         // Thêm className = "content-wrapper" vào tránh Navbar che chữ
         <div className="content-wrapper">
           <Alert variant='primary'>
                 <Container>
-                <Form id="data" style={{'text-align':'center'}}>
+                <Form id="data" style={{textAlign:'center'}}>
                 <Form.Group>
                 <Form.Label className='mr-2'>Username</Form.Label>
-                <select value={enteredUserID} onChange={(e) => setUserID(e.target.value)}>
-                          {userList && userList.map( 
-                            (item) =>
+                <select 
+                value={enteredUserID} 
+                onClick={(e) =>  handleSelectUser(e)}
+                onChange={(e) =>setUserID(e.target.value)}
+                >
+                          {!isSelectedUserName
+                          ?<option>Select user</option>
+                          : userList && userList.map( 
+                            (item,index) =>
                             
-                            <option value={item.id}> {item.username}</option>
-                          )
+                            <option key={index} value={item.id}> {item.username}</option>
+                            )
                           }
+                          
+                         
                         
                   </select>
                   <br></br><br></br>
                   <Form.Label className='mr-2'>Role</Form.Label>
-                  <select value={enteredRoleID} onChange={(e) => setRoleID(e.target.value)}>
-                          {roleList && roleList.map( 
-                            (item) =>
+                  <select value={enteredRoleID} 
+                   onClick={(e) =>  handleSelecRole(e)}
+                  onChange={(e) => setRoleID(e.target.value)}>
+
+
+                          {!isSelectedUserName
+                          ?<option>Select role</option>
+                          :roleList && roleList.map( 
+                            (item,index) =>
                             
-                            <option value={item.id}> {item.name}</option>
+                            <option key={index} value={item.id}> {item.name}</option>
                           )
                           }
                         
