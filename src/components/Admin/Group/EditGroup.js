@@ -46,17 +46,22 @@ const GroupForm = () => {
     const submitActionHandler = (event) => {
       event.preventDefault();
 
-
-      GroupService.updateGroup(groupID,{
-          groupName: groupName,
-          groupAbout: groupAbout,
-          })
+      GroupService.updateGroup({
+          groupName,
+          groupAbout,
+          }, groupID)
         .then((response) => {
           alert("Group "+ groupID +" updated!");
           navigate('/admin/group/read')
   
         }).catch(error => {
-          alert("Error Ocurred updating group:"+ error);
+          const resMessage =
+						(error.response &&
+						error.response.data &&
+						error.response.data.message) ||
+						error.message ||
+						error.toString();
+          alert(resMessage);
         });
    
     };
