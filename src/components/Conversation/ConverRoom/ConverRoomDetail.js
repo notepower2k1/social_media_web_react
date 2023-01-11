@@ -4,7 +4,7 @@ import AuthService from '../../../services/auth.service';
 import ConversationService from '../../../services/conver.service';
 import ConverRoomAdd from './ConverRoomAdd';
 
-const ConverRoomDetail = ({ conver, onToggleChat, otherProfiles, onSetOtherMemProfiles }) => {
+const ConverRoomDetail = ({ conver, onToggleChat, otherMembers, onSetOtherMembers }) => {
 
     const user = AuthService.getCurrentUser();
 
@@ -61,11 +61,11 @@ const ConverRoomDetail = ({ conver, onToggleChat, otherProfiles, onSetOtherMemPr
     const handleRemoveMember = (event, id) => {
         event.preventDefault();
 
-        if (otherProfiles.length > 2) {
+        if (otherMembers.length > 2) {
             if (window.confirm("Are u sure you want to remove this member?")) {
                 ConversationService.removeUserFromConverRoom(conver.id, id)
                     .then(res => {
-                        onSetOtherMemProfiles(prev => prev.filter(profile => profile.user.id !== id));
+                        onSetOtherMembers(prev => prev.filter(user => user.id !== id));
                     })
                     .catch(err => {
     
@@ -98,7 +98,7 @@ const ConverRoomDetail = ({ conver, onToggleChat, otherProfiles, onSetOtherMemPr
                 });
         }
     }
-
+    console.log(otherMembers);
     return (
         <div className="card">
             {
@@ -106,7 +106,7 @@ const ConverRoomDetail = ({ conver, onToggleChat, otherProfiles, onSetOtherMemPr
                     <ConverRoomAdd
                         conver={conver}
                         onShow={setIsShowed}
-                        onSetOtherMemProfiles={onSetOtherMemProfiles}
+                        onSetOtherMembers={onSetOtherMembers}
                     />
             }
             <div className="card-body">
@@ -173,17 +173,17 @@ const ConverRoomDetail = ({ conver, onToggleChat, otherProfiles, onSetOtherMemPr
                     >{ roomName }</h3>
                     <ul className="list-group p-0">
                         {
-                            otherProfiles && otherProfiles.map((profile, index) => 
+                            otherMembers && otherMembers.map((user, index) => 
                                 <li key={index} className="list-group-item">
                                     <div className="d-flex justify-content-between">
                                         <div>
-                                            <div>{profile.firstName} {profile.lastName}</div>
-                                            <div className="font-italic font-weight-light">@{profile.user.username}</div>
+                                            <div>{user.profile.firstName} {user.profile.lastName}</div>
+                                            <div className="font-italic font-weight-light">@{user.username}</div>
                                         </div>
                                         <button 
                                             type="button" 
                                             className="btn btn-danger"
-                                            onClick={ (event) => handleRemoveMember(event, profile.user.id) }
+                                            onClick={ (event) => handleRemoveMember(event, user.id) }
                                         ><i className="fa fa-times" aria-hidden="true"></i></button>
                                     </div>
                                 </li>

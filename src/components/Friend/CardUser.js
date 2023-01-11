@@ -11,7 +11,6 @@ function CardUser({user}) {
         })
 
     },[])
-
     return (
     <>
         <figure>
@@ -19,7 +18,7 @@ function CardUser({user}) {
         <span className="status f-online"></span>
     </figure>
     <div className="friendz-meta">
-        <Link to={"/profile/" + user.id} >{user.firstName + " " + user.lastName}</Link>
+        <Link to={"/profile/" + user.userID} >{user.firstName + " " + user.lastName}</Link>
     </div>
     </>
     )

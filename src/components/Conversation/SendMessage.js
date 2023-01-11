@@ -2,6 +2,7 @@ import React ,{ useState } from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 
 import AuthService from '../../services/auth.service';
+import UserService from '../../services/user.service';
 import ConversationService from '../../services/conver.service';
 
 function SendMessage({socket, increaseRenderValue, currentConversation, room}) {
@@ -16,13 +17,20 @@ function SendMessage({socket, increaseRenderValue, currentConversation, room}) {
 			event.preventDefault();
 			if(!messageInput){
 				alert("please fill in field!!")
-			}
-			else{
+			} else {
 				var reply = messageInput;
 				var conversation = currentConversation;
 				const status = 0
 				var ConversationReply = {reply, status, user, conversation}
-		
+
+				UserService.getByUserID(user.id)
+					.then(res => {
+						socket.emit("sendMessage",{
+							sender: res.data,
+							text: messageInput,
+							room: room
+						})
+					});
 				ConversationService.createConversationReply(ConversationReply)
 					.then(res => {
 						increaseRenderValue();
@@ -32,36 +40,23 @@ function SendMessage({socket, increaseRenderValue, currentConversation, room}) {
 					});
 				ConversationService.readOthersUserID(currentConversation.id, user.id)
 					.then(res => {
-						socket.emit("sendMessage",{
-							sender: user,
-							text: messageInput,
-							room: room
-						})
-		
+
 						/* socket.emit("sendMessNotification",{		
 							otherUserList:res.data
-						
-						}) */
+						}); */
+
+					});
 		
-						
-					})
-		
-					ConversationService.getOtherMemIDs(currentConversation.id, user.id).then(result => {
+				ConversationService.getOtherMemIDs(currentConversation.id, user.id)
+					.then(result => {
 						socket.emit("sendMessNotification",{		
 							otherUserList:result.data
 						})
-					})
+					});
 				
 				setMessageInput('');
-		
 			}
-		  }
-			
-		
-		
-		
-		
-
+		}
 	}
 
 	return (

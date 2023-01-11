@@ -2,7 +2,6 @@
 import React , {useState, useEffect} from 'react';
 import ReactEmoji from 'react-emoji';
 
-import ProfileService from '../../services/profile.service';
 import { getImageUrlFromFirebase } from '../../utils/firebasePort';
 import ConversationService from '../../services/conver.service';
 
@@ -34,10 +33,7 @@ function Conversation({onlineUsers, renderValue, conversation, sender}) {
                     convertTime(converdata.conversationReplyTime);
                     setLastUserReply(converdata.user);
                     setDeleteStatus(converdata.deleleStatus);
-                    getUserProfile(converdata.user.id)
-                        .then(profileRes => {
-                            setLastUserProfileRep(profileRes.data);
-                        });
+                    setLastUserProfileRep(converdata.user.profile);
                 }
             });
         ConversationService.getCountNewMessage(conversation.id, sender.id)
@@ -49,15 +45,11 @@ function Conversation({onlineUsers, renderValue, conversation, sender}) {
 
     useEffect(() => {
         if (otherMembers.length === 1) {
-            let id = otherMembers[0]?.id;
-            getUserProfile(id)
+            setFirstName(otherMembers[0].profile.firstName);
+            setLastName(otherMembers[0].profile.lastName);
+            getImageUrlFromFirebase("avatarImages", otherMembers[0].profile.avatar)
                 .then((response) => {
-                    setFirstName(response.data.firstName);
-                    setLastName(response.data.lastName);
-                    getImageUrlFromFirebase("avatarImages", response.data.avatar)
-                        .then((response) => {
-                            setAvatar(response);
-                        });
+                    setAvatar(response);
                 });
         }
     }, [otherMembers])
@@ -99,10 +91,6 @@ function Conversation({onlineUsers, renderValue, conversation, sender}) {
 			.then(res => {
 				setOtherMembers(res.data);
 			});
-    }
-
-    const getUserProfile = async (userID) => {
-        return await ProfileService.getProfile(userID);
     }
     
     return (

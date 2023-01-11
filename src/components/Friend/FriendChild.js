@@ -11,7 +11,7 @@ function FriendChild({user,userCurrentID,handleChange}) {
         const avatarRef = ref(storage,`avatarImages/${user.avatar}`);
         getDownloadURL(avatarRef).then(url => setAvatar(url))
     },[user])
-
+    
     const handleRemoveFriendShip = (userID2) => {
         FriendService.removeFriendShip(userCurrentID,userID2).then(res => handleChange())
     }

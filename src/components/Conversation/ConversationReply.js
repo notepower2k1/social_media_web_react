@@ -5,7 +5,7 @@ import AuthService from '../../services/auth.service'
 import ConversationService from '../../services/conver.service';
 import ReactEmoji from 'react-emoji';
 
-function ConversationReply({increaseRenderValue, socket, renderValue, currentConversation}) {
+function ConversationReply({increaseRenderValue, socket, renderValue, currentConversation, otherMembers}) {
 
 	const user = AuthService.getCurrentUser();
 
@@ -13,14 +13,13 @@ function ConversationReply({increaseRenderValue, socket, renderValue, currentCon
 	const [arrivalMessage,setArrivalMessage] = useState("");
 
 	const [lastID,setLastID] = useState(0);
-	const [otherMemProfiles, setOtherMemProfiles] = useState([]);
 
 	const conversationReplyTime = new Date(new Date().toString().split('GMT')[0]+' UTC').toISOString();
 	
 	const iconRef = useRef([]);
 	const scrollRef = useRef();
 	useEffect(()=>{
-		getMemberProfiles(currentConversation.id, user.id);
+		/* getMemberProfiles(currentConversation.id, user.id); */
 		socket.on("getMessage", data => {
 			console.log(data);
 			setArrivalMessage({
@@ -36,14 +35,9 @@ function ConversationReply({increaseRenderValue, socket, renderValue, currentCon
 
 		return () => {
 			setMessages([]);
-			setOtherMemProfiles([]);
 			setArrivalMessage("");
 		}
 	}, []);
-
-	/* useEffect(()=>{
-		getMemberProfiles(currentConversation.id, user.id);
-	}, [otherMemProfiles]); */
 
 	useEffect(()=>{
 		
@@ -74,7 +68,7 @@ function ConversationReply({increaseRenderValue, socket, renderValue, currentCon
 				setMessages(converRepData);
 			});
 	}
-	const getMemberProfiles = async (convID, userID) => {
+	/* const getMemberProfiles = async (convID, userID) => {
 		await ConversationService.readMemberProfiles(convID, userID)
 			.then(res => {
 				setOtherMemProfiles(res.data);
@@ -82,7 +76,7 @@ function ConversationReply({increaseRenderValue, socket, renderValue, currentCon
 			.catch(err => {
 				console.log(err);
 			})
-	}
+	} */
 
 	const deleteReply = async (id)=>{
 		await ConversationService.deleteConversationReply(id)
@@ -124,7 +118,7 @@ function ConversationReply({increaseRenderValue, socket, renderValue, currentCon
 		<div>
 			{
 				messages && messages.map( (conversationReply,index) =>
-					<div key={conversationReply.id} ref={scrollRef}>
+					<div key={index} ref={scrollRef}>
 							{                    
 								user.id === conversationReply.user.id
 									?
@@ -166,12 +160,9 @@ function ConversationReply({increaseRenderValue, socket, renderValue, currentCon
 										<div className="received_msg">
 											<div className="received_withd_msg">
 												<p className="bg-transparent p-0" 
-												style={{ width: "fit-content", color: "#A3A3A3", fontSize: "12px"}}
-												
+													style={{ width: "fit-content", color: "#A3A3A3", fontSize: "12px"}}
 												>
-													{
-														conversationReply.user.username
-													}
+													{ conversationReply.user.profile.firstName } { conversationReply.user.profile.lastName }
 												</p>
 												{	
 													conversationReply.deleleStatus === 0

@@ -30,12 +30,12 @@ function ListConversation() {
     const [avatar, setAvatar] = useState(null);
     const [otherUserID, setOtherUserID] = useState(0);
     const [otherUserProfID, setOtherUserProfID] = useState(0);
-	const [otherMemProfiles, setOtherMemProfiles] = useState([]);
+	const [otherMembers, setOtherMembers] = useState([]);
 	
     const increaseRenderValue = ()=> {
       	setRenderValue(c => c + 1)
     }
-	
+
     useEffect(() => {
       	getAllConversation();
 		socket.on("getUsers", users => {
@@ -44,10 +44,11 @@ function ListConversation() {
 
   	}, [chatOn])
 
-	const getOtherMembers = async (convID, userID) =>{
+	/* const getOtherMembers = async (convID, userID) =>{
 		await ConversationService.readMemberProfiles(convID, userID)
 			.then(res => {
 				let profileData = res.data;
+				console.log(profileData);
 				setOtherMemProfiles(profileData);
 				if (profileData.length === 1) {
 					setFirstName(profileData[0]["firstName"]);
@@ -63,7 +64,7 @@ function ListConversation() {
 			.catch(err => {
 				console.log(err);
 			});
-    }
+    } */
 
     const getAllConversation = async () =>{
         await ConversationService.getAllConversation(user.id)
@@ -108,7 +109,25 @@ function ListConversation() {
 		}
 	}
 
-	
+	const getOtherMembers = async (convID, userID) =>{
+        await ConversationService.readOtherMembers(convID, userID)
+			.then(res => {
+				let userData = res.data;
+				setOtherMembers(userData);
+
+				if (userData.length === 1) {
+					setFirstName(userData[0].profile.firstName);
+					setLastName(userData[0].profile.lastName);
+					getImageUrlFromFirebase("avatarImages", userData[0].profile.avatar)
+						.then(url => {
+							setAvatar(url);
+						});
+					setOtherUserProfID(userData[0].profile.userProfileID);
+					setOtherUserID(userData[0].id);
+				}
+
+			});
+    }
 
   	return (
 		<section>
@@ -160,8 +179,8 @@ function ListConversation() {
 												otherUserID,
 												otherUserProfID
 											}}
-											otherProfiles={otherMemProfiles}
-											onSetOtherMemProfiles={setOtherMemProfiles}
+											otherMembers={otherMembers}
+											onSetOtherMembers={setOtherMembers}
 										/>
 								}
 						</div>
@@ -175,6 +194,7 @@ function ListConversation() {
 									increaseRenderValue={increaseRenderValue} 
 									renderValue={renderValue} 
 									currentConversation={currConver}
+									otherMembers={otherMembers}
 								/>
 							}
 						</div>

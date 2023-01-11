@@ -4,7 +4,7 @@ import Form from "react-validation/build/form";
 import AuthService from '../../../services/auth.service';
 import ConversationService from "../../../services/conver.service";
 
-const ConverRoomAdd = ({ conver, onToggleChat, usersInChat, onShow, onSetOtherMemProfiles }) => {
+const ConverRoomAdd = ({ conver, onToggleChat, usersInChat, onShow, onSetOtherMembers }) => {
 
     const user = AuthService.getCurrentUser();
 
@@ -28,7 +28,6 @@ const ConverRoomAdd = ({ conver, onToggleChat, usersInChat, onShow, onSetOtherMe
             setMembersID([]);
         }
     }, []);
-
     /* useEffect(() => {
         checkboxs.current = checkboxs.current.slice(0, friends.length);
     }, [friends]); */
@@ -40,7 +39,7 @@ const ConverRoomAdd = ({ conver, onToggleChat, usersInChat, onShow, onSetOtherMe
                 .then(res => {
                     let profilesData = res.data;
                     profilesData.forEach(profile => {
-                        onSetOtherMemProfiles(prev => [...prev, profile]);
+                        onSetOtherMembers(prev => [...prev, profile]);
                     });
                     onShow(prev => !prev);
                 })
@@ -90,10 +89,10 @@ const ConverRoomAdd = ({ conver, onToggleChat, usersInChat, onShow, onSetOtherMe
                 {
                     friends && friends.map((friend, index) => <div key={index} className="form-check">
                             <input 
-                                /* ref={el => checkboxs.current[index] = el}  */
+                                
                                 className="form-check-input" 
                                 type="checkbox" 
-                                value={friend.user.id}
+                                value={friend.userID}
                                 onChange={handleChange}
                                 id="flexCheckDefault" 
                             />
