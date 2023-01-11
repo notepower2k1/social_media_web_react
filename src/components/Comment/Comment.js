@@ -2,7 +2,6 @@ import React ,{useState ,useEffect,useRef} from 'react'
 import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
 import CommentService from '../../services/CommentService'
-import FirebaseSerive from '../../services/firebase.service';
 import { getPassedTime } from "../../utils/spUtils";
 
 function Comment({index,formRef,increaseRenderValue,data}) {
@@ -14,16 +13,12 @@ function Comment({index,formRef,increaseRenderValue,data}) {
 
     const [firstName,setFirstName] = useState('');
     const [lastName,setLastName] = useState('');
-    const [avatar,setAvatar] = useState(null);
 
     useEffect(()=>{
 
        
             setFirstName(data.user.profile.firstName);
             setLastName(data.user.profile.lastName);
-            FirebaseSerive.getAvatarFromFirebase(data.user.profile.avatar).then((response) => {
-                setAvatar(response)
-            })
             
         
 
@@ -122,7 +117,7 @@ function Comment({index,formRef,increaseRenderValue,data}) {
     <>
 
     <div className="comet-avatar">
-    <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar"/>
+    <img src={data.user.profile.avatar} className="rounded-circle avatar shadow-4" alt="Avatar"/>
   </div>
 
   <div className="we-comment">

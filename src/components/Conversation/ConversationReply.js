@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React ,{useState ,useEffect,useRef} from 'react';
 
@@ -157,7 +158,13 @@ function ConversationReply({increaseRenderValue, socket, renderValue, currentCon
 									</div>
 									:  
 									<div className="incoming_msg">
-										<div className="received_msg">
+										<div className="received_msg d-flex align-items-center">
+											<img 
+												src={conversationReply.user.profile.avatar}
+												className="rounded-circle mr-2"
+												height="50"
+											/>
+											
 											<div className="received_withd_msg">
 												<p className="bg-transparent p-0" 
 													style={{ width: "fit-content", color: "#A3A3A3", fontSize: "12px"}}

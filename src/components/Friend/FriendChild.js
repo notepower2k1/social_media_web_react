@@ -5,12 +5,6 @@ import { ref, getDownloadURL } from "firebase/storage";
 import { Link } from "react-router-dom";
 
 function FriendChild({user,userCurrentID,handleChange}) {
-    const [avatar,setAvatar] = useState()
-
-    useEffect(() =>{
-        const avatarRef = ref(storage,`avatarImages/${user.avatar}`);
-        getDownloadURL(avatarRef).then(url => setAvatar(url))
-    },[user])
     
     const handleRemoveFriendShip = (userID2) => {
         FriendService.removeFriendShip(userCurrentID,userID2).then(res => handleChange())
@@ -20,7 +14,7 @@ function FriendChild({user,userCurrentID,handleChange}) {
             <div className="nearly-pepls">
                 <figure>
                     <Link to={"/profile/" + user.userID}>
-                        <img src={avatar} />
+                        <img src={user.avatar} />
                     </Link>
                 </figure>
                 <div className="pepl-info">

@@ -1,40 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { getImageUrlFromFirebase } from '../../../utils/firebasePort';
 
 const GroupMember = ({ key, profile, removeMember }) => {
-
-    const [avatar, setAvatar] = useState("");
-
-    useEffect(() => {
-        getImageFromFirebase(profile.avatar)
-            .then(url => {
-                setAvatar(url);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-
-        return () => {
-            setAvatar("")
-        }
-    }, []);
-
-    const getImageFromFirebase = async (image) => {
-        return await getImageUrlFromFirebase("avatarImages", image);
-    }
 
     return (
         <li key={key}>
             <div className="nearly-pepls">
                 <figure>
-                    <Link to={ "/profile/" + profile.user.id } title="">
-                        <img src={ avatar } alt="" />
+                    <Link to={ "/profile/" + profile.userID } title="">
+                        <img src={ profile.avatar } alt="" />
                     </Link>
                 </figure>
                 <div className="pepl-info">
-                    <h4><Link to={ "/profile/" + profile.user.id } title="">
+                    <h4><Link to={ "/profile/" + profile.userID } title="">
                         { profile.firstName.concat(" "+profile.lastName) }
                     </Link></h4>
                     {/* <span>ftv model</span> */}
@@ -45,7 +24,7 @@ const GroupMember = ({ key, profile, removeMember }) => {
                         onClick={ (event) => {
                             event.preventDefault();
                             return removeMember
-                                (profile.firstName.concat(" "+profile.lastName), profile.user.id);
+                                (profile.firstName.concat(" "+profile.lastName), profile.userID);
                         } }
                     >Remove from group</a>
                 </div>

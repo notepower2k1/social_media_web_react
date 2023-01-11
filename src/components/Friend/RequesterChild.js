@@ -5,12 +5,6 @@ import { ref, getDownloadURL } from "firebase/storage";
 import { Link } from "react-router-dom";
 
 function RequesterChild({user,userCurrentID,handleChange}){
-    const [avatar,setAvatar] = useState()
-
-    useEffect(() =>{
-        const avatarRef = ref(storage,`avatarImages/${user.avatar}`);
-        getDownloadURL(avatarRef).then(url => setAvatar(url))
-    },[user])
 
     const handleAcceptRequest = (userID2) => {
         FriendService.acceptRequest(userCurrentID,userID2).then(res => handleChange())
@@ -25,7 +19,7 @@ function RequesterChild({user,userCurrentID,handleChange}){
             <div class="nearly-pepls">
                 <figure>
                     <Link to={"/profile/" + user.userID}>
-                        <img src={avatar} />
+                        <img src={user.avatar} />
                     </Link>
                 </figure>
                 <div class="pepl-info">

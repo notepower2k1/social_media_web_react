@@ -4,7 +4,6 @@ import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 
 import ProfileService from './services/profile.service';
-import FirebaseSerive from './services/firebase.service';
 import NotificationList from "./components/Notification/NotificationList";
 import { SocketContext } from './utils/SocketContext';
 
@@ -21,10 +20,7 @@ function Navbar({currentUser,logOut}) {
     useEffect(()=>{
         socket.emit("addUser",currentUser.id);
         ProfileService.getProfile(currentUser.id).then((response) => {
-            FirebaseSerive.getAvatarFromFirebase(response.data.avatar).then((response) => {
-                setAvatar(response)
-            })
-            
+          setAvatar(response.data.avatar)
         })
 
     },[])

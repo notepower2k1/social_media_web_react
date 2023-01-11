@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import Form from "react-validation/build/form";
 import Textarea from "react-validation/build/textarea";
 import ImageUploading from 'react-images-uploading';
-import { ref, uploadBytesResumable } from "firebase/storage";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 import PostService from "../../services/post.service";
 import { storage } from "../../utils/firebaseConfig";
@@ -39,8 +39,30 @@ const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
             let imagesString = res.reduce((accum, current) => {
                 return accum.concat("|" + current);
             }, "")
-            //FIX LẠI
-            if(isGroupPost) {
+
+            if (oldData !== null) {
+                PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
+                    .then(res => {
+                        console.log(res.data);
+                        dispatch(updatePost(res.data));
+                    });
+            } else {
+                if (isGroupPost) {
+                    PostService.createPostGroup({content: content, image: images.length !== 0 ? imagesString : "NONE"},groupID)
+                        .then(res => {
+                            console.log(res.data);
+                            dispatch(addPost(res.data));
+                        });
+                } else {
+                    PostService.createPost({content: content, image: images.length !== 0 ? imagesString : "NONE"})
+                        .then(res => {
+                            console.log(res.data);
+                            dispatch(addPost(res.data));
+                        });
+                }
+            }
+
+            /* if(isGroupPost) {
                 if (oldData !== null) {
                     PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
                         .then(res => {
@@ -68,7 +90,7 @@ const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
                             dispatch(addPost(res.data));
                         });
                 }
-            }
+            } */
         })
         
         //Bắt lỗi và hiển thị...
@@ -97,6 +119,18 @@ const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
         }
         return imagesArray;
     };
+
+    /* const handleUploadImages = async (images) => {
+        const imagesArray = [];
+        for (let i = 0; i < images.length; i++) {
+            const storageRef = ref(storage, `post_images/${images[i].file.name}`);
+            const upload = await uploadBytesResumable(storageRef, images[i].file);
+
+            const imageUrl = await getDownloadURL(storageRef);
+            imagesArray.push(images[i].file.name);
+        }
+        return imagesArray;
+    }; */
 
     return (
         <div className="modal-container">

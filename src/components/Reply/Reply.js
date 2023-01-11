@@ -1,5 +1,4 @@
 import React ,{useState,useEffect,useRef} from 'react';
-import FirebaseSerive from '../../services/firebase.service';
 import AuthService from '../../services/auth.service'
 import ReplyService from '../../services/ReplyService'
 import TextareaAutosize from 'react-textarea-autosize';
@@ -16,7 +15,6 @@ const ReplyForm = styled(Form)`
 function Reply({increaseRenderValue,index,data}) {
     const [firstName,setFirstName] = useState('');
     const [lastName,setLastName] = useState('');
-    const [avatar,setAvatar] = useState(null);
 
     const [inputReply,setInputReply] = useState("");
 
@@ -33,9 +31,6 @@ function Reply({increaseRenderValue,index,data}) {
     
           setFirstName(data.user.profile.firstName);
           setLastName(data.user.profile.lastName);
-          FirebaseSerive.getAvatarFromFirebase(data.user.profile.avatar).then((response) => {
-              setAvatar(response)
-          })
           
       
 
@@ -123,7 +118,7 @@ function Reply({increaseRenderValue,index,data}) {
   return (
     <>
     <div className="comet-avatar">
-    <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar"/>
+    <img src={data.user.profile.avatar} className="rounded-circle avatar shadow-4" alt="Avatar"/>
   </div>
   <div className="we-comment">
     <div className="coment-head">

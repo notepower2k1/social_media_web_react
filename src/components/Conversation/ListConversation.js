@@ -44,28 +44,6 @@ function ListConversation() {
 
   	}, [chatOn])
 
-	/* const getOtherMembers = async (convID, userID) =>{
-		await ConversationService.readMemberProfiles(convID, userID)
-			.then(res => {
-				let profileData = res.data;
-				console.log(profileData);
-				setOtherMemProfiles(profileData);
-				if (profileData.length === 1) {
-					setFirstName(profileData[0]["firstName"]);
-					setLastName(profileData[0]["lastName"]);
-					getImageUrlFromFirebase("avatarImages", profileData[0]["avatar"])
-						.then(url => {
-							setAvatar(url);
-						});
-					setOtherUserProfID(profileData[0]["userProfileID"]);
-					setOtherUserID(profileData[0]["user"]["id"]);
-				}
-			})
-			.catch(err => {
-				console.log(err);
-			});
-    } */
-
     const getAllConversation = async () =>{
         await ConversationService.getAllConversation(user.id)
 			.then(res=>{
@@ -118,10 +96,7 @@ function ListConversation() {
 				if (userData.length === 1) {
 					setFirstName(userData[0].profile.firstName);
 					setLastName(userData[0].profile.lastName);
-					getImageUrlFromFirebase("avatarImages", userData[0].profile.avatar)
-						.then(url => {
-							setAvatar(url);
-						});
+					setAvatar(userData[0].profile.avatar);
 					setOtherUserProfID(userData[0].profile.userProfileID);
 					setOtherUserID(userData[0].id);
 				}

@@ -7,13 +7,7 @@ import { getPassedTime } from "../../utils/spUtils";
 
 function NotificationDetail({noty,handle}){
 
-    const [avatar,setAvatar] = useState("")
     const [change,setChange] = useState(false)
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        FirebaseService.getAvatarFromFirebase(noty.senderProfile.avatar).then(res => setAvatar(res))
-    },[noty])
 
     const handleRead = (id,url) => {
         NotificationService.readedNotification(id).then(res => setChange(!change))
@@ -24,7 +18,7 @@ function NotificationDetail({noty,handle}){
         <li>
             <Link to={noty.url} onClick={() => handleRead(noty.id)}>
                 <p>
-                <img src={avatar} alt="" />
+                <img src={noty.senderProfile.avatar} alt="" />
                
                     <span className="mesg-meta" >
                         <span style={{marginBottom: "0px"}}>{noty.senderProfile.firstName + " " + noty.senderProfile.lastName}</span>

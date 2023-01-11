@@ -197,7 +197,7 @@ function App() {
 					</Route>
 
 					{
-						currentUser && currentUser.roles.includes("ROLE_ADMIN")
+						currentUser && (currentUser.roles.includes("ROLE_ADMIN") || currentUser.roles.includes("ROLE_MODERATOR"))
 						?	<Route element={<AdminLayout />} >
 
 						

@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import InfiniteScroll from "react-infinite-scroll-component";
 
 import PostService from "../../services/post.service";
-import UserService from "../../services/user.service";
 import AuthService from "../../services/auth.service";
-import LikePostService from "../../services/likepost.service";
 import GroupService from "../../services/group.service";
 import Loading from "../Loading/Loading";
 import PostModal from "./PostModal";
@@ -29,7 +27,6 @@ const PostContainer = () => {
     const [isGroupPost, setIsGroupPost] = useState(false);
 
     const dispatch = useDispatch();
-    const state = useSelector(state => state.allPosts);
 
 	useEffect(() => {
         getAllPosts();
@@ -37,7 +34,7 @@ const PostContainer = () => {
         return () => {
             setPosts([]);
         }
-    }, [reload, state]);
+    }, [reload]);
     
     useEffect(() => {
         getAllPosts();
@@ -51,24 +48,9 @@ const PostContainer = () => {
         setLoading(true);
         await PostService.getFriendPostByUserID(currentUser.id)
 			.then(res => {
-				let allPosts = res.data;
-				allPosts.forEach(post => {
-                    getUserProfileByUser(post.user)
-                        .then(profileRes => {
-                            let userProfile = profileRes.data;
-                            post.userProfile = userProfile;
-                            setPosts(prev => {
-                                if (prev.every(curPostValue => curPostValue.id !== post.id)) {
-                                    return [...prev, post];
-                                } else {
-                                    return [...prev];
-                                }
-                            });
-                        });
-                    if (state.allPosts.every(curPostValue => curPostValue.id !== post.id)) {
-                        dispatch(addPost(post));
-                    }
-				})
+                console.log(res.data);
+                setPosts(res.data);
+                dispatch(setAllPosts(res.data));
             })
             .catch(e => {
                 console.log(e);
@@ -84,12 +66,6 @@ const PostContainer = () => {
             .catch(err => {
                 console.log(err);
             });
-    }
-
- 
-     
-    const getUserProfileByUser = async (user) => {
-        return await UserService.readUserProfile(user);
     }
 
     const showModal = () => {
@@ -152,11 +128,8 @@ const PostContainer = () => {
                                             
                                             </ul>
                                         </div>
-                                
                                     </aside>
                                 </div>
-
-                            
                                 <div className="col-lg-6">
                                     <div className="central-meta">
                                         <div className="new-postbox">
@@ -231,15 +204,7 @@ const PostContainer = () => {
                                                         </div>
                                                     )
                                             }
-                                            
                                         </div>
-                                        
-
-
-
-
-
-                                 
                                     </aside>
                                 </div>
                             </div>

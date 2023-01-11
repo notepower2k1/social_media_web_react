@@ -11,14 +11,13 @@ const postHistorySection={
     position:'relative'
 };
 
-const PostHistory = ({ postId, handleClose, nameProfile }) => {
+const PostHistory = ({ postId, handleClose }) => {
 
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
         getPostEditHistory(postId)
             .then(res => {
-                console.log(res.data);
                 setPosts(res.data); 
             })
             .catch(err => {
@@ -32,8 +31,6 @@ const PostHistory = ({ postId, handleClose, nameProfile }) => {
     const getPostEditHistory = async (postId) => {
         return await PostService.readEditHistoryByPostId(postId);
     }
-
-    
 
     return (
         <div>
@@ -54,7 +51,6 @@ const PostHistory = ({ postId, handleClose, nameProfile }) => {
                             : posts.map((post) => <PostEdited 
                                         key={ post.id }
                                         post={ post }
-                                        nameProfile={nameProfile}
                                     /> )
                     }
                 </section>

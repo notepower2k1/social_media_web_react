@@ -1,33 +1,19 @@
 import React, { useState, useEffect} from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {useParams} from 'react-router-dom';
 import PostService from "../../services/post.service";
-import UserService from "../../services/user.service";
 import PostModal from "./PostModal";
 import Post from "./Post";
-import AuthService from '../../services/auth.service'
 
 import "./post.css";
 
 function PostDetail() {
-    const user = AuthService.getCurrentUser();
-
     const [post, setPost] = useState();
     const [selectedPost, setSelectedPost] = useState(null);
     const [isShowed, setIsShowed] = useState(false);
     const [reload, setReload] = useState(false);
-
-    /* const forceUpdate = useForceUpdate(); */
-    const dispatch = useDispatch();
-    const state = useSelector(state => state.allPosts);
     
     const {postID} = useParams();
-
-
-
-	useEffect(() => {
-        getAllPosts(postID);
-    }, [state]);
 
     useEffect(() => {
         getAllPosts(postID);
@@ -38,25 +24,12 @@ function PostDetail() {
     }, []);
 
     const getAllPosts = async (postID) => {
-        
         PostService.readPostById(postID).then((res) => {
-           
             let postDetail = res.data;
-            getUserProfileByUser(postDetail.user).then((profile) => {
-                let userProfile = profile.data;
-                postDetail.userProfile = userProfile;
-                setPost(postDetail)
-            })
-            
-        })
+            setPost(postDetail);
+        });
     }  
      
-    const getUserProfileByUser = async (user) => {
-        return await UserService.readUserProfile(user);
-    }
-
-
-
 
     const showModal = () => {
         setIsShowed(true);

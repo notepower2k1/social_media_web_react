@@ -3,7 +3,7 @@ import ReactEmoji from 'react-emoji';
 
 import FirebaseService from '../../services/firebase.service';
 import { getPassedTime } from "../../utils/spUtils";
-const PostEdited = ({ post, nameProfile }) => {
+const PostEdited = ({ post }) => {
 
     const [images, setImages] = useState([]);
 
@@ -17,6 +17,7 @@ const PostEdited = ({ post, nameProfile }) => {
                 getImageFromFirebase(imageFileName);
             });
         }
+
         return () => {
             setImages([]);
         };
@@ -31,15 +32,15 @@ const PostEdited = ({ post, nameProfile }) => {
 
     return (
         <div>
-            <h4>{ getPassedTime(new Date(post.editedDate)) }</h4>
+            <h5 className="mb-0 mt-1">{ getPassedTime(new Date(post.editedDate)) }</h5>
             <div style={{ backgroundColor: "#E5E7EB" }}>
                 <div className="p-2 d-flex align-items-center">
                     <img 
-                        src="https://scontent.fdad3-5.fna.fbcdn.net/v/t1.30497-1/143086968_2856368904622192_1959732218791162458_n.png?stp=cp0_dst-png_p56x56&_nc_cat=1&ccb=1-7&_nc_sid=7206a8&_nc_ohc=LEpdzksOwNEAX-7R4B_&_nc_ht=scontent.fdad3-5.fna&oh=00_AfDwVrjKfMhcgTOMI_neb_AOuXJRYoHq9-9_5EPuYOu0TA&oe=63CFF178"
+                        src={post.user.profile.avatar}
                         className="rounded-circle"
-                        height="50"
+                        style={{height: "50px"}}
                     />
-                    <div>{ nameProfile }</div>
+                    <div>{ post.user.profile.firstName } { post.user.profile.lastName }</div>
                 </div>
                 <div className="p-2">
                     { ReactEmoji.emojify(post.content) }

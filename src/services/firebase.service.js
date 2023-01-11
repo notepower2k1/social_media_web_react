@@ -2,7 +2,7 @@ import {storage} from '../utils/firebaseConfig';
 import {ref,getDownloadURL} from "firebase/storage";
 
 
-const getAvatarFromFirebase= async (avatar)=>{
+/* const getAvatarFromFirebase= async (avatar)=>{
     const avatarRef = ref(storage,`avatarImages/${avatar}`);
     
     var result  = await getDownloadURL(avatarRef).then((url) => {
@@ -27,15 +27,15 @@ const getBackGroundFromFirebase= async (background)=>{
 
     return result;
 
-}
+} */
 
 const getImageUrlFromFirebase = async (image) => {
     const avatarRef = ref(storage,`post_images/${image}`);
     return await getDownloadURL(avatarRef);
 }
 const FirebaseService = {
-    getAvatarFromFirebase,
-    getBackGroundFromFirebase,
+    /* getAvatarFromFirebase,
+    getBackGroundFromFirebase, */
     getImageUrlFromFirebase,
 };
 

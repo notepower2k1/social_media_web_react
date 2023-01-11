@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/alt-text */
 import React, { useState, useEffect } from 'react';
 
 import AuthService from '../../../services/auth.service';
@@ -176,9 +177,16 @@ const ConverRoomDetail = ({ conver, onToggleChat, otherMembers, onSetOtherMember
                             otherMembers && otherMembers.map((user, index) => 
                                 <li key={index} className="list-group-item">
                                     <div className="d-flex justify-content-between">
-                                        <div>
-                                            <div>{user.profile.firstName} {user.profile.lastName}</div>
-                                            <div className="font-italic font-weight-light">@{user.username}</div>
+                                        <div className="d-flex align-items-center">
+                                            <img 
+												src={user.profile.avatar}
+												className="rounded-circle mr-2"
+                                                height="50"
+											/>
+                                            <div>
+                                                <div>{user.profile.firstName} {user.profile.lastName}</div>
+                                                <div className="font-italic font-weight-light">@{user.username}</div>
+                                            </div>
                                         </div>
                                         <button 
                                             type="button" 

@@ -11,21 +11,18 @@ import CommentsList from '../Comment/CommentsList';
 import FirebaseService from "../../services/firebase.service";
 import LikePostService from "../../services/likepost.service";
 import UserService from "../../services/user.service";
-import ProfileService from "../../services/profile.service";
 import { removePost } from "../../redux/actions/PostActions";
 import { getPassedTime } from "../../utils/spUtils";
 import NotificationService from "../../services/notify.service";
 import { SocketContext } from '../../utils/SocketContext';
 
 const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
-    
     const currentUser = AuthService.getCurrentUser();
     const formRef = useRef([]);
 
 	const socket = useContext(SocketContext);
 
     const [images, setImages] = useState([]);
-    const [avatar,setAvatar] = useState(null);
     const [isShowed, setIsShowed] = useState(false);
     const [totalLikes, setTotalLikes] = useState(0);
 
@@ -45,15 +42,7 @@ const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
             });
         }
 
-        ProfileService.getProfile(data.user.id).then((response) => {       
-            FirebaseService.getAvatarFromFirebase(response.data.avatar).then((response) => {
-                setAvatar(response)
-            })
-        })
-
-
-      
-            getPostsCurrentUserLiked(currentUser,data)
+        getPostsCurrentUserLiked(currentUser, data);
         
         return () => {
             setImages([]);
@@ -86,8 +75,6 @@ const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
         }
     };
 
-   
-
     const handleOpenComment = function(e) {   
         const currentForm = formRef.current;
         if (currentForm) {    
@@ -102,7 +89,6 @@ const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
   
     const getPostsCurrentUserLiked = async (user,post) => {
 
-       
             await LikePostService.readPostUserLiked(user.id,post.id)
             .then(res => {
                 setPostLiked(res.data);
@@ -110,14 +96,9 @@ const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
             .catch(err => {
                 console.log(err);
             })
-        
-      
     }
-  
 
-    
-
-      const handleShowEditHistory = (e) => {
+    const handleShowEditHistory = (e) => {
         e.preventDefault();
         setIsShowed(true);
     }
@@ -137,45 +118,41 @@ const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
 
     const handleLikePost = async (event) => {
         await UserService.likePost(data.id, currentUser.id)
-              .then((res) => {
-                  // console.log(res.data);
-                  setIsLiked(prev=>!prev)
-                  NotificationService.createNotification(currentUser.id,data.user.id,`/detail/post/${res.data.post.id}`,2)
-                  .then(noty => {
-                    socket.emit("sendNotification",noty.data)
-                  }) 
-              })
-              .catch((err) => {
-                  console.log(err);
-              }) 
-
-              console.log(data.id, currentUser.id);
+            .then((res) => {
+                // console.log(res.data);
+                setIsLiked(prev=>!prev)
+                NotificationService.createNotification(currentUser.id,data.user.id,`/detail/post/${res.data.post.id}`,2)
+                    .then(noty => {
+                        noty && socket.emit("sendNotification",noty.data)
+                    }) 
+            })
+            .catch((err) => {
+                console.log(err);
+            });
       }
       // Cần thêm @Modifying và @Transactional bên Repository mới Delete được
       const handleDisLikePost = async (event) => {
         // console.log(data.id, currentUser.id)
-        await UserService.dislikePost(data.id, currentUser.id)
+            await UserService.dislikePost(data.id, currentUser.id)
                 .then((res) => {
                     // console.log(res.data);
                     setIsLiked(prev=>!prev)
                 })
                 .catch((err) => {
                     console.log(err);
-                }) 
-
-             
+                });
       }
   
       // Function để gọi lại cho tiện
       const readTotalLikes = () => {
-          LikePostService.readTotalLikesById(data.id)
-              .then(res => {
-                  setTotalLikes(res.data);
-              })
-              .catch(err => {
-                  console.log(err.response)
-              })
-        }
+        LikePostService.readTotalLikesById(data.id)
+            .then(res => {
+                setTotalLikes(res.data);
+            })
+            .catch(err => {
+                console.log(err.response)
+            });
+    }
   
     return (
         <div className="user-post">
@@ -194,25 +171,24 @@ const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
                 <div className="dropdown-menu dropdown-scale dropdown-menu-right" role="menu" 
                     style={{position: "absolute", transform: "translate3d(-136px, 28px, 0px)", top: "0px", willChange: "transform"}}
                 >
-                    {/* <a className="dropdown-item" href="#">Hide post</a>
-                    <a className="dropdown-item" href="#">Stop following</a>
-                    <a className="dropdown-item" href="#">Report</a> */}
                     <a className="dropdown-item" href="#" onClick={ handleShowEditHistory }>History Editting</a>
-                    { currentUser.id === data.user.id ? 
-                        <>
-                            <a className="dropdown-item" href="#" onClick={ handleRepost }>Repost</a>
-                            <a className="dropdown-item" href="#" onClick={ handleDeletePost }>Delete Post</a> 
-                        </>
-                    : "" }
+                    {   currentUser.id === data.user.id 
+                        ? 
+                            <>
+                                <a className="dropdown-item" href="#" onClick={ handleRepost }>Repost</a>
+                                <a className="dropdown-item" href="#" onClick={ handleDeletePost }>Delete Post</a> 
+                            </>
+                        : "" 
+                    }
                     
                 </div>
             </div>
             <div className="friend-info">
             <figure>
-                <img src={avatar} alt=""/>
+                <img src={data.user.profile.avatar} alt=""/>
             </figure>
             <div className="friend-name">
-                <ins>{ data.userProfile.firstName.concat(" " + data.userProfile.lastName) }</ins>
+                <ins>{ data.user.profile.firstName.concat(" " + data.user.profile.lastName) }</ins>
                 <Link to={"/detail/post/" + data.id} >{getPassedTime(new Date(data.publishedDate)) }</Link>
 
                 

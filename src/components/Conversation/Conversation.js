@@ -47,10 +47,7 @@ function Conversation({onlineUsers, renderValue, conversation, sender}) {
         if (otherMembers.length === 1) {
             setFirstName(otherMembers[0].profile.firstName);
             setLastName(otherMembers[0].profile.lastName);
-            getImageUrlFromFirebase("avatarImages", otherMembers[0].profile.avatar)
-                .then((response) => {
-                    setAvatar(response);
-                });
+            setAvatar(otherMembers[0].profile.avatar);
         }
     }, [otherMembers])
 
