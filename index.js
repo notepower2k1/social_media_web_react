@@ -34,10 +34,10 @@ io.on("connection", (socket)=>{
 
     //send and get message
 
-    socket.on("sendMessage",({senderID, text, room})=>{
+    socket.on("sendMessage",({sender, text, room})=>{
         if (room) {
             socket.to(room).emit("getMessage",{
-                senderID,
+                sender,
                 text,
             });
         };
