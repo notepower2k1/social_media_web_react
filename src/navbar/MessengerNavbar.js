@@ -1,13 +1,13 @@
-import React, { useState ,useEffect, useContext} from "react";
+import React, { useState ,useEffect, useContext,useRef} from "react";
 import { Link ,useNavigate  } from "react-router-dom";
 import InputGroup from 'react-bootstrap/InputGroup';
 import Form from 'react-bootstrap/Form';
 
-import ProfileService from './services/profile.service';
-import NotificationList from "./components/Notification/NotificationList";
-import { SocketContext } from './utils/SocketContext';
-
-function Navbar({currentUser,logOut}) {
+import ProfileService from '../services/profile.service';
+import { SocketContext } from '../utils/SocketContext';
+import NotificationService from '../services/notify.service';
+import NotificationDetail from "../components/Notification/NotificationDetail";
+function MessengerNavbar({currentUser,logOut}) {
 
     const socket = useContext(SocketContext);
 
@@ -38,6 +38,37 @@ function Navbar({currentUser,logOut}) {
 
     }
 }
+
+
+    const [listNoti,setListNoti] = useState([])
+
+
+    const [length,setLength] = useState(0)
+    const [change,setChange] = useState(false)
+    const dropdownRef = useRef()
+
+    useEffect(() => {
+        NotificationService.getByIdRecipient(currentUser.id).then(res => setListNoti(res.data));
+        NotificationService.getLengthNewNotification(currentUser.id).then(res => setLength(res));
+    },[change])
+
+    useEffect(()=>{
+        socket.on("getNotification",data=> {
+            setListNoti((prev) => [...prev, data])
+            NotificationService.getLengthNewNotification(currentUser.id).then(res => setLength(res));
+        })
+
+       
+    },[])
+
+
+
+
+    const showNoti = () => {
+        dropdownRef.current.classList.toggle("active")
+        NotificationService.checkedAllNotificaiton().then(res => setChange(!change));
+    }
+
   return (
 
    
@@ -86,8 +117,26 @@ function Navbar({currentUser,logOut}) {
                 </InputGroup>
               
             </li>
-            <NotificationList currentUser = {currentUser} socket={socket}/>
-            
+            <li style={{marginTop:"12px"}}>
+            <p className="notification" onClick={() => showNoti()}>
+                <i className="ti-bell" ></i>{length > 0 && <span className="length-show">{length}</span>}
+            </p>
+            <div className="dropdowns dropdown-noti" ref={dropdownRef}>
+                <ul className="drops-menu">
+                {
+                    listNoti && listNoti.map((noty,index) => 
+                  
+                    <NotificationDetail key={index} noty = {noty} handle={showNoti}/>
+                    )
+                }
+                </ul>
+            </div>
+            </li>
+            <li style={{marginTop:"10px"}}>
+            <Link className="notification" to={"/"} style={{fontSize:"22px"}} >
+            <i className="ti-home" ></i>
+            </Link>
+            </li>
 				<li>
       
 					
@@ -118,4 +167,4 @@ function Navbar({currentUser,logOut}) {
 
   )
 }
-export default Navbar
+export default MessengerNavbar

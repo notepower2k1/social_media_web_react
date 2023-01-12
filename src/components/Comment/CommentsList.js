@@ -46,19 +46,21 @@ function CommentsList({post}) {
     e.preventDefault();
     var content = inputComment;
   
-    const temp = {content,user,post,}
+    const temp = {content,user,post}
 
     CommentService.createComment(temp).then((res)=>{
       increaseRenderValue();
-
-      NotificationService.createNotification(user.id,post.user.id,`/detail/post/${res.data.post.id}`,3).then(noty => {
-        socket.emit("sendNotification",noty.data)
-      })
-
     }).catch((err)=>{
         console.log(err)
     });
     
+    if(user.id !== post.user.id){
+      NotificationService.createNotification(user.id,post.user.id,`/detail/post/${post.id}`,3).then(noty => {
+        socket.emit("sendNotification",noty.data)
+      })
+    }
+   
+
     setInputComment('');
   }
 

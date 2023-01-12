@@ -5,7 +5,7 @@ import AuthService from '../../services/auth.service';
 import UserService from '../../services/user.service';
 import ConversationService from '../../services/conver.service';
 
-function SendMessage({socket, increaseRenderValue, currentConversation, room}) {
+function SendMessage({chatOn,socket, increaseRenderValue, currentConversation, room}) {
 
 	const user = AuthService.getCurrentUser();
 
@@ -20,7 +20,12 @@ function SendMessage({socket, increaseRenderValue, currentConversation, room}) {
 			} else {
 				var reply = messageInput;
 				var conversation = currentConversation;
-				const status = 0
+
+				var status = 0
+				
+			
+				
+				
 				var ConversationReply = {reply, status, user, conversation}
 
 				UserService.getByUserID(user.id)

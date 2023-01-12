@@ -180,8 +180,7 @@ const ConverRoomDetail = ({ conver, onToggleChat, otherMembers, onSetOtherMember
                                         <div className="d-flex align-items-center">
                                             <img 
 												src={user.profile.avatar}
-												className="rounded-circle mr-2"
-                                                height="50"
+												className="rounded-circle mr-2 avatar"
 											/>
                                             <div>
                                                 <div>{user.profile.firstName} {user.profile.lastName}</div>

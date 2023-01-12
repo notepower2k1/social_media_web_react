@@ -177,6 +177,7 @@ function ListConversation() {
 							{
 								chatOn && currConver && 
 								<SendMessage 
+								chatOn = {chatOn}
 									socket ={socket} 
 									increaseRenderValue={increaseRenderValue} 
 									currentConversation={currConver}

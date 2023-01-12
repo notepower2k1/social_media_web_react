@@ -161,8 +161,7 @@ function ConversationReply({increaseRenderValue, socket, renderValue, currentCon
 										<div className="received_msg d-flex align-items-center">
 											<img 
 												src={conversationReply.user.profile.avatar}
-												className="rounded-circle mr-2"
-												height="50"
+												className="rounded-circle mr-2 avatar"
 											/>
 											
 											<div className="received_withd_msg">

@@ -48,7 +48,6 @@ const PostContainer = () => {
         setLoading(true);
         await PostService.getFriendPostByUserID(currentUser.id)
 			.then(res => {
-                console.log(res.data);
                 setPosts(res.data);
                 dispatch(setAllPosts(res.data));
             })

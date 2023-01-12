@@ -36,10 +36,14 @@ function Conversation({onlineUsers, renderValue, conversation, sender}) {
                     setLastUserProfileRep(converdata.user.profile);
                 }
             });
-        ConversationService.getCountNewMessage(conversation.id, sender.id)
+
+       
+            ConversationService.getCountNewMessage(conversation.id, sender.id)
             .then(res=>{
                 setNumberOfNewMessages(res.data);
             });
+        
+      
         
     },[renderValue]) 
 

@@ -72,6 +72,9 @@ function ProfileComponent() {
 			setBackground(response.data.background);
             setStateSwitch(0);
             setPosts([]);
+
+			OldImage.current = response.data.avatar
+			OldBackground.current = response.data.background
         });
         FriendService.getListFriend(userID).then(res => setListFriend(res.data))
 
@@ -106,43 +109,67 @@ function ProfileComponent() {
 
     const handleUploadAvatar = (selectorFiles) => {
 		if (selectorFiles) {
-			let uploadAvatar = selectorFiles[0];
-			console.log(uploadAvatar);
-			if(uploadAvatar===null){
-				setAvatar(OldImage.current);
-			} else {
-				const avatarRef = ref(storage,`avatarImages/${uploadAvatar.name}`)
-				uploadBytesResumable(avatarRef, uploadAvatar)
-					.then(() =>{
-						getDownloadURL(avatarRef)
-							.then(url => {
-								setAvatar(url);
-							});
-					});
-			}
-		}
+			setUploadAvatar(selectorFiles[0]);
+		  }
+		
     };
 
     const handleUploadBackground = (selectorFiles) => {
 		if (selectorFiles) {
-			let uploadBackground = selectorFiles[0];
-			console.log(uploadBackground);
-			if (uploadBackground === null) {
-				setBackground(OldBackground.current);
-			} else {
-				const backgroundRef = ref(storage,`backGroundImages/${uploadBackground.name}`);
-				uploadBytesResumable(backgroundRef, uploadBackground)
-					.then(() =>{
-						getDownloadURL(backgroundRef)
+			setUploadBackground(selectorFiles[0]);
+		  }
+	}
+	
+    const handleUpdateProfile= async ()=>{
+		var avatar = "";
+        var background = "";
+
+		if(uploadAvatar===null){
+			avatar = OldImage.current;
+
+		  }
+
+		else{
+			const avatarRef = ref(storage,`avatarImages/${uploadAvatar.name}`)
+			uploadBytesResumable(avatarRef, uploadAvatar)
+				.then(() =>{
+					getDownloadURL(avatarRef)
 						.then(url => {
-							setBackground(url);
+							setAvatar(url);
+
 						});
-					});
-			}
+				});
+			avatar = await getDownloadURL(avatarRef).then(url => {
+				return url
+			})
 		}
-    };
-    
-    const handleUpdateProfile= ()=>{
+	
+	
+		if(uploadBackground===null){
+			background = OldBackground.current;
+
+		}
+		else{
+			const backgroundRef = ref(storage,`backGroundImages/${uploadBackground.name}`);
+			uploadBytesResumable(backgroundRef, uploadBackground)
+			.then(() =>{
+				getDownloadURL(backgroundRef)
+				.then(url => {
+					setBackground(url);
+
+				});
+			});
+			background = await getDownloadURL(backgroundRef).then(url => {
+				return url
+			})
+		}
+		
+			
+
+		
+		
+		
+
         const updateDate = new Date().toISOString().slice(0, 10);;
         const dateOfBirth = dob;
           
@@ -156,6 +183,7 @@ function ProfileComponent() {
 				console.log(err)
 			});
   	}
+
     useEffect(() => {
         getAllPosts();
 
@@ -371,10 +399,9 @@ function ProfileComponent() {
 							/>
 						</div>      
 						{
-							<img src={avatar}  alt="Avatar" className="rounded-circle shadow-4 img-thumbnail" style={{width: "150px"}}/>
-							/* !uploadAvatar 
+							!uploadAvatar 
 							? 	<img src={avatar}  alt="Avatar" className="rounded-circle shadow-4 img-thumbnail" style={{width: "150px"}}/>
-							: 	<img src={URL.createObjectURL(uploadAvatar)}  alt="Avatar" className="rounded-circle shadow-4 img-thumbnail" style={{width: "150px"}}/>					 */
+							: 	<img src={URL.createObjectURL(uploadAvatar)}  alt="Avatar" className="rounded-circle shadow-4 img-thumbnail" style={{width: "150px"}}/>
 						}
 					</div>
 					<div className="text-center mb-3">
@@ -389,10 +416,9 @@ function ProfileComponent() {
 							/>
 						</div>
 						{
-							<img src={(background)}  alt="Background" className="shadow-4 img-fluid" style={{height: "200px"}}/>
-							/* !uploadBackground 
+							!uploadBackground 
 							? 	<img src={(background)}  alt="Background" className="shadow-4 img-fluid" style={{height: "200px"}}/>
-							: 	<img src={URL.createObjectURL(uploadBackground)}  alt="Background" className="shadow-4 img-fluid" style={{height: "200px"}}/> */
+							: 	<img src={URL.createObjectURL(uploadBackground)}  alt="Background" className="shadow-4 img-fluid" style={{height: "200px"}}/> 
 						}
 					</div>
 					<div className="text-center mb-3">

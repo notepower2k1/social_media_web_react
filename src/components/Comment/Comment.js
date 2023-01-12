@@ -76,18 +76,12 @@ function Comment({index,formRef,increaseRenderValue,data}) {
     
       const deleteComment = ((id) =>{
 
-        if(window.confirm("Delete item ?")){
+      
           CommentService.deleteComments(id).then((res)=>{
             alert("Delete Sucess!")
             increaseRenderValue();
       
-        }).catch((err)=>{
-            console.log(err)
-        })
-        }
-        else{
-
-        }
+          })
       });
     
     

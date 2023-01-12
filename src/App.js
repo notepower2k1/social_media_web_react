@@ -18,7 +18,6 @@ import Search from "./components/Search/Search";
 import GroupEdit from "./components/Group/GroupEdit";
 import ListConversation from "./components/Conversation/ListConversation";
 
-import Navbar from "./Navbar";
 import PostDetail from "./components/Post/PostDetail";
 import AddUserRole from './components/Admin/UserRole/AddUserRole';
 import EditUserRole from './components/Admin/UserRole/EditUserRole';
@@ -31,7 +30,9 @@ import Chart from "./components/Admin/Statistics/Chart";
 
 import RequesterList from "./components/Friend/ListRequester";
 
-import AdminNavbar from "./AdminNavbar";
+import Navbar from "./navbar/Navbar";
+import MessengerNavbar from "./navbar/MessengerNavbar";
+import AdminNavbar from "./navbar/AdminNavbar";
 
 import { setSocket } from "./redux/actions/SocketActions";
 import ConfirmAccount from "./components/ConfirmAccount/ConfirmAccount";
@@ -114,6 +115,21 @@ function App() {
 			</main>
 		</>
 	);
+
+	const ChatLayout = () => (
+		<>
+		<main className={"main--container"}>
+			<div className={"main--content"}>
+				<div className="theme-layout" style={{height: "100vh"}}>
+					{ currentUser &&  <MessengerNavbar  currentUser={currentUser} logOut={logOut}/>}
+					<div className="mt-5">
+						<Outlet/>
+					</div>
+				</div>
+			</div>
+		</main>
+		</>
+	);
 	return (
 		<SocketProvider>
 			<div>
@@ -165,11 +181,7 @@ function App() {
 							<ProfileComponent />
 							</PrivateRoute>
 						} />
-						<Route path="/conversation" element={
-							<PrivateRoute>
-							<ListConversation />
-							</PrivateRoute>
-						} />
+						
 						<Route path="/search/:keyword" element={
 							<PrivateRoute>
 							<Search />
@@ -184,6 +196,14 @@ function App() {
 							
 					</Route>
 
+
+					<Route element={<ChatLayout />} >
+					<Route path="/conversation" element={
+							<PrivateRoute>
+							<ListConversation />
+							</PrivateRoute>
+						} />
+					</Route>
 					<Route element={<AuthLayout />} >
 				
 					{currentUser?

@@ -6,7 +6,7 @@ import TextareaAutosize from 'react-textarea-autosize';
 import AuthService from '../../services/auth.service'
 import { SocketContext } from '../../utils/SocketContext';
 import NotificationService from '../../services/notify.service';
-
+import ProfileService from '../../services/profile.service';
 
 
 
@@ -15,15 +15,17 @@ function AddReplyComponent({increaseRenderValue,comment}) {
 
     const [inputReply,setInputReply] = useState("");
     const user = AuthService.getCurrentUser();
-    const formRef = useRef()
     const [firstName,setFirstName] = useState('');
     const [lastName,setLastName] = useState('');
-
+    const [avatar,setAvatar] = useState('');
 
     useEffect(()=>{
-
-          setFirstName(comment.user.profile.firstName);
-          setLastName(comment.user.profile.lastName);
+      ProfileService.getProfile(user.id).then((response) => {
+        setFirstName(response.data.firstName);
+        setLastName(response.data.lastName);
+        setAvatar(response.data.avatar);
+      })
+         
           
       
 
@@ -37,15 +39,17 @@ function AddReplyComponent({increaseRenderValue,comment}) {
         
             increaseRenderValue();  
 
-            NotificationService.createNotification(user.id,comment.post.user.id,`/detail/post/${comment.post.id}`,3).then(noty => {
-              socket.emit("sendNotification",noty.data)
-            })
+            
 
         }).catch((err)=>{
             console.log(err)
         });
         
-
+        if(user.id !== comment.post.user.id){
+        NotificationService.createNotification(user.id,comment.post.user.id,`/detail/post/${comment.post.id}`,3).then(noty => {
+          socket.emit("sendNotification",noty.data)
+        })
+        }
         setInputReply("")
       }
 
@@ -63,7 +67,7 @@ function AddReplyComponent({increaseRenderValue,comment}) {
     <div>
 
              <div className="comet-avatar">
-              <img src={comment.user.profile.avatar} className="rounded-circle avatar shadow-4" alt="Avatar" />
+              <img src={avatar} className="rounded-circle avatar shadow-4" alt="Avatar" />
               </div>
               <div className="we-comment">
               <h5>{firstName} {lastName}</h5>
