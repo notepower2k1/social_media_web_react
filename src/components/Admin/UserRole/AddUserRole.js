@@ -99,7 +99,7 @@ const UserRoleForm = () => {
                   onChange={(e) => setRoleID(e.target.value)}>
 
 
-                          {!isSelectedUserName
+                          {!isSelectedRole
                           ?<option>Select role</option>
                           :roleList && roleList.map( 
                             (item,index) =>

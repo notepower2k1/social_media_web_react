@@ -2,43 +2,34 @@ import React ,{useState,useEffect,useRef} from 'react';
 import AuthService from '../../services/auth.service'
 import ReplyService from '../../services/ReplyService'
 import TextareaAutosize from 'react-textarea-autosize';
-import Form from 'react-bootstrap/Form';
-import styled from "styled-components";
-import AddReplyComponent from './AddReplyComponent';
+
 import { getPassedTime } from "../../utils/spUtils";
 
 
-const ReplyForm = styled(Form)`
-   display:none;
-`;
 
-function Reply({increaseRenderValue,index,data}) {
+
+
+function Reply({increaseRenderValue,data}) {
     const [firstName,setFirstName] = useState('');
     const [lastName,setLastName] = useState('');
 
-    const [inputReply,setInputReply] = useState("");
 
     const [isReadonly, setIsReadonly] = useState(true);
    
     const currentuser = AuthService.getCurrentUser();
 
-    const formRef = useRef([]);
     const inputRef = useRef([]);
 
    
-    useEffect(()=>{
 
-    
+    useEffect(()=>{
           setFirstName(data.user.profile.firstName);
           setLastName(data.user.profile.lastName);
-          
-      
-
   },[])
 
  
 
-  const updateComment = (inputUpdateReply,id)=>{
+  const updateReply = (inputUpdateReply,id)=>{
   
     var reply = inputUpdateReply;
     var comment = data.comment
@@ -70,18 +61,7 @@ function Reply({increaseRenderValue,index,data}) {
   });
 
 
-  const handlerCreate = () => {
-      const currentForm = formRef.current[index];
-      if (currentForm) {
-  
-       
-        if (currentForm.style.display === "none" || currentForm.style.display === "") {
-          currentForm.style.display = "block";
-        } else {
-          currentForm.style.display = "none";
-        }
-      }
-    }
+
 
   
   
@@ -103,7 +83,7 @@ function Reply({increaseRenderValue,index,data}) {
           if(window.confirm('Delete the item?')){
             const inputUpdateReply = currentInput.value ;
             
-            updateComment(inputUpdateReply,commentReplyID);
+            updateReply(inputUpdateReply,commentReplyID);
           }
           else{
           }
@@ -137,9 +117,6 @@ function Reply({increaseRenderValue,index,data}) {
        </TextareaAutosize>  
        <div className="d-flex we-reply">
          <div className="feature">
-         <span className='icon feedback-icon mr-2' onClick={(e) => handlerCreate()}> 
-         <i className="fa fa-reply"></i>
-         </span>
 
           { currentuser.id === data.user.id 
             ?<>
@@ -160,15 +137,7 @@ function Reply({increaseRenderValue,index,data}) {
 
       
 
-      <ul>
-      <li>
-        
-       <ReplyForm  ref={el => formRef.current[index] = el}> 
-       <AddReplyComponent  increaseRenderValue={increaseRenderValue} comment={data.comment}/>
-        </ReplyForm>  
-
-        </li>
-        </ul>
+    
   </>
   )
 }

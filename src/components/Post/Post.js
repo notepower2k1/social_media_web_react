@@ -15,7 +15,7 @@ import { removePost } from "../../redux/actions/PostActions";
 import { getPassedTime } from "../../utils/spUtils";
 import NotificationService from "../../services/notify.service";
 import { SocketContext } from '../../utils/SocketContext';
-
+import GroupService from "../../services/group.service";
 const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
     const currentUser = AuthService.getCurrentUser();
     const formRef = useRef([]);
@@ -29,6 +29,8 @@ const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
     const [isLiked , setIsLiked] = useState(true);
     const [postsLiked, setPostLiked] = useState([]);
 
+    const [groupName,setGroupName] = useState("")
+    const [groupID,setGroupID] = useState("")
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -44,9 +46,19 @@ const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
 
         getPostsCurrentUserLiked(currentUser, data);
         
+
+        if(data.group_id !==null){
+            GroupService.readGroupById(data.group_id).then((response) => {
+                setGroupName(response.data.groupName);
+                setGroupID(response.data.id)
+            })
+        }
+
         return () => {
             setImages([]);
         };
+
+       
     }, []);
     
     useEffect(()=>{
@@ -188,7 +200,12 @@ const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
                 <img src={data.user.profile.avatar} alt=""/>
             </figure>
             <div className="friend-name">
-                <ins>{ data.user.profile.firstName.concat(" " + data.user.profile.lastName) }</ins>
+                    {data.group_id
+                    ? <>
+                    <ins><Link to ={"/group/ "+groupID}>{groupName}</Link></ins><span>{ data.user.profile.firstName.concat(" " + data.user.profile.lastName) }</span> 
+                    </>
+                    : <ins>{ data.user.profile.firstName.concat(" " + data.user.profile.lastName) }</ins>}
+               
                 <Link to={"/detail/post/" + data.id} >{getPassedTime(new Date(data.publishedDate)) }</Link>
 
                 

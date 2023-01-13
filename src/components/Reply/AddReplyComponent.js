@@ -27,7 +27,6 @@ function AddReplyComponent({increaseRenderValue,comment}) {
       })
          
           
-      
 
   },[])
     const saveReply = (e)=>{
@@ -45,12 +44,15 @@ function AddReplyComponent({increaseRenderValue,comment}) {
             console.log(err)
         });
         
-        if(user.id !== comment.post.user.id){
-        NotificationService.createNotification(user.id,comment.post.user.id,`/detail/post/${comment.post.id}`,3).then(noty => {
+        
+        if(user.id !== comment.user.id){
+        NotificationService.createNotification(user.id,comment.user.id,`/detail/post/${comment.post.id}`,3).then(noty => {
           socket.emit("sendNotification",noty.data)
         })
         }
-        setInputReply("")
+        setInputReply("") 
+      
+
       }
 
       const handleKeyDown = async  (event) => {
