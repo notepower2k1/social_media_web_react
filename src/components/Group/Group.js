@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from 'react-router-dom';
 
 import UserService from "../../services/user.service";
 import GroupService from "../../services/group.service";
+import AuthService from "../../services/auth.service";
 
 const Group = ({ data, user, callBack }) => {
 
     const [totalMembers, setTotalMembers] = useState(0);
     const [loading, setLoading] = useState("");
 
+    const currentUser = AuthService.getCurrentUser();
+    
     useEffect(() => {
         GroupService.readTotalMembersById(data.id)
             .then(res => {
@@ -32,19 +35,37 @@ const Group = ({ data, user, callBack }) => {
         setLoading(false);
         callBack(prev => !prev)
     }
-
+    
     const handleLeaveGroup = async (event) => {
         event.preventDefault();
-        setLoading(true);
-        await UserService.leaveGroup(data.id, user.id)
-            .then((res) => {
-                setLoading(false);
+        checkUserIsAdminGroup(data.id, currentUser.id)
+            .then(res => {
+                if (res.data === 1) {
+                    if (window.confirm("Bạn là admin nếu rời nhóm, nhóm sẽ tự động xóa.\nXác nhận xóa?")) {
+                        /* UserService.leaveGroup(data.id, currentUser.id); */
+                        GroupService.deleteGroup(data.id)
+                            .then(res => {
+                                callBack(prev => !prev);
+                            });
+                    }
+                } else {
+                    setLoading(true);
+                    UserService.leaveGroup(data.id, currentUser.id)
+                        .then((res) => {
+                            setLoading(false);
+                        });
+                    setLoading(false);
+                }
+                callBack(prev => !prev);
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log(err);
             });
-        setLoading(false);
-        callBack(prev => !prev)
+        
+    }
+
+    const checkUserIsAdminGroup = async (groupId, userId) => {
+        return await UserService.checkUserIsAdminGroup(groupId, userId);
     }
 
     return (

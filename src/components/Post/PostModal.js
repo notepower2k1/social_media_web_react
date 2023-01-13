@@ -10,7 +10,7 @@ import { storage } from "../../utils/firebaseConfig";
 import { addPost, updatePost } from "../../redux/actions/PostActions";
 import "./modal.css";
 
-const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
+const PostModal = ({ handleClose, oldData, isGroupPost, groupID, callBack }) => {
 
     const [content, setContent] = useState("");
     const [images, setImages] = useState([]);
@@ -43,55 +43,27 @@ const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
             if (oldData !== null) {
                 PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
                     .then(res => {
-                        console.log(res.data);
                         dispatch(updatePost(res.data));
+                        callBack(prev => !prev);
                     });
             } else {
                 if (isGroupPost) {
                     PostService.createPostGroup({content: content, image: images.length !== 0 ? imagesString : "NONE"},groupID)
                         .then(res => {
-                            console.log(res.data);
                             dispatch(addPost(res.data));
+                            callBack(prev => !prev);
                         });
                 } else {
                     PostService.createPost({content: content, image: images.length !== 0 ? imagesString : "NONE"})
                         .then(res => {
-                            console.log(res.data);
                             dispatch(addPost(res.data));
+                            callBack(prev => !prev);
                         });
                 }
             }
-
-            /* if(isGroupPost) {
-                if (oldData !== null) {
-                    PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
-                        .then(res => {
-                            console.log(res.data);
-                            dispatch(updatePost(res.data));
-                        });
-                } else {
-                    PostService.createPostGroup({content: content, image: images.length !== 0 ? imagesString : "NONE"},groupID)
-                        .then(res => {
-                            console.log(res.data);
-                            dispatch(addPost(res.data));
-                        });
-                }
-            } else {
-                if (oldData !== null) {
-                    PostService.updatePost({content: content, image: images.length !== 0 ? imagesString : "NONE"}, oldData.id)
-                        .then(res => {
-                            console.log(res.data);
-                            dispatch(updatePost(res.data));
-                        });
-                } else {
-                    PostService.createPost({content: content, image: images.length !== 0 ? imagesString : "NONE"})
-                        .then(res => {
-                            console.log(res.data);
-                            dispatch(addPost(res.data));
-                        });
-                }
-            } */
         })
+
+        
         
         //Bắt lỗi và hiển thị...
 
@@ -125,7 +97,6 @@ const PostModal = ({ handleClose, oldData, isGroupPost,groupID }) => {
         for (let i = 0; i < images.length; i++) {
             const storageRef = ref(storage, `post_images/${images[i].file.name}`);
             const upload = await uploadBytesResumable(storageRef, images[i].file);
-
             const imageUrl = await getDownloadURL(storageRef);
             imagesArray.push(images[i].file.name);
         }

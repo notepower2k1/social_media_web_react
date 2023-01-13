@@ -50,15 +50,11 @@ const PostContainer = () => {
 			.then(res => {
                 setPosts(res.data);
                 dispatch(setAllPosts(res.data));
-
-                console.log(res.data)
             })
             .catch(e => {
                 console.log(e);
             });
         setLoading(false);
-
-        
     }
 
     const getGroupsCurrentUserJoined = async (userId) => {
@@ -176,6 +172,7 @@ const PostContainer = () => {
                                                 handleClose={ hideModal } 
                                                 oldData={ selectedPost }
                                                 isGroupPost = {isGroupPost}
+                                                callBack={ setReload }
                                             /> : '' 
                                     }
                                     {

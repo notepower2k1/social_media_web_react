@@ -16,7 +16,7 @@ const GroupList = () => {
     const [newGroups, setNewGroups] = useState([]);
     const [reload, setReload] = useState(false);
     const currentUser = AuthService.getCurrentUser();
-
+    
     useEffect(() => {
         getAllGroups()
             .then(res => {

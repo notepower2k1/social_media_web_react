@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 
 const GroupMember = ({ key, profile, removeMember }) => {
-
+    
     return (
         <li key={key}>
             <div className="nearly-pepls">

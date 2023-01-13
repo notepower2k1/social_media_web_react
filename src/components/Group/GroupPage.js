@@ -1,6 +1,5 @@
 import React, { useEffect, useState} from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { useSelector, useDispatch } from "react-redux";
 
 import Post from "../Post/Post";
 import Loading from "../Loading/Loading";
@@ -9,7 +8,6 @@ import GroupService from "../../services/group.service";
 import AuthService from "../../services/auth.service";
 import UserService from "../../services/user.service";
 import PostService from "../../services/post.service";
-import { addPost } from "../../redux/actions/PostActions";
 
 import "../Post/post.css";
 
@@ -26,9 +24,6 @@ const GroupPage = () => {
     const [reload, setReload] = useState(false);
     const [isGroupPost, setIsGroupPost] = useState(true);
 
-    const dispatch = useDispatch();
-    const state = useSelector(state => state.allPosts);
-
     const currentUser = AuthService.getCurrentUser();
     
     const navigate = useNavigate();
@@ -39,7 +34,7 @@ const GroupPage = () => {
         return () => {
             setPosts([]);
         }
-    }, [reload, state]);
+    }, [reload]);
 
     useEffect(() => {
         getGroup(id)
@@ -78,28 +73,8 @@ const GroupPage = () => {
         await PostService.getPostsGroup(id)
 			.then(res => {
 				let allPosts = res.data;
-
-                if(allPosts){
-                    allPosts.forEach(post => {
-                        getUserProfileByUser(post.user)
-                        .then(profileRes => {
-                            let userProfile = profileRes.data;
-                            post.userProfile = userProfile;
-                            setPosts(prev => {
-                                if (prev.every(curPostValue => curPostValue.id !== post.id)) {
-                                    return [...prev, post];
-                                } else {
-                                    return [...prev];
-                                }
-                            });
-                            if (state.allPosts.every(curPostValue => curPostValue.id !== post.id)) {
-                                dispatch(addPost(post));
-                            }
-                        });
-                    })
-                }
-
-			
+                setPosts(allPosts);
+               
             })
             .catch(e => {
                 console.log(e);
@@ -163,10 +138,6 @@ const GroupPage = () => {
         return await UserService.checkUserIsAdminGroup(groupId, userId);
     }
 
-    const getUserProfileByUser = async (user) => {
-        return await UserService.readUserProfile(user);
-    }
-
     return (
         <div>
             { group !== null ? (
@@ -175,7 +146,6 @@ const GroupPage = () => {
                             <div className="feature-photo">
                                 <figure><img src="https://www.facebook.com/images/groups/groups-default-cover-photo-2x.png" alt=""  /></figure>
                                 <div className="add-btn">
-                                    {/* <span>1205 followers</span> */}
                                     <span>{ totalMembers } thành viên</span>
                                     {
                                         isJoined ? <a href="#" title="" className="bg-danger" data-ripple="" 
@@ -227,15 +197,7 @@ const GroupPage = () => {
                                                     <h5>{ group.groupName }</h5>
                                                     <span>(public-private)</span>
                                                     </li>
-                                                    {/* <li>
-                                                        <a className="active" href="time-line.html" title="" data-ripple="">time line</a>
-                                                        <a className="" href="timeline-photos.html" title="" data-ripple="">Photos</a>
-                                                        <a className="" href="timeline-videos.html" title="" data-ripple="">Videos</a>
-                                                        <a className="" href="timeline-friends.html" title="" data-ripple="">Friends</a>
-                                                        <a className="" href="timeline-groups.html" title="" data-ripple="">Groups</a>
-                                                        <a className="" href="about.html" title="" data-ripple="">about</a>
-                                                        <a className="" href="#" title="" data-ripple="">more</a>
-                                                    </li> */}
+                                                  
                                                 </ul>
                                             </div>
                                         </div>
@@ -290,6 +252,7 @@ const GroupPage = () => {
                                             oldData={ selectedPost }
                                             isGroupPost={isGroupPost}
                                             groupID = {id}
+                                            callBack={ setReload }
                                         /> : '' 
                                 }
                                 {

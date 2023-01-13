@@ -25,7 +25,7 @@ const GroupEdit = () => {
             setGroup(null);
         }
     }, []);
-    console.log(group);
+    
     const getGroupById = async (groupId) => {
         return await GroupService.readGroupById(groupId);
     }

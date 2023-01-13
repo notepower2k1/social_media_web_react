@@ -1,19 +1,12 @@
-import { useEffect, useState } from "react";
-import {storage} from '../../utils/firebaseConfig';
-import {ref,uploadBytes,getDownloadURL} from "firebase/storage";
+
 import {Link } from "react-router-dom";
 import { getPassedTime } from "../../utils/spUtils";
 
 function PostChild({postWithUser}){
 
-    const [avatar,setAvatar] = useState()
     const userProfile = postWithUser.userProfile
     const post = postWithUser.post
     
-    useEffect(() =>{
-        const avatarRef = ref(storage,`avatarImages/${postWithUser.userProfile.avatar}`);
-        getDownloadURL(avatarRef).then(url => setAvatar(url))
-    },[postWithUser])
 
     return (
         <div className="central-meta item">
@@ -21,7 +14,7 @@ function PostChild({postWithUser}){
         <div className="user-post">
             <div className="friend-info">
                 <figure>
-                    <img src={avatar} alt=""/>
+                    <img src={userProfile.avatar} alt=""/>
                 </figure>
                 <div className="friend-name">
                    

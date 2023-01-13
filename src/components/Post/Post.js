@@ -202,7 +202,7 @@ const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
             <div className="friend-name">
                     {data.group_id
                     ? <>
-                    <ins><Link to ={"/group/ "+groupID}>{groupName}</Link></ins><span>{ data.user.profile.firstName.concat(" " + data.user.profile.lastName) }</span> 
+                    <ins><Link to ={"/group/"+groupID}>{groupName}</Link></ins><span>{ data.user.profile.firstName.concat(" " + data.user.profile.lastName) }</span> 
                     </>
                     : <ins>{ data.user.profile.firstName.concat(" " + data.user.profile.lastName) }</ins>}
                
@@ -260,7 +260,7 @@ const Post = ({ data, callBack, selected, onShowModal, nameProfile }) => {
                             </button> 
                             :
                             <button className="btn btn-primary w-100"   onClick={ handleDisLikePost }>
-                            <i className="fa fa-thumbs-down"> Dislike</i>
+                            <i className="fa fa-thumbs-down"> Unlike</i>
                             </button>
                            
                             
